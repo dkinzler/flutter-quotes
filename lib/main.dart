@@ -8,6 +8,7 @@ import 'package:flutter_sample/favorites/filter_cubit.dart';
 import 'package:flutter_sample/random/random_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'logging.dart';
 import 'app.dart';
@@ -16,8 +17,10 @@ void main() async {
   runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      Provider.debugCheckInvalidValueType = null;
+      //TODO fix this here?
+      //Provider.debugCheckInvalidValueType = null;
       initLogging();
+      await Hive.initFlutter();
       //TODO explain here why we insert AppRouter into tree
       var appController = AppController();
       runApp(

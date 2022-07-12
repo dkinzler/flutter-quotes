@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/actions/favorites.dart';
 import 'package:flutter_sample/actions/search.dart';
+import 'package:flutter_sample/favorites/favorites_cubit.dart';
 import 'package:flutter_sample/favorites/favorites_screen.dart';
 import 'package:flutter_sample/home/nav.dart';
 import 'package:flutter_sample/random/random_screen.dart';
@@ -88,10 +90,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           searchCubit: context.read<SearchCubit>(),
         ),
         DialogIntent: DialogAction(),
+        DeleteFavoriteIntent: DeleteFavoriteAction(
+          favoritesCubit: context.read<FavoritesCubit>(),
+        ),
+        AddFavoriteIntent: AddFavoriteAction(
+          favoritesCubit: context.read<FavoritesCubit>(),
+        ),
       },
       child: Scaffold(
         bottomNavigationBar: isMobile ? BottomNavBar(selectedTab: widget.tab) : null,
-        body: body,
+        body: SafeArea(child: body),
       ),
     );
   }

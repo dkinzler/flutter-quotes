@@ -4,46 +4,41 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_sample/favorites/favorite.dart';
 import 'package:flutter_sample/favorites/favorites_cubit.dart';
 
-//TODO include an option to filter by tag?
-//sure, shouldnt be hard
-
-enum FilterStatus {loading, done}
 
 //TODO better name for this
 enum Sort {newest, oldest}
 
 class FilterState extends Equatable {
-  final FilterStatus status;
-
   final List<Favorite> filteredFavorites;
   final List<Favorite> favorites;
 
   final String? searchTerm;
+  final List<String> tags;
   final Sort sort;
 
   const FilterState({
-    required this.status,
     required this.filteredFavorites,
     required this.favorites,
     this.searchTerm,
     this.sort = Sort.newest,
+    this.tags = const [],
   });
 
   @override
-  List<Object?> get props => [status, filteredFavorites, favorites, searchTerm, sort];
+  List<Object?> get props => [filteredFavorites, favorites, searchTerm, tags, sort];
 
   FilterState copyWith({
-    FilterStatus? status,
     List<Favorite>? filteredFavorites,
     List<Favorite>? favorites,
     String? searchTerm,
+    List<String>? tags,
     Sort? sort,
   }) {
     return FilterState(
-      status: status ?? this.status,
       filteredFavorites: filteredFavorites ?? this.filteredFavorites,
       favorites: favorites ?? this.favorites,
       searchTerm: searchTerm ?? this.searchTerm,
+      tags: tags ?? this.tags,
       sort: sort ?? this.sort,
     );
   }
@@ -59,7 +54,6 @@ class FilterCubit extends Cubit<FilterState> {
   FilterCubit({
     required this.favoritesCubit,
   }) : super(const FilterState(
-    status: FilterStatus.loading,
     favorites: [],
     filteredFavorites: [],
   )) {
@@ -73,17 +67,18 @@ class FilterCubit extends Cubit<FilterState> {
     if(favorites == state.favorites) {
       return;
     }
-    var filtered = _filterFavorites(favorites, state.searchTerm, state.sort);
+    var filtered = _filterFavorites(favorites, state.searchTerm, state.tags, state.sort);
     emit(state.copyWith(
-      status: FilterStatus.done,
       favorites: favorites, 
       filteredFavorites: filtered,
     ));
   }
 
   //TODO move this to a separate thread with compute?
-  List<Favorite> _filterFavorites(List<Favorite> favorites, String? searchTerm, Sort sort) {
-    List<Favorite> filtered = [];
+  List<Favorite> _filterFavorites(List<Favorite> favorites, String? searchTerm, List<String> tags, Sort sort) {
+    List<Favorite> result = [];
+    List<Favorite> filtered  = [];
+
     if(searchTerm != null) {
       for(final favorite in favorites) {
         if(favorite.quote.text.contains(searchTerm) ||
@@ -92,16 +87,34 @@ class FilterCubit extends Cubit<FilterState> {
           filtered.add(favorite);
         }
       }
+      result = filtered;
     } else {
-      filtered = List.from(favorites);
+      result = List.from(favorites);
+    }
+
+    filtered = [];
+    if(tags.isNotEmpty) {
+      for(final favorite in result) {
+        bool contained = false;
+        for(final tag in favorite.quote.tags) {
+          if(tags.contains(tag)) {
+            contained = true;
+            break;
+          }
+        }
+        if(contained) {
+          filtered.add(favorite);
+        }
+      }
+      result = filtered;
     }
 
     if(sort == Sort.newest) {
-      filtered.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
+      result.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
     } else {
-      filtered.sort((a, b) => -1 * a.timeAdded.compareTo(b.timeAdded));
+      result.sort((a, b) => -1 * a.timeAdded.compareTo(b.timeAdded));
     }
-    return filtered;
+    return result;
   }
 
   //TODO can this code be made more dry?
@@ -109,9 +122,8 @@ class FilterCubit extends Cubit<FilterState> {
     if(searchTerm == state.searchTerm) {
       return;
     }
-    var filtered = _filterFavorites(state.favorites, searchTerm, state.sort);
+    var filtered = _filterFavorites(state.favorites, searchTerm, state.tags, state.sort);
     emit(state.copyWith(
-      status: FilterStatus.done,
       filteredFavorites: filtered,
       searchTerm: searchTerm,
     ));
@@ -121,11 +133,34 @@ class FilterCubit extends Cubit<FilterState> {
     if(sort == state.sort) {
       return;
     }
-    var filtered = _filterFavorites(state.favorites, state.searchTerm, sort);
+    var filtered = _filterFavorites(state.favorites, state.searchTerm, state.tags, sort);
     emit(state.copyWith(
-      status: FilterStatus.done,
       filteredFavorites: filtered,
       sort: sort,
+    ));
+  }
+
+  void addTag(String tag) {
+    if(state.tags.contains(tag)) {
+      return;
+    }
+    var newTags = List<String>.from(state.tags)..add(tag);
+    var filtered = _filterFavorites(state.favorites, state.searchTerm, newTags, state.sort);
+    emit(state.copyWith(
+      filteredFavorites: filtered,
+      tags: newTags,
+    ));
+  }
+
+  void removeTag(String tag) {
+    if(!state.tags.contains(tag)) {
+      return;
+    }
+    var newTags = state.tags.where((t) => t != tag).toList();
+    var filtered = _filterFavorites(state.favorites, state.searchTerm, newTags, state.sort);
+    emit(state.copyWith(
+      filteredFavorites: filtered,
+      tags: newTags,
     ));
   }
 

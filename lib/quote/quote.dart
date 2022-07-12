@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class Quote extends Equatable {
@@ -47,10 +49,21 @@ class Quote extends Equatable {
     return {
       'text': text,
       'author': author,
-      if(authorId != null) 'authorId': authorId,
+      'authorId': authorId,
       'tags': tags,
-      if(id != null) 'id': id,
+      'id': id,
       'source': source,
     };
+  }
+
+  factory Quote.fromMap(Map<String, dynamic> map) {
+    return Quote(
+      text: map['text'] ?? '',
+      author: map['author'] ?? '',
+      authorId: map['authorId'],
+      tags: List<String>.from(map['tags']),
+      id: map['id'],
+      source: map['source'] ?? '',
+    );
   }
 }

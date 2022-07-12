@@ -1,36 +1,31 @@
-import 'dart:math';
+import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/quote/provider.dart';
 
-enum Status {idle, loading, error}
+enum LoadingStatus {idle, loading, error}
 
 class RandomState extends Equatable {
-  final Status status;
-  final List<Quote> quotes;
-  final int currentQuoteIndex;
-  Quote? get currentQuote => currentQuoteIndex < quotes.length ? quotes[currentQuoteIndex] : null;
+  final LoadingStatus status;
+  final Quote? quote;
 
   const RandomState({
-    required this.currentQuoteIndex,
     required this.status,
-    required this.quotes
+    required this.quote
   });
 
   @override
-  List<Object?> get props => [status, quotes, currentQuoteIndex];
+  List<Object?> get props => [status, quote];
 
   RandomState copyWith({
-    Status? status,
-    List<Quote>? quotes,
-    int? currentQuoteIndex
+    LoadingStatus? status,
+    Quote? quote,
   }) {
     return RandomState(
       status: status ?? this.status,
-      quotes: quotes ?? this.quotes,
-      currentQuoteIndex: currentQuoteIndex ?? this.currentQuoteIndex,
+      quote: quote ?? this.quote,
     );
   }
 }
@@ -38,68 +33,56 @@ class RandomState extends Equatable {
 class RandomCubit extends Cubit<RandomState> {
   final _log = Logger('RandomCubit');
 
-  final QuoteProvider quoteProvider;
-  final maxImages = 40;
+  QuoteProvider quoteProvider;
+  Queue<Quote> _cache = Queue();
 
   RandomCubit({
     required this.quoteProvider,
   }) : super(const RandomState(
-    status: Status.idle,
-    quotes: [],
-    currentQuoteIndex: 0,
+    status: LoadingStatus.idle,
+    quote: null,
   )) {
-    loadMore();
+    next();
   }
 
-  Future<bool> loadMore() async {
-    if(state.status == Status.loading) {
-      return false;
-    }
-    emit(state.copyWith(status: Status.loading));
+  void reset() {
+    _cache = Queue();
+    emit(const RandomState(status: LoadingStatus.idle, quote: null));
+  }
+
+  void setQuoteProvider(QuoteProvider provider) {
+    quoteProvider = provider;
+    _cache = Queue();
+  }
+
+  Future<bool> _loadMore() async {
     try {
       var quotes = await quoteProvider.random(10);
-      //keep at most maxImages images
-      //if there are too many remove the oldest ones
-      var allQuotes = List<Quote>.from(state.quotes)..addAll(quotes);
-      var elementsToRemove = max(0, allQuotes.length - maxImages);
-      var newIndex = state.currentQuoteIndex;
-      if(elementsToRemove > 0) {
-        newIndex -= elementsToRemove;
-        allQuotes = allQuotes.sublist(elementsToRemove);
-      }
-      emit(state.copyWith(
-        status: Status.idle,
-        quotes: allQuotes,
-        currentQuoteIndex: newIndex,
-      ));
+      _cache.addAll(quotes);
       return true;
     } catch(e, st) {
       _log.warning('could not load more quotes', e, st);
-      emit(state.copyWith(status: Status.error));
       return false;
     }
   }
 
-  //index can be at most state.images.length
-  //index==state.images.length will show the loading progress indicator
-  void next() {
-    var nextIndex = state.currentQuoteIndex + 1;
-    if(nextIndex <= state.quotes.length) {
-      emit(state.copyWith(
-        currentQuoteIndex: nextIndex,
-      ));
-      if(state.quotes.length - state.currentQuoteIndex < 5) {
-        loadMore();
+  //TODO maybe trigger loading already if there are <= x elements in cache
+  //however need to rework stuff a bit then
+  Future<void> next() async {
+    if(state.status == LoadingStatus.loading) {
+      return;
+    }
+
+    emit(const RandomState(status: LoadingStatus.loading, quote: null));
+    if(_cache.isEmpty) {
+      var success = await _loadMore();
+      if(!success) {
+        emit(const RandomState(status: LoadingStatus.error, quote: null));
+        return;
       }
     }
-  }
 
-  void prev() {
-    var nextIndex = state.currentQuoteIndex - 1;
-    if(nextIndex >= 0) {
-      emit(state.copyWith(
-        currentQuoteIndex: nextIndex,
-      ));
-    }
+    var quote = _cache.removeFirst();
+    emit(RandomState(status: LoadingStatus.idle, quote: quote));
   }
 }

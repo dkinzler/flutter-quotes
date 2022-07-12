@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter_sample/quote/quote.dart';
 
 class Favorite extends Equatable {
@@ -14,4 +17,20 @@ class Favorite extends Equatable {
   
   @override
   List<Object?> get props => [quote, timeAdded];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'quote': quote.toMap(),
+      'timeAdded': timeAdded.millisecondsSinceEpoch,
+    };
+  }
+
+  factory Favorite.fromMap(Map<String, dynamic> map) {
+    return Favorite(
+      id: map['id'] ?? '',
+      quote: Quote.fromMap(map['quote']),
+      timeAdded: DateTime.fromMillisecondsSinceEpoch(map['timeAdded']),
+    );
+  }
 }

@@ -8,19 +8,22 @@ class MockQuoteApiClient implements QuoteProvider {
 
   @override
   Future<List<Quote>> random(int count) async {
+    await Future.delayed(const Duration(seconds: 4));
     return _randomQuotes(count);
   }
 
   List<Quote> _randomQuotes(int count) {
     List<Quote> quotes = [];
+    int baseIndex = Random().nextInt(1000);
     for(int i = 0; i < count; i++) {
+      var quoteId = baseIndex + i;
       quotes.add(
         Quote(
-          text: 'This is a quote, a great one actually. Amazing quote right here, we got the best quotes.',
+          text: '$quoteId This is a quote, a great one actually. Amazing quote right here, we got the best quotes.',
           author: 'Quoti Quoter',
           authorId: '1234',
           source: 'mock',
-          id: Random().nextInt(1<<32).toString(),
+          id: quoteId.toString(),
           tags: <String>[
             for(int j = 0; j < 10; j++)
               'Tag ${Random().nextInt(1000)}'

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/actions/favorites.dart';
 import 'package:flutter_sample/favorites/favorites_cubit.dart';
 import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/theme/theme.dart';
@@ -12,6 +13,7 @@ class QuoteCard extends StatelessWidget {
   final TextStyle? authorTextStyle;
   final EdgeInsets padding;
   final bool showFavoriteButton;
+  final void Function()? onDeleteButtonPressed;
 
   final bool showTags;
   //max number of tags to show, if there are more there will be a button to show all
@@ -26,6 +28,7 @@ class QuoteCard extends StatelessWidget {
     this.authorTextStyle,
     this.padding = const EdgeInsets.all(16.0),
     this.showFavoriteButton = true,
+    this.onDeleteButtonPressed,
     this.showTags = true,
     this.maxTagsToShow = 4,
     this.onTagPressed,
@@ -56,6 +59,11 @@ class QuoteCard extends StatelessWidget {
                   ),
                 ),
                 if(showFavoriteButton) _FavoriteButton(quote: quote),
+                if(onDeleteButtonPressed != null) 
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: onDeleteButtonPressed,
+                  ),
               ],
             ),
             if(showTags && quote.tags.isNotEmpty) ...[
