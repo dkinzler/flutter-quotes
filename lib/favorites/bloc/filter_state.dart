@@ -41,9 +41,9 @@ enum SortOrder {newest, oldest}
 
 void sort(List<Favorite> favorites, SortOrder sortOrder) {
   if(sortOrder == SortOrder.newest) {
-    favorites.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
+    favorites.sort((a, b) => b.timeAdded.compareTo(a.timeAdded));
   } else {
-    favorites.sort((a, b) => -1 * a.timeAdded.compareTo(b.timeAdded));
+    favorites.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
   }
 }
 
@@ -89,8 +89,8 @@ class Filters extends Equatable {
     List<Favorite> result = [];
     for(final favorite in favorites) {
       bool contained = false;
-      for(final tag in favorite.quote.tags) {
-        if(tags.contains(tag)) {
+      for(final tag in tags) {
+        if(favorite.quote.tags.contains(tag)) {
           contained = true;
           break;
         }

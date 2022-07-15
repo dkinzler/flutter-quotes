@@ -26,7 +26,7 @@ class FavoritesState extends Equatable {
   final List<Favorite> favorites; 
 
   bool containsQuote(Quote quote) {
-    var id = _idFromQuote(quote);
+    var id = quote.id;
     return favorites.any((i) => i.id == id);
   }
 
@@ -37,13 +37,6 @@ class FavoritesState extends Equatable {
 
   @override
   List<Object?> get props => [status, favorites];
-}
-
-String _idFromQuote(Quote quote) {
-  if(quote.id != null) {
-    return '${quote.source}:${quote.id}';
-  }
-  return quote.text;
 }
 
 typedef StorageBuilder = FavoritesStorage Function(String userId);
@@ -74,9 +67,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   //should be called everytime the logged-in user changes
-  void init(String userId) {
+  Future<void> init(String userId) async {
     _storage = _storageBuilder(userId);
-    load();
+    return load();
   }
 
   Future<void> load() async {
@@ -107,11 +100,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       return false;
     }
 
-    var favorite = Favorite(
-      id: _idFromQuote(quote),
-      quote: quote,
-      timeAdded: DateTime.now(),
-    );
+    var favorite = Favorite.fromQuote(quote: quote);
     try {
       bool success = await _storage!.add(favorite);
       if(success) {
@@ -131,7 +120,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<bool> remove(Quote quote) async {
-    var id = _idFromQuote(quote);
+    var id = quote.id;
     return removeById(id);
   }
 

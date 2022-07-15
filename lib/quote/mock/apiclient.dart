@@ -23,7 +23,7 @@ class MockQuoteApiClient implements QuoteProvider {
           author: 'Quoti Quoter',
           authorId: '1234',
           source: 'mock',
-          id: quoteId.toString(),
+          sourceId: quoteId.toString(),
           tags: <String>[
             for(int j = 0; j < 10; j++)
               'Tag ${Random().nextInt(1000)}'

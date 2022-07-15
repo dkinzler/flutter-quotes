@@ -8,20 +8,27 @@ class Quote extends Equatable {
 
   final List<String> tags;
 
-  final String? id;
   final String source;
+  final String? sourceId;
+
+  String get id {
+    if(sourceId != null) {
+      return '$source:$sourceId';
+    }
+    return text;
+  }
 
   const Quote({
     required this.text,
     required this.author,
     this.authorId,
     this.tags = const[],
-    this.id,
+    this.sourceId,
     required this.source,
   });
   
   @override
-  List<Object?> get props => [text, author, authorId, tags , id, source];
+  List<Object?> get props => [text, author, authorId, tags , sourceId, source];
 
   Map<String, dynamic> toMap() {
     return {
@@ -29,7 +36,7 @@ class Quote extends Equatable {
       'author': author,
       'authorId': authorId,
       'tags': tags,
-      'id': id,
+      'sourceId': sourceId,
       'source': source,
     };
   }
@@ -40,7 +47,7 @@ class Quote extends Equatable {
       author: map['author'] ?? '',
       authorId: map['authorId'],
       tags: List<String>.from(map['tags']),
-      id: map['id'],
+      sourceId: map['sourceId'],
       source: map['source'] ?? '',
     );
   }

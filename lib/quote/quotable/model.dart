@@ -27,7 +27,7 @@ class QuotableQuote extends Equatable {
       author: author,
       authorId: authorSlug,
       tags: tags,
-      id: id,
+      sourceId: id,
       source: 'api.quotable.io',
     );
   }

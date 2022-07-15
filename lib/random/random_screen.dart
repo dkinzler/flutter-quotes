@@ -96,7 +96,7 @@ class _RandomScreenState extends State<RandomScreen> {
                     );
                   },
                   child: QuoteCard(
-                    key: ValueKey(quote.id ?? quote.text),
+                    key: ValueKey(quote.sourceId ?? quote.text),
                     quote: quote,
                     onTagPressed: (String tag) {
                       Actions.invoke<SearchIntent>(context, SearchIntent(
