@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/add/add_favorite_cubit.dart';
-import 'package:flutter_sample/favorites/add/add_favorite_dialog.dart';
-import 'package:flutter_sample/favorites/favorite.dart';
-import 'package:flutter_sample/favorites/favorites_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/add_favorite_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/favorite.dart';
+import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_sample/favorites/ui/add_favorite_dialog.dart';
+
+//TODO move these into the corresonding feature folders
 
 class DeleteFavoriteIntent extends Intent {
   final Favorite favorite;

@@ -60,6 +60,14 @@ class _NavRailState extends State<NavRail> {
       onDestinationSelected: (index) {
         context.go(HomeRoute(tab: _indexToTab(index)));
       } ,
+      trailing: extended ? ListTile(
+        leading: const Icon(Icons.logout),
+        title: const Text('Login'),
+        onTap: () => context.read<AuthCubit>().logout(),
+      ) : IconButton(
+        icon: const Icon(Icons.logout),
+        onPressed: () => context.read<AuthCubit>().logout(),
+      ),
     );
   }
 }

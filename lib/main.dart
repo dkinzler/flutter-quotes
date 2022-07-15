@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/app_controller.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/favorites/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/filter_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/random/random_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
@@ -31,7 +30,7 @@ void main() async {
             BlocProvider<SearchCubit>.value(value: appController.searchCubit),
             BlocProvider<RandomCubit>.value(value: appController.randomCubit),
             BlocProvider<FavoritesCubit>.value(value: appController.favoritesCubit),
-            BlocProvider<FilterCubit>.value(value: appController.filterCubit),
+            BlocProvider<FilteredFavoritesBloc>.value(value: appController.filterBloc),
           ],
           child: const App()),
       );

@@ -1,9 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_sample/favorites/add/add_favorite_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/add_favorite_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 
 class AddFavoriteDialog extends StatefulWidget {

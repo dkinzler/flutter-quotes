@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/actions/search.dart';
-import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/random/random_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
@@ -15,8 +14,6 @@ class NextIntent extends Intent {
   const NextIntent();
 }
 
-//TODO this needs some cleaning up
-//TODO coudl also add a button to favorite/unfavorite
 class RandomScreen extends StatefulWidget {
   const RandomScreen({Key? key}) : super(key: key);
 
@@ -42,25 +39,7 @@ class _RandomScreenState extends State<RandomScreen> {
   Widget build(BuildContext context) {
     var state = context.watch<RandomCubit>().state;
 
-    if(state.status == LoadingStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if(state.status == LoadingStatus.error) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Ups, something went wrong.'),
-            ElevatedButton.icon(
-              onPressed: (){
-                context.read<RandomCubit>().next();
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try again')
-            ),
-          ],
-        ),
-      );
-    } else {
+    if(state.quote != null) {
       var quote = state.quote!;
       return GestureDetector(
         onPanEnd: (details) {
@@ -137,6 +116,24 @@ class _RandomScreenState extends State<RandomScreen> {
               ],
             ),
           ),
+        ),
+      );
+    } else if(state.status == LoadingStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    } else {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Ups, something went wrong.'),
+            ElevatedButton.icon(
+              onPressed: (){
+                context.read<RandomCubit>().next();
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try again')
+            ),
+          ],
         ),
       );
     }

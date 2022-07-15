@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-
 import 'package:flutter_sample/quote/quote.dart';
 
 class Favorite extends Equatable {

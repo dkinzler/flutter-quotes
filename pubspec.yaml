@@ -45,10 +45,15 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_form_builder: ^7.3.1
+  form_builder_validators: ^8.2.0
+  rxdart: ^0.27.4
+  bloc_concurrency: ^0.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  bloc_test: ^9.0.3
+  test: ^1.20.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

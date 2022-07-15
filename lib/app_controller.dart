@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/favorites/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/filter_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/quote/mock/apiclient.dart';
 import 'package:flutter_sample/random/random_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
@@ -19,7 +18,7 @@ class AppController {
     //quoteProvider: QuotableApiClient(),
   );
   final FavoritesCubit favoritesCubit = FavoritesCubit();
-  late final FilterCubit filterCubit = FilterCubit(
+  late final FilteredFavoritesBloc filterBloc = FilteredFavoritesBloc(
     favoritesCubit: favoritesCubit,
   );
 
@@ -33,7 +32,7 @@ class AppController {
 
   void _handleAuthStateChange(AuthState authState) {
     if(authState.isAuthenticated) {
-      favoritesCubit.init(authState.email);
+      favoritesCubit.init(authState.user.email);
       router.go(const HomeRoute(tab: HomeTab.search));
     } else {
       favoritesCubit.reset();

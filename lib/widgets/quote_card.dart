@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/actions/favorites.dart';
-import 'package:flutter_sample/favorites/favorites_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/theme/theme.dart';
 

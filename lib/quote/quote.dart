@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 class Quote extends Equatable {
@@ -24,26 +22,6 @@ class Quote extends Equatable {
   
   @override
   List<Object?> get props => [text, author, authorId, tags , id, source];
-
-  /*TODO remove this?
-    having this caused an issue with sorting a list of Favorites (that each contain a quote)
-    in FavoritesCubit, something with hashing
-    the reason we had this however was that when we search for or load a random quote
-    that was already added to favorites, we want this to be detected if the id's are the same
-    even though the quote might have been slightly changed in the backend api
-    otherwise if there was a small change the quote will not be marked as favorited
-    for testing this override the onError method in the FilterCubit, otherwise
-    nothing will be printed and stuff will just mysteriously fail
-  @override
-  bool operator ==(Object other) {
-    if(other is Quote) {
-      if(source == other.source && id != null && id == other.id) {
-        return true;
-      }
-    }
-    return this == other;
-  }
-  */
 
   Map<String, dynamic> toMap() {
     return {

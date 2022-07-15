@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/actions/favorites.dart';
-import 'package:flutter_sample/favorites/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/filter_cubit.dart';
+import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -14,14 +13,14 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var status = context.select<FavoritesCubit, InitStatus>(((c) => c.state.status));
-    var favoritesState = context.watch<FilterCubit>().state;
+    var status = context.select<FavoritesCubit, LoadingStatus>(((c) => c.state.status));
+    var favoritesState = context.watch<FilteredFavoritesBloc>().state;
     var favorites = favoritesState.filteredFavorites;
-    if(status == InitStatus.loading) {
+    if(status == LoadingStatus.loading) {
       return const Center(
         child: CircularProgressIndicator(),
       );
-    } else if(status == InitStatus.error) {
+    } else if(status == LoadingStatus.error) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -69,7 +68,7 @@ class FavoritesScreen extends StatelessWidget {
                     ));
                   },
                   onTagPressed: (String tag) {
-                    context.read<FilterCubit>().addTag(tag);
+                    context.read<FilteredFavoritesBloc>().add(FilterTagAdded(tag: tag));
                   },
                 );
               }, 
@@ -96,14 +95,14 @@ class _FilterBarState extends State<FilterBar> {
     super.initState();
     //TODO remove listener or not necessary? google this
     _searchFieldController.addListener(() {
-      context.read<FilterCubit>().setSearchTerm(_searchFieldController.text);
+      context.read<FilteredFavoritesBloc>().add(SearchTermChanged(searchTerm: _searchFieldController.text));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var state = context.watch<FilterCubit>().state;
-    var sort = state.sort;
+    var state = context.watch<FilteredFavoritesBloc>().state;
+    var sort = state.sortOrder;
     
     List<Widget> children = [
       Row(
@@ -114,23 +113,23 @@ class _FilterBarState extends State<FilterBar> {
               controller: _searchFieldController,
             ),
           ),
-          PopupMenuButton<Sort>(
+          PopupMenuButton<SortOrder>(
             initialValue: sort,
             onSelected: ((value) {
-              context.read<FilterCubit>().setSort(value);
+              context.read<FilteredFavoritesBloc>().add(SortOrderChanged(sortOrder: value));
             }),
-            itemBuilder: (context) => <PopupMenuEntry<Sort>>[
-              const PopupMenuItem<Sort>(
-                value: Sort.newest,
+            itemBuilder: (context) => <PopupMenuEntry<SortOrder>>[
+              const PopupMenuItem<SortOrder>(
+                value: SortOrder.newest,
                 child: Text('Newest'),
               ),
-              const PopupMenuItem<Sort>(
-                value: Sort.oldest,
+              const PopupMenuItem<SortOrder>(
+                value: SortOrder.oldest,
                 child: Text('Oldest'),
               ),
             ],
             child: Text(
-              sort == Sort.newest ? 'Sort by: newest' : 'Sort by: oldest',
+              sort == SortOrder.newest ? 'Sort by: newest' : 'Sort by: oldest',
             ),
           ),
           IconButton(
@@ -143,7 +142,7 @@ class _FilterBarState extends State<FilterBar> {
       ),
     ];
 
-    var searchTerm = state.searchTerm;
+    var searchTerm = state.filters.searchTerm;
     if(searchTerm != null && searchTerm.isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.symmetric(
@@ -155,7 +154,7 @@ class _FilterBarState extends State<FilterBar> {
       ));
     }
 
-    var tags = state.tags;
+    var tags = state.filters.tags;
     if(tags.isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -165,7 +164,7 @@ class _FilterBarState extends State<FilterBar> {
           children: tags.map<Widget>((t) => InputChip(
             label: Text(t),
             onDeleted: () {
-              context.read<FilterCubit>().removeTag(t);
+              context.read<FilteredFavoritesBloc>().add(FilterTagRemoved(tag: t));
             },
           )).toList(),
         ),
