@@ -50,6 +50,8 @@ dependencies:
   bloc_concurrency: ^0.2.0
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   bloc_test: ^9.0.3

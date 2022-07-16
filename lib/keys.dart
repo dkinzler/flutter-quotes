@@ -5,5 +5,7 @@
 //then we need to type 'loginButton' again in test files and a typo does not produce a compile-time error
 
 enum AppKey {
-  exampleKey,
+  loginEmailTextField,
+  loginPasswordTextField,
+  loginButton,
 }

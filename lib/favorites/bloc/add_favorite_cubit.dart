@@ -4,11 +4,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/quote/quote.dart';
 
-//TODO comment here on binding between UI input and cubit state
-//here it is done manually by using onChanged callbacks on simple textfields
-//there are also librarieres that do this, e.g. reactive_forms
+/*
+AddFavoriteCubit manages the state of a form for creating a new quote.
 
-//TODO make submitResult an enum?
+The same comments about binding state and UI together as in 'login_cubit.dart' apply here.
+*/
 
 class AddFavoriteState extends Equatable {
   final bool submitInProgress;
@@ -61,6 +61,7 @@ class AddFavoriteCubit extends Cubit<AddFavoriteState> {
     if(state.submitInProgress) {
       return false;
     }
+
     var quote = state.quote;
     var author = state.author;
     if(quote.isEmpty || author.isEmpty) {

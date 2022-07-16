@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 import 'logging.dart';
 import 'app.dart';
 
-void main() async {
-  runZonedGuarded<Future<void>>(
+Future<void> main() async {
+  return runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       //TODO fix this here?

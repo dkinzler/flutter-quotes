@@ -1,12 +1,25 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter_sample/favorites/bloc/favorite.dart';
 import 'package:flutter_sample/favorites/bloc/filter_events.dart';
 import 'package:flutter_sample/favorites/bloc/filter_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
+
+/*
+TODO
+filtered favorites get recomputed on every change to favorites
+even if the favorites page isn't even open
+we could avoid this by having a filteredFavorites getter
+that returns a future
+however we then have the problem of how we apply debouncing
+we could e.g. add a ticker to the state where the same instance always gets passed to the next state
+when copyWith is called?
+*/
 
 /*
 FilteredFavoritesBloc takes care of sorting, searching and filtering a user's favorites.
@@ -43,7 +56,7 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
     on<RecomputeFavoritesRequested>(
       _onRecomputeRequested,
       /*
-      This will process the events sequentially but only process events that were added at least the given duration apart.
+      This will process the events sequentially but only process events that were added at least the given duration after the last event was processed.
       Useful e.g. when a user types in a search term, a SearchTermChanged event will be fired for every additional letter typed.
       In turn every SearchTermChanged event will cause a RecomputeFavoritesRequested event to be added.
       However when the letters are typed in quick succession, we do not want to recompute the list of favorites matching the search term
@@ -104,14 +117,20 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
     }
   }
 
-  //TODO move this to separate isolate using compute?
-  void _onRecomputeRequested(RecomputeFavoritesRequested event, Emitter<FilteredFavoritesState> emit) {
-    var favorites = state.favorites;
-    var filters = state.filters;
-    var sortOrder = state.sortOrder;
-    var filteredFavorites = filters.filter(favorites);
-    sort(filteredFavorites, sortOrder);
-    emit(state.copyWith(filteredFavorites: filteredFavorites));
+  Future<void> _onRecomputeRequested(RecomputeFavoritesRequested event, Emitter<FilteredFavoritesState> emit) async {
+    if(state.filters.isEmpty) {
+      emit(state.copyWith(filteredFavorites: state.favorites));
+    } else {
+      final p = ReceivePort();
+      await Isolate.spawn(_recomputeFilteredFavorites, _FilterIsolateMessage(
+        favorites: state.favorites,
+        filters: state.filters,
+        sortOrder: state.sortOrder,
+        sendPort: p.sendPort,
+      ));
+      var filteredFavorites = await p.first as List<Favorite>;
+      emit(state.copyWith(filteredFavorites: filteredFavorites));
+    }
   }
 
   @override
@@ -119,4 +138,27 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
     _favoritesCubitSubscription?.cancel();
     return super.close();
   }
+}
+
+void _recomputeFilteredFavorites(_FilterIsolateMessage message) {
+    var favorites = message.favorites;
+    var filters = message.filters;
+    var sortOrder = message.sortOrder;
+    var filteredFavorites = filters.filter(favorites);
+    sort(filteredFavorites, sortOrder);
+    Isolate.exit(message.sendPort, filteredFavorites);
+}
+
+class _FilterIsolateMessage {
+  final List<Favorite> favorites;
+  final Filters filters;
+  final SortOrder sortOrder;
+  final SendPort sendPort;
+
+  const _FilterIsolateMessage({
+    required this.favorites,
+    required this.filters,
+    required this.sortOrder,
+    required this.sendPort,
+  });
 }

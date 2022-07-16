@@ -56,6 +56,8 @@ class Filters extends Equatable {
     this.tags = const[],
   });
 
+  bool get isEmpty => searchTerm.isEmpty && tags.isEmpty;
+
   @override
   List<Object?> get props => [searchTerm, tags];
 

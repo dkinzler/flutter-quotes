@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/auth/login/login_cubit.dart';
+import 'package:flutter_sample/keys.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -63,6 +64,7 @@ class _LoginFormState extends State<LoginForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   FormBuilderTextField(
+                    key: const ValueKey(AppKey.loginEmailTextField),
                     name: 'email',
                     //disable text field while login is in progress
                     //this isn't stricly necessary
@@ -78,6 +80,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   SizedBox(height: context.sizes.spaceM),
                   FormBuilderTextField(
+                    key: const ValueKey(AppKey.loginPasswordTextField),
                     name: 'password',
                     enabled: context.select<LoginCubit, bool>((c) => !c.state.loginInProgress),
                     initialValue: _loginCubit.state.password,
@@ -96,6 +99,7 @@ class _LoginFormState extends State<LoginForm> {
                       var state = cubit.state;
                 
                       Widget? errorMessage;
+                      //TODO make a separate errorWidget that can take a key as well for integration testing?
                       if(state.loginResult == LoginResult.error) {
                         errorMessage = const Text('Login failed');
                       }
@@ -105,6 +109,7 @@ class _LoginFormState extends State<LoginForm> {
                         child = const Center(child: CircularProgressIndicator());
                       } else {
                         child = ElevatedButton(
+                          key: const ValueKey(AppKey.loginButton),
                           onPressed: () {
                             _formKey.currentState!.save();
                             if(_formKey.currentState!.validate()) {
