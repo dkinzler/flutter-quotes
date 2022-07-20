@@ -37,45 +37,79 @@ class QuoteCard extends StatelessWidget {
       elevation: 8.0,
       child: Padding(
         padding: padding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              quote.text,
-              style: quoteTextStyle,
-            ),
-            SizedBox(height: context.sizes.spaceM), 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Text(
-                    '- ${quote.author}',
-                    style: authorTextStyle,
-                  ),
-                ),
-                if(showFavoriteButton) _FavoriteButton(quote: quote),
-                if(onDeleteButtonPressed != null) 
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: onDeleteButtonPressed,
-                  ),
-              ],
-            ),
-            if(showTags && quote.tags.isNotEmpty) ...[
-              SizedBox(height: context.sizes.spaceM), 
-              _QuoteTagList(
-                tags: quote.tags,
-                maxTagsToShow: maxTagsToShow,
-                onTagPressed: onTagPressed,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              QuoteTextWidget(
+                quote: quote,
+                authorTextStyle: authorTextStyle,
+                quoteTextStyle: quoteTextStyle,
+                showFavoriteButton: showFavoriteButton,
+                onDeleteButtonPressed: onDeleteButtonPressed,
               ),
+              if(showTags && quote.tags.isNotEmpty) ...[
+                SizedBox(height: context.sizes.spaceM), 
+                _QuoteTagList(
+                  tags: quote.tags,
+                  maxTagsToShow: maxTagsToShow,
+                  onTagPressed: onTagPressed,
+                ),
             ]
           ],
         ),
       ),
     );
   }
+}
+
+class QuoteTextWidget extends StatelessWidget {
+  final Quote quote;
+  final TextStyle? quoteTextStyle;
+  final TextStyle? authorTextStyle;
+  final bool showFavoriteButton;
+  final void Function()? onDeleteButtonPressed;
+
+  const QuoteTextWidget({
+    Key? key,
+    required this.quote,
+    this.quoteTextStyle,
+    this.authorTextStyle,
+    this.showFavoriteButton = true,
+    this.onDeleteButtonPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          quote.text,
+          style: quoteTextStyle,
+        ),
+        SizedBox(height: context.sizes.spaceM), 
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                '- ${quote.author}',
+                style: authorTextStyle,
+              ),
+            ),
+            if(showFavoriteButton) _FavoriteButton(quote: quote),
+            if(onDeleteButtonPressed != null) 
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: onDeleteButtonPressed,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
 }
 
 class _FavoriteButton extends StatelessWidget {

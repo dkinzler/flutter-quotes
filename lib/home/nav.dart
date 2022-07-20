@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/theme/theme.dart';
 
 class NavRail extends StatefulWidget {
   final HomeTab selectedTab;
@@ -24,7 +23,7 @@ class _NavRailState extends State<NavRail> {
       extended: extended,
       selectedIndex: _tabToIndex(widget.selectedTab),
       leading: IconButton(
-        icon: Icon(Icons.double_arrow),
+        icon: const Icon(Icons.double_arrow),
         onPressed: () {
           setState(() {
             extended = !extended;
@@ -34,18 +33,18 @@ class _NavRailState extends State<NavRail> {
       destinations: const[
         NavigationRailDestination(
           icon: Icon(
-            Icons.search,
+            Icons.home,
           ),
           label: Text(
-            'Search',
+            'Explore',
           ),
         ),
         NavigationRailDestination(
           icon: Icon(
-            Icons.radar,
+            Icons.search,
           ),
           label: Text(
-            'Random',
+            'Search',
           ),
         ),
         NavigationRailDestination(
@@ -59,12 +58,8 @@ class _NavRailState extends State<NavRail> {
       ],
       onDestinationSelected: (index) {
         context.go(HomeRoute(tab: _indexToTab(index)));
-      } ,
-      trailing: extended ? ListTile(
-        leading: const Icon(Icons.logout),
-        title: const Text('Login'),
-        onTap: () => context.read<AuthCubit>().logout(),
-      ) : IconButton(
+      },
+      trailing:IconButton(
         icon: const Icon(Icons.logout),
         onPressed: () => context.read<AuthCubit>().logout(),
       ),
@@ -89,12 +84,12 @@ class BottomNavBar extends StatelessWidget {
       },
       items: const[
         BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
+          icon: Icon(Icons.home),
+          label: 'Explore',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.radar),
-          label: 'Random',
+          icon: Icon(Icons.search),
+          label: 'Search',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite_border),
@@ -107,7 +102,7 @@ class BottomNavBar extends StatelessWidget {
 
 int _tabToIndex(HomeTab tab) {
   switch (tab) {
-    case HomeTab.random:
+    case HomeTab.search:
       return 1; 
     case HomeTab.favorites:
       return 2; 
@@ -119,10 +114,10 @@ int _tabToIndex(HomeTab tab) {
 HomeTab _indexToTab(int index) {
   switch (index) {
     case 1:
-      return HomeTab.random;
+      return HomeTab.search;
     case 2:
       return HomeTab.favorites;
     default:
-      return HomeTab.search;
+      return HomeTab.explore;
   }
 }

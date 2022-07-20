@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/actions/favorites.dart';
+import 'package:flutter_sample/favorites/ui/actions.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
@@ -131,12 +131,6 @@ class _FilterBarState extends State<FilterBar> {
             child: Text(
               sort == SortOrder.newest ? 'Sort by: newest' : 'Sort by: oldest',
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              Actions.invoke(context, const AddFavoriteIntent());
-            },
-            icon: const Icon(Icons.add),
           ),
         ],
       ),

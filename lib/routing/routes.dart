@@ -37,17 +37,17 @@ class LoginRoute extends AppRoute {
 const homeRouteName = 'home';
 
 enum HomeTab {
+  explore,
   search,
-  random,
   favorites;
 
   static HomeTab fromString(String s) {
-    if(s == random.name) {
-      return random;
+    if(s == search.name) {
+      return search;
     } else if(s == favorites.name) {
       return favorites;
     } else {
-      return search;
+      return explore;
     }
   }
 }

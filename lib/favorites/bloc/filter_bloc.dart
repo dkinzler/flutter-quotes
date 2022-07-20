@@ -140,6 +140,7 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
   }
 }
 
+//this function is intended to be passed to Isolate.spawn to be run in a separate isolate
 void _recomputeFilteredFavorites(_FilterIsolateMessage message) {
     var favorites = message.favorites;
     var filters = message.filters;

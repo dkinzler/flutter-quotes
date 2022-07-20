@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/quote/mock/apiclient.dart';
-import 'package:flutter_sample/random/random_cubit.dart';
+import 'package:flutter_sample/explore/random_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 
@@ -33,7 +33,7 @@ class AppController {
   void _handleAuthStateChange(AuthState authState) {
     if(authState.isAuthenticated) {
       favoritesCubit.init(authState.user.email);
-      router.go(const HomeRoute(tab: HomeTab.search));
+      router.go(const HomeRoute(tab: HomeTab.explore));
     } else {
       favoritesCubit.reset();
       router.go(const LoginRoute());

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/actions/favorites.dart';
-import 'package:flutter_sample/actions/search.dart';
+import 'package:flutter_sample/explore/explore_screen.dart';
+import 'package:flutter_sample/favorites/ui/actions.dart';
+import 'package:flutter_sample/search/actions.dart';
 import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/favorites/ui/favorites_screen.dart';
 import 'package:flutter_sample/home/nav.dart';
-import 'package:flutter_sample/random/random_screen.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/search/search_screen.dart';
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   int _tabToIndex(HomeTab tab) {
     switch (tab) {
-      case HomeTab.random:
+      case HomeTab.search:
         return 1; 
       case HomeTab.favorites:
         return 2; 
@@ -65,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     Widget body = TabBarView(
       controller: _tabController,
       children: const[
+        ExploreScreen(),
         SearchScreen(),
-        RandomScreen(),
         FavoritesScreen(),
       ],
     );
@@ -89,11 +89,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           appRouter: context.read<AppRouter>(),
           searchCubit: context.read<SearchCubit>(),
         ),
-        DialogIntent: DialogAction(),
         DeleteFavoriteIntent: DeleteFavoriteAction(
-          favoritesCubit: context.read<FavoritesCubit>(),
-        ),
-        AddFavoriteIntent: AddFavoriteAction(
           favoritesCubit: context.read<FavoritesCubit>(),
         ),
       },

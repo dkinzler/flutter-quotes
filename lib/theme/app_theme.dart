@@ -5,38 +5,16 @@ import 'layout.dart';
 import 'sizes.dart';
 
 final ThemeData baseTheme = ThemeData.from(
-  colorScheme: colorScheme,
-);
-
-final ColorScheme colorScheme = ColorScheme.fromSwatch(
-  primarySwatch: MaterialColor(
-    const Color.fromARGB(0xFF, 0x46, 0x70, 0x88).value, const <int, Color>{
-      50: Color.fromARGB(0xFF, 0x78, 0xA2, 0xBA),
-      100: Color.fromARGB(0xFF, 0x6B, 0x98, 0xB3),
-      200: Color.fromARGB(0xFF, 0x5D, 0x8F, 0xAC),
-      300: Color.fromARGB(0xFF, 0x53, 0x85, 0xA2),
-      400: Color.fromARGB(0xFF, 0x4C, 0x7A, 0x94),
-      500: Color.fromARGB(0xFF, 0x46, 0x70, 0x88),
-      600: Color.fromARGB(0xFF, 0x3E, 0x64, 0x79),
-      700: Color.fromARGB(0xFF, 0x37, 0x59, 0x6C),
-      800: Color.fromARGB(0xFF, 0x31, 0x4D, 0x5E),
-      900: Color.fromARGB(0xFF, 0x2A, 0x42, 0x51),
-    },
-  ),
-  //accentColor: const Color.fromARGB(0xFF, 0xED, 0x98, 0x2A),
-  //accentColor: const Color.fromARGB(0xFF, 0x83, 0x61, 0x78),
-  //accentColor: const Color.fromARGB(0xFF, 0xB8, 0x94, 0xAC),
-  //accentColor: const Color.fromARGB(0xFF, 0xB4, 0xDE, 0xF9),
-  accentColor: const Color.fromARGB(0xFF, 0xE6, 0xF4, 0xF1),
-  backgroundColor: Colors.grey.shade700, 
-  brightness: Brightness.dark,
+  colorScheme: const ColorScheme.dark(),
+  /*
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: Color.fromARGB(0xFF, 0x46, 0x70, 0x88),
+        brightness: Brightness.dark),
+        */
 );
 
 class AppThemeData extends Equatable {
-  final headerColor = const Color.fromARGB(255, 51,85,110);
-  final scaffoldBackgroundColor = Colors.grey.shade500;
-
-  final Layout layout; 
+  final Layout layout;
 
   final double scale;
   final double fontSizeFactor;
@@ -44,32 +22,25 @@ class AppThemeData extends Equatable {
   final Sizes sizes;
   final Insets insets;
 
-  AppThemeData({
-    required this.layout,
-    this.scale = 1.0,
-    this.fontSizeFactor = 1.0,
-  }) : sizes = Sizes(scale: scale),
-    insets = Insets(scale: scale);
+  AppThemeData(
+      {required this.layout, this.scale = 1.0, this.fontSizeFactor = 1.0})
+      : sizes = Sizes(scale: scale),
+        insets = Insets(scale: scale);
 
   @override
   List<Object?> get props => [
-    layout,
-    scale,
-    fontSizeFactor,
-    sizes,
-    insets,
-  ];
-
-  final CardTheme cardTheme = CardTheme(
-    color: Colors.blueGrey.shade700,
-  );
+        layout,
+        scale,
+        fontSizeFactor,
+        sizes,
+        insets,
+      ];
 
   ThemeData themeDataFrom(ThemeData base) {
     return base.copyWith(
-      textTheme:  base.textTheme.apply(fontSizeFactor: fontSizeFactor),
-      primaryTextTheme: base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
-      scaffoldBackgroundColor: scaffoldBackgroundColor,
-      cardTheme: cardTheme,
+      textTheme: base.textTheme.apply(fontSizeFactor: fontSizeFactor),
+      primaryTextTheme:
+          base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
     );
   }
 
@@ -99,10 +70,7 @@ To fix this, AppTheme inserts another Theme widget, which has font scaling appli
 class AppTheme extends StatelessWidget {
   final Widget child;
 
-  const AppTheme({
-    Key? key,
-    required this.child
-  }) : super(key: key);
+  const AppTheme({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -122,16 +90,18 @@ class AppTheme extends StatelessWidget {
   }
 
   static AppThemeData of(BuildContext context) {
-    var widget = context.dependOnInheritedWidgetOfExactType<_InheritedAppTheme>();
-    if(widget == null) {
+    var widget =
+        context.dependOnInheritedWidgetOfExactType<_InheritedAppTheme>();
+    if (widget == null) {
       throw Exception("No AppTheme found in context");
     }
     return widget.appThemeData;
   }
 
   static Widget appBuilder(BuildContext context, Widget? child) {
-    if(child == null) {
-      throw Exception('AppTheme: no child widget provided to appBuilder method');
+    if (child == null) {
+      throw Exception(
+          'AppTheme: no child widget provided to appBuilder method');
     }
     return AppTheme(
       child: child,
@@ -140,12 +110,12 @@ class AppTheme extends StatelessWidget {
 }
 
 class _InheritedAppTheme extends InheritedWidget {
-
   final AppThemeData appThemeData;
 
-  const _InheritedAppTheme({Key? key, required this.appThemeData, required Widget child})
-   : super(key : key, child: child);
-  
+  const _InheritedAppTheme(
+      {Key? key, required this.appThemeData, required Widget child})
+      : super(key: key, child: child);
+
   @override
   bool updateShouldNotify(covariant _InheritedAppTheme oldWidget) {
     return appThemeData != oldWidget.appThemeData;

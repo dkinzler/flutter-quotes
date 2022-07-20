@@ -29,19 +29,3 @@ class SearchAction extends Action<SearchIntent> {
     searchCubit.search(query: intent.query);
   }
 }
-
-class DialogIntent extends Intent {}
-
-class DialogAction extends ContextAction<DialogIntent> {
-  @override
-  Future<void> invoke(DialogIntent intent, [BuildContext? context]) async {
-    if(context != null) {
-      await showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          content: Text('hello'),
-        ),
-      );
-    }
-  }
-}

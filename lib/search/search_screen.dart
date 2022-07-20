@@ -1,11 +1,10 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/actions/search.dart';
 import 'package:flutter_sample/search/search_bar.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/widgets/error.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -26,7 +25,8 @@ class SearchScreen extends StatefulWidget {
 //for the ListView/GridView.
 //This works for the ListView widget but not for the MasonryGridView widget from the
 //flutter_staggered_grid_view package, this is probably a bug in that package.
-class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClientMixin<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen>
+    with AutomaticKeepAliveClientMixin<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -38,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
       ],
     );
   }
-  
+
   @override
   bool get wantKeepAlive => true;
 }
@@ -61,7 +61,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
     super.initState();
     _scrollController.addListener(() async {
       var trigger = 0.9 * _scrollController.position.maxScrollExtent;
-      if(!_loadInProgress && _scrollController.position.pixels > trigger) {
+      if (!_loadInProgress && _scrollController.position.pixels > trigger) {
         _loadInProgress = true;
         await context.read<SearchCubit>().loadMoreResults();
         _loadInProgress = false;
@@ -72,12 +72,12 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<SearchCubit>().state;
-    if(!state.hasResults) {
-      if(state.status == SearchStatus.empty) {
+    if (!state.hasResults) {
+      if (state.status == SearchStatus.idle) {
         return const Center(
           child: Text('Enter a search term...'),
         );
-      } else if(state.status == SearchStatus.inProgress) {
+      } else if (state.status == SearchStatus.inProgress) {
         return const Center(child: CircularProgressIndicator());
       } else {
         return Center(
@@ -93,18 +93,18 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
               ),
             ],
           ),
-        ); 
+        );
       }
     } else {
       var quotes = state.quotes!;
-      if(quotes.isEmpty) {
+      if (quotes.isEmpty) {
         return const Text('No results found');
       }
 
       var itemCount = quotes.length + 1;
 
       Widget resultList;
-      if(context.layout == Layout.desktop) {
+      if (context.layout == Layout.desktop) {
         var width = MediaQuery.of(context).size.width;
         var numColumns = max(width / context.appTheme.scale / 400, 1).floor();
 
@@ -113,24 +113,25 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
           crossAxisSpacing: context.sizes.spaceS,
           mainAxisSpacing: context.sizes.spaceS,
           itemCount: itemCount,
-          gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(crossAxisCount: numColumns),
+          gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: numColumns),
           padding: const EdgeInsets.all(32.0),
           //TODO make this more dry, itembuilder is the same for gridview and listview
           itemBuilder: (context, index) {
-            if(index == itemCount - 1) {
-              if(state.status == SearchStatus.inProgress) {
+            if (index == itemCount - 1) {
+              if (state.status == SearchStatus.inProgress) {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(child: CircularProgressIndicator()),
                 );
-              } else if(!state.canLoadMore) {
+              } else if (!state.canLoadMore) {
                 return const Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text('No more results'),
                   ),
                 );
-              } else if(state.status == SearchStatus.error) {
+              } else if (state.status == SearchStatus.error) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -161,7 +162,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
                 context.read<SearchCubit>().search(query: tag);
               },
             );
-          }, 
+          },
         );
       } else {
         resultList = ListView.builder(
@@ -169,31 +170,24 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
           itemCount: itemCount,
           padding: const EdgeInsets.all(32.0),
           itemBuilder: (context, index) {
-            if(index == itemCount - 1) {
-              if(state.status == SearchStatus.inProgress) {
+            if (index == itemCount - 1) {
+              if (state.status == SearchStatus.inProgress) {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(child: CircularProgressIndicator()),
                 );
-              } else if(!state.canLoadMore) {
+              } else if (!state.canLoadMore) {
                 return const Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text('No more results'),
                   ),
                 );
-              } else if(state.status == SearchStatus.error) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Ups, something went wrong'),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<SearchCubit>().loadMoreResults();
-                      },
-                      child: const Text('Try again'),
-                    ),
-                  ],
+              } else if (state.status == SearchStatus.error) {
+                return ErrorRetryWidget(
+                  onPressed: () {
+                    context.read<SearchCubit>().loadMoreResults();
+                  },
                 );
               } else {
                 return ElevatedButton(
@@ -213,7 +207,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
                 context.read<SearchCubit>().search(query: tag);
               },
             );
-          }, 
+          },
         );
       }
 

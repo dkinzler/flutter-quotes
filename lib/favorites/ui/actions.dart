@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/bloc/add_favorite_cubit.dart';
 import 'package:flutter_sample/favorites/bloc/favorite.dart';
 import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/ui/add_favorite_dialog.dart';
-
-//TODO move these into the corresonding feature folders
 
 class DeleteFavoriteIntent extends Intent {
   final Favorite favorite;
@@ -39,35 +34,6 @@ class DeleteFavoriteAction extends ContextAction<DeleteFavoriteIntent> {
           ),
           duration: const Duration(seconds :6),
         ),
-      );
-    }
-  }
-}
-
-class AddFavoriteIntent extends Intent {
-  const AddFavoriteIntent();
-}
-
-class AddFavoriteAction extends ContextAction<AddFavoriteIntent> {
-  final FavoritesCubit favoritesCubit;
-
-  AddFavoriteAction({
-    required this.favoritesCubit,
-  });
-
-  @override
-  Future<void> invoke(AddFavoriteIntent intent, [BuildContext? context]) async {
-    if(context != null) {
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return BlocProvider<AddFavoriteCubit>(
-            create: (context) => AddFavoriteCubit(
-              favoritesCubit: favoritesCubit,
-            ),
-            child: Dialog(child: const AddFavoriteDialog()),
-          );
-        }
       );
     }
   }

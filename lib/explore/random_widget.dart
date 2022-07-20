@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/actions/search.dart';
-import 'package:flutter_sample/random/random_cubit.dart';
+import 'package:flutter_sample/explore/random_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
 
@@ -14,14 +13,14 @@ class NextIntent extends Intent {
   const NextIntent();
 }
 
-class RandomScreen extends StatefulWidget {
-  const RandomScreen({Key? key}) : super(key: key);
+class RandomQuoteWidget extends StatefulWidget {
+  const RandomQuoteWidget({Key? key}) : super(key: key);
 
   @override
-  State<RandomScreen> createState() => _RandomScreenState();
+  State<RandomQuoteWidget> createState() => _RandomQuoteWidgetState();
 }
 
-class _RandomScreenState extends State<RandomScreen> {
+class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
   final _focusNode = FocusNode();
 
   @override
@@ -39,9 +38,11 @@ class _RandomScreenState extends State<RandomScreen> {
   Widget build(BuildContext context) {
     var state = context.watch<RandomCubit>().state;
 
+    Widget child;
+
     if(state.quote != null) {
       var quote = state.quote!;
-      return GestureDetector(
+      child = GestureDetector(
         onPanEnd: (details) {
           if(details.velocity.pixelsPerSecond.dx < 0) {
             context.read<RandomCubit>().next();
@@ -71,7 +72,10 @@ class _RandomScreenState extends State<RandomScreen> {
           child: MouseRegion(
             onEnter: (_) => _focusNode.requestFocus(),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
+                //TODO remove this animation, change it back to fade maybe?
+                //or can we slide it in within the widget
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   transitionBuilder: (child, animation) {
@@ -95,15 +99,17 @@ class _RandomScreenState extends State<RandomScreen> {
                       child: child,
                     );
                   },
-                  child: QuoteCard(
+                  child: QuoteTextWidget(
                     key: ValueKey(quote.sourceId ?? quote.text),
                     quote: quote,
+                    /*
                     onTagPressed: (String tag) {
                       Actions.invoke<SearchIntent>(context, SearchIntent(
                         gotoSearchScreen: true,
                         query: tag,
                       ));
                     },
+                    */
                   ),
                 ),
                 SizedBox(height: context.sizes.spaceM),
@@ -119,23 +125,43 @@ class _RandomScreenState extends State<RandomScreen> {
         ),
       );
     } else if(state.status == LoadingStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
+      child = const Center(child: CircularProgressIndicator());
     } else {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Ups, something went wrong.'),
-            ElevatedButton.icon(
-              onPressed: (){
-                context.read<RandomCubit>().next();
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try again')
-            ),
-          ],
-        ),
+      child = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('Ups, something went wrong.'),
+          ElevatedButton.icon(
+            onPressed: (){
+              context.read<RandomCubit>().next();
+            },
+            icon: const Icon(Icons.refresh),
+            label: const Text('Try again')
+          ),
+        ],
       );
     }
+
+    return Center(
+      child: Card(
+        child: Padding(
+          padding: context.insets.paddingM,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Random Quote',
+                style: context.theme.textTheme.headlineSmall,
+              ),
+              Divider(
+                thickness: context.sizes.spaceXS,
+              ),
+              child,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

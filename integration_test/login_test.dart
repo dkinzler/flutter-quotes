@@ -7,6 +7,8 @@ import 'package:integration_test/integration_test.dart';
 import 'robot.dart';
 import 'package:flutter_sample/main.dart' as app;
 
+//TODO don't need to integration test everything, just enough to showcase how different things work
+
 void main() {
   var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

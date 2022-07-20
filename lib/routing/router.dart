@@ -42,7 +42,7 @@ class AppRouter {
         name: homeRouteName,
         path: '/home/:tab',
         builder: (context, state) {
-          var p = state.params['tab'] ?? HomeTab.search.name;
+          var p = state.params['tab'] ?? HomeTab.explore.name;
           //TODO how to move to an error page on invalid parameter
           var tab = HomeTab.fromString(p);
           return HomeScreen(key: state.pageKey, tab: tab);

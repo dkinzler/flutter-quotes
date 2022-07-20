@@ -5,6 +5,7 @@ import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/auth/login/login_cubit.dart';
 import 'package:flutter_sample/keys.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/widgets/error.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         body: Center(
           child: Padding(
-            padding: context.insets.paddingM,
+            padding: context.insets.paddingL,
             child: const LoginForm(),
           ),
         ),
@@ -37,112 +38,124 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  late final LoginCubit _loginCubit;
 
   @override
   void initState() {
     super.initState();
-    _loginCubit = context.read<LoginCubit>();
   }
 
   @override
   Widget build(BuildContext context) {
-    //TODO align within the scroll view?
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
           //limit the width of the form, e.g. on desktop we wouldn't want the form to span the whole width of the screen
-          maxWidth: 400 * context.appTheme.scale,
+          maxWidth: 500 * context.appTheme.scale,
         ),
         child: Card(
           child: Padding(
-            padding: context.insets.paddingM,
+            padding: context.insets.symmetricScaled(
+              horizontal: 32.0,
+              vertical: 48.0,
+            ),
             child: FormBuilder(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FormBuilderTextField(
-                    key: const ValueKey(AppKey.loginEmailTextField),
-                    name: 'email',
-                    //disable text field while login is in progress
-                    //this isn't stricly necessary
-                    enabled: context.select<LoginCubit, bool>((c) => !c.state.loginInProgress),
-                    initialValue: _loginCubit.state.email,
-                    onChanged: (value) => _loginCubit.setEmail(value ?? ''),
-                    keyboardType: TextInputType.emailAddress,
-                    //onTap: () => _loginCubit.resetResult(),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: 'Please enter your email'),
-                      FormBuilderValidators.email(errorText: 'Invalid email'),
-                    ]),
-                  ),
-                  SizedBox(height: context.sizes.spaceM),
-                  FormBuilderTextField(
-                    key: const ValueKey(AppKey.loginPasswordTextField),
-                    name: 'password',
-                    enabled: context.select<LoginCubit, bool>((c) => !c.state.loginInProgress),
-                    initialValue: _loginCubit.state.password,
-                    onChanged: (value) => _loginCubit.setPassword(value ?? ''),
-                    keyboardType: TextInputType.text,
-                    obscureText: true,
-                    //onTap: () => _loginCubit.resetResult(),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: 'Please enter your password'),
-                    ]),
-                  ),
-                  SizedBox(height: context.sizes.spaceM),
-                  Builder(
-                    builder: (context) {
-                      var cubit = context.watch<LoginCubit>();
-                      var state = cubit.state;
-                
-                      Widget? errorMessage;
-                      //TODO make a separate errorWidget that can take a key as well for integration testing?
-                      if(state.loginResult == LoginResult.error) {
-                        errorMessage = const Text('Login failed');
-                      }
-                
-                      Widget child;
-                      if(state.loginInProgress) {
-                        child = const Center(child: CircularProgressIndicator());
-                      } else {
-                        child = ElevatedButton(
-                          key: const ValueKey(AppKey.loginButton),
-                          onPressed: () {
-                            _formKey.currentState!.save();
-                            if(_formKey.currentState!.validate()) {
-                              cubit.login();
-                            }
-                          },
-                          child: Padding(
-                            padding: context.insets.paddingM,
-                            child: Text(
-                              'Login',
-                              style: context.theme.textTheme.labelLarge,
-                            ),
-                          ),
-                        );
-                      }
-                
-                      //TODO right now this changes height when moving from button to progressindicator, how to avoid this?
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if(errorMessage != null) ...[
-                            errorMessage,
-                            SizedBox(height: context.sizes.spaceM),
-                          ],
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child: child,
-                          ),
-                        ],
-                      );
-                    }
-                  ),
-                ],
+              child: BlocBuilder<LoginCubit, LoginState>(
+                //we don't need to rebuild when email or password fields of the state change
+                buildWhen: (previous, current) =>
+                    previous.loginInProgress != current.loginInProgress ||
+                    previous.loginResult != current.loginResult,
+                builder: (context, state) {
+                  var loginCubit = context.read<LoginCubit>();
+
+                  Widget? errorMessage;
+                  if (state.loginResult == LoginResult.error) {
+                    errorMessage = const ErrorText(text: 'Login failed');
+                  }
+
+                  Widget child;
+                  var buttonTextStyle = context.theme.textTheme.titleLarge;
+                  var buttonPadding = context.insets.paddingS;
+                  var childHeight = (buttonTextStyle!.fontSize! *
+                              (buttonTextStyle.height ?? 1.0) +
+                          buttonPadding.vertical) *
+                      1.25;
+
+                  if (state.loginInProgress) {
+                    child = const Center(child: CircularProgressIndicator());
+                  } else {
+                    child = ElevatedButton(
+                      key: const ValueKey(AppKey.loginButton),
+                      onPressed: () {
+                        _formKey.currentState!.save();
+                        if (_formKey.currentState!.validate()) {
+                          loginCubit.login();
+                        }
+                      },
+                      child: Padding(
+                        padding: buttonPadding,
+                        child: Text(
+                          'Login',
+                          style: buttonTextStyle,
+                        ),
+                      ),
+                    );
+                  }
+
+                  child = SizedBox(
+                    height: childHeight,
+                    child: child,
+                  );
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FormBuilderTextField(
+                        key: const ValueKey(AppKey.loginEmailTextField),
+                        name: 'email',
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), hintText: 'Email'),
+                        autovalidateMode: AutovalidateMode.disabled,
+                        onChanged: (value) => loginCubit.setEmail(value ?? ''),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Please enter your email'),
+                          FormBuilderValidators.email(
+                              errorText: 'Invalid email'),
+                        ]),
+                      ),
+                      SizedBox(height: context.sizes.spaceM),
+                      FormBuilderTextField(
+                        key: const ValueKey(AppKey.loginPasswordTextField),
+                        name: 'password',
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), hintText: 'Password'),
+                        autovalidateMode: AutovalidateMode.disabled,
+                        onChanged: (value) =>
+                            loginCubit.setPassword(value ?? ''),
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Please enter your password'),
+                        ]),
+                        onSubmitted: (value) {
+                          _formKey.currentState?.fields['password']?.validate();
+                        },
+                      ),
+                      SizedBox(height: context.sizes.spaceL),
+                      if (errorMessage != null) ...[
+                        errorMessage,
+                        SizedBox(height: context.sizes.spaceM),
+                      ],
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: child,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
