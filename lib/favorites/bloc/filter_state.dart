@@ -37,10 +37,10 @@ class FilteredFavoritesState extends Equatable {
   }
 }
 
-enum SortOrder {newest, oldest}
+enum SortOrder { newest, oldest }
 
 void sort(List<Favorite> favorites, SortOrder sortOrder) {
-  if(sortOrder == SortOrder.newest) {
+  if (sortOrder == SortOrder.newest) {
     favorites.sort((a, b) => b.timeAdded.compareTo(a.timeAdded));
   } else {
     favorites.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
@@ -53,7 +53,7 @@ class Filters extends Equatable {
 
   const Filters({
     this.searchTerm = '',
-    this.tags = const[],
+    this.tags = const [],
   });
 
   bool get isEmpty => searchTerm.isEmpty && tags.isEmpty;
@@ -61,22 +61,21 @@ class Filters extends Equatable {
   @override
   List<Object?> get props => [searchTerm, tags];
 
-  //given a list of favorites return the list of favorites that match 
+  //given a list of favorites return the list of favorites that match
   //the conditions defined by this object
   List<Favorite> filter(List<Favorite> favorites) {
     return filterBySearchTerm(filterByTags(favorites));
   }
 
   List<Favorite> filterBySearchTerm(List<Favorite> favorites) {
-    if(searchTerm.isEmpty) {
+    if (searchTerm.isEmpty) {
       return favorites;
     }
 
     List<Favorite> result = [];
-    for(final favorite in favorites) {
-      if(favorite.quote.text.contains(searchTerm) ||
-         favorite.quote.author.contains(searchTerm)
-      ) {
+    for (final favorite in favorites) {
+      if (favorite.quote.text.contains(searchTerm) ||
+          favorite.quote.author.contains(searchTerm)) {
         result.add(favorite);
       }
     }
@@ -84,20 +83,20 @@ class Filters extends Equatable {
   }
 
   List<Favorite> filterByTags(List<Favorite> favorites) {
-    if(tags.isEmpty) {
+    if (tags.isEmpty) {
       return favorites;
     }
 
     List<Favorite> result = [];
-    for(final favorite in favorites) {
+    for (final favorite in favorites) {
       bool contained = false;
-      for(final tag in tags) {
-        if(favorite.quote.tags.contains(tag)) {
+      for (final tag in tags) {
+        if (favorite.quote.tags.contains(tag)) {
           contained = true;
           break;
         }
       }
-      if(contained) {
+      if (contained) {
         result.add(favorite);
       }
     }
@@ -115,7 +114,7 @@ class Filters extends Equatable {
   }
 
   Filters copyWithTag(String tag) {
-    if(tags.contains(tag)) {
+    if (tags.contains(tag)) {
       return this;
     }
     var newTags = List<String>.from(tags)..add(tag);
@@ -123,7 +122,7 @@ class Filters extends Equatable {
   }
 
   Filters copyWithTagRemoved(String tag) {
-    if(!tags.contains(tag)) {
+    if (!tags.contains(tag)) {
       return this;
     }
     var newTags = tags.where((t) => t != tag).toList();

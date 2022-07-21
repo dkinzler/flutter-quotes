@@ -38,16 +38,17 @@ We use a bloc here instead of a cubit, because it allows for more control on how
 e.g. see the comments below on debouncing events.
 */
 
-class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavoritesState> {
+class FilteredFavoritesBloc
+    extends Bloc<FilteredFavoritesEvent, FilteredFavoritesState> {
   final FavoritesCubit favoritesCubit;
   StreamSubscription? _favoritesCubitSubscription;
 
   FilteredFavoritesBloc({
     required this.favoritesCubit,
   }) : super(const FilteredFavoritesState(
-    favorites: [],
-    filteredFavorites: [],
-  )) {
+          favorites: [],
+          filteredFavorites: [],
+        )) {
     on<FavoritesChanged>(_onFavoritesChanged, transformer: sequential());
     on<SearchTermChanged>(_onSearchTermChanged, transformer: sequential());
     on<FilterTagAdded>(_onTagAdded, transformer: sequential());
@@ -62,12 +63,14 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
       However when the letters are typed in quick succession, we do not want to recompute the list of favorites matching the search term
       for every additional letter that changes.
       */
-      transformer: (events, mapper) => events.debounceTime(
-        const Duration(milliseconds: 300)).asyncExpand(mapper),
+      transformer: (events, mapper) => events
+          .debounceTime(const Duration(milliseconds: 300))
+          .asyncExpand(mapper),
     );
 
     //listen to state changes in FavoritesCubit
-    _favoritesCubitSubscription = favoritesCubit.stream.listen((favoritesState) {
+    _favoritesCubitSubscription =
+        favoritesCubit.stream.listen((favoritesState) {
       add(FavoritesChanged(favorites: favoritesCubit.state.favorites));
     });
     //need to fire an event with the current cubit state, since the listener
@@ -79,55 +82,65 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
     add(const RecomputeFavoritesRequested());
   }
 
-  void _onFavoritesChanged(FavoritesChanged event, Emitter<FilteredFavoritesState> emit) {
+  void _onFavoritesChanged(
+      FavoritesChanged event, Emitter<FilteredFavoritesState> emit) {
     //only process the event if the list of favorites actually changed
-    if(state.favorites != event.favorites) {
+    if (state.favorites != event.favorites) {
       emit(state.copyWith(favorites: event.favorites));
       _requestRecompute();
     }
   }
 
-  void _onSearchTermChanged(SearchTermChanged event, Emitter<FilteredFavoritesState> emit) {
-    if(state.filters.searchTerm != event.searchTerm) {
-      emit(state.copyWith(filters: state.filters.copyWith(searchTerm: event.searchTerm)));
+  void _onSearchTermChanged(
+      SearchTermChanged event, Emitter<FilteredFavoritesState> emit) {
+    if (state.filters.searchTerm != event.searchTerm) {
+      emit(state.copyWith(
+          filters: state.filters.copyWith(searchTerm: event.searchTerm)));
       _requestRecompute();
     }
   }
 
   void _onTagAdded(FilterTagAdded event, Emitter<FilteredFavoritesState> emit) {
     var newFilters = state.filters.copyWithTag(event.tag);
-    if(newFilters != state.filters) {
+    if (newFilters != state.filters) {
       emit(state.copyWith(filters: newFilters));
       _requestRecompute();
     }
   }
 
-  void _onTagRemoved(FilterTagRemoved event, Emitter<FilteredFavoritesState> emit) {
+  void _onTagRemoved(
+      FilterTagRemoved event, Emitter<FilteredFavoritesState> emit) {
     var newFilters = state.filters.copyWithTagRemoved(event.tag);
-    if(newFilters != state.filters) {
+    if (newFilters != state.filters) {
       emit(state.copyWith(filters: newFilters));
       _requestRecompute();
     }
   }
 
-  void _onSortOrderChanged(SortOrderChanged event, Emitter<FilteredFavoritesState> emit) {
-    if(state.sortOrder != event.sortOrder) {
+  void _onSortOrderChanged(
+      SortOrderChanged event, Emitter<FilteredFavoritesState> emit) {
+    if (state.sortOrder != event.sortOrder) {
       emit(state.copyWith(sortOrder: event.sortOrder));
       _requestRecompute();
     }
   }
 
-  Future<void> _onRecomputeRequested(RecomputeFavoritesRequested event, Emitter<FilteredFavoritesState> emit) async {
-    if(state.filters.isEmpty) {
-      emit(state.copyWith(filteredFavorites: state.favorites));
+  Future<void> _onRecomputeRequested(RecomputeFavoritesRequested event,
+      Emitter<FilteredFavoritesState> emit) async {
+    if (state.filters.isEmpty) {
+      var sortedFavorites = List<Favorite>.from(state.favorites);
+      sort(sortedFavorites, state.sortOrder);
+      emit(state.copyWith(filteredFavorites: sortedFavorites));
     } else {
       final p = ReceivePort();
-      await Isolate.spawn(_recomputeFilteredFavorites, _FilterIsolateMessage(
-        favorites: state.favorites,
-        filters: state.filters,
-        sortOrder: state.sortOrder,
-        sendPort: p.sendPort,
-      ));
+      await Isolate.spawn(
+          _recomputeFilteredFavorites,
+          _FilterIsolateMessage(
+            favorites: state.favorites,
+            filters: state.filters,
+            sortOrder: state.sortOrder,
+            sendPort: p.sendPort,
+          ));
       var filteredFavorites = await p.first as List<Favorite>;
       emit(state.copyWith(filteredFavorites: filteredFavorites));
     }
@@ -142,12 +155,12 @@ class FilteredFavoritesBloc extends Bloc<FilteredFavoritesEvent, FilteredFavorit
 
 //this function is intended to be passed to Isolate.spawn to be run in a separate isolate
 void _recomputeFilteredFavorites(_FilterIsolateMessage message) {
-    var favorites = message.favorites;
-    var filters = message.filters;
-    var sortOrder = message.sortOrder;
-    var filteredFavorites = filters.filter(favorites);
-    sort(filteredFavorites, sortOrder);
-    Isolate.exit(message.sendPort, filteredFavorites);
+  var favorites = message.favorites;
+  var filters = message.filters;
+  var sortOrder = message.sortOrder;
+  var filteredFavorites = filters.filter(favorites);
+  sort(filteredFavorites, sortOrder);
+  Isolate.exit(message.sendPort, filteredFavorites);
 }
 
 class _FilterIsolateMessage {

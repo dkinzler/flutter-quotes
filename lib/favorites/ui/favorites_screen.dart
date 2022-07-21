@@ -13,21 +13,22 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var status = context.select<FavoritesCubit, LoadingStatus>(((c) => c.state.status));
+    var status =
+        context.select<FavoritesCubit, LoadingStatus>(((c) => c.state.status));
     var favoritesState = context.watch<FilteredFavoritesBloc>().state;
     var favorites = favoritesState.filteredFavorites;
-    if(status == LoadingStatus.loading) {
+    if (status == LoadingStatus.loading) {
       return const Center(
         child: CircularProgressIndicator(),
       );
-    } else if(status == LoadingStatus.error) {
+    } else if (status == LoadingStatus.error) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Ups, something went wrong.'),
             ElevatedButton.icon(
-              onPressed: (){
+              onPressed: () {
                 context.read<FavoritesCubit>().load();
               },
               icon: const Icon(Icons.refresh),
@@ -36,10 +37,8 @@ class FavoritesScreen extends StatelessWidget {
           ],
         ),
       );
-    } else if(favoritesState.favorites.isEmpty) {
-      return const Center(
-        child: Text('You have not favorited any quotes.')
-      );
+    } else if (favoritesState.favorites.isEmpty) {
+      return const Center(child: Text('You have not favorited any quotes.'));
     } else {
       return Column(
         children: [
@@ -56,22 +55,28 @@ class FavoritesScreen extends StatelessWidget {
               mainAxisSpacing: context.sizes.spaceS,
               itemCount: favorites.length,
               padding: const EdgeInsets.all(16.0),
-              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate:
+                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
               itemBuilder: (context, index) {
                 var favorite = favorites[index];
                 return QuoteCard(
                   quote: favorite.quote,
                   showFavoriteButton: false,
                   onDeleteButtonPressed: () {
-                    Actions.invoke<DeleteFavoriteIntent>(context, DeleteFavoriteIntent(
-                      favorite: favorite,
-                    ));
+                    Actions.invoke<DeleteFavoriteIntent>(
+                        context,
+                        DeleteFavoriteIntent(
+                          favorite: favorite,
+                        ));
                   },
                   onTagPressed: (String tag) {
-                    context.read<FilteredFavoritesBloc>().add(FilterTagAdded(tag: tag));
+                    context
+                        .read<FilteredFavoritesBloc>()
+                        .add(FilterTagAdded(tag: tag));
                   },
                 );
-              }, 
+              },
             ),
           ),
         ],
@@ -95,7 +100,9 @@ class _FilterBarState extends State<FilterBar> {
     super.initState();
     //TODO remove listener or not necessary? google this
     _searchFieldController.addListener(() {
-      context.read<FilteredFavoritesBloc>().add(SearchTermChanged(searchTerm: _searchFieldController.text));
+      context
+          .read<FilteredFavoritesBloc>()
+          .add(SearchTermChanged(searchTerm: _searchFieldController.text));
     });
   }
 
@@ -103,7 +110,7 @@ class _FilterBarState extends State<FilterBar> {
   Widget build(BuildContext context) {
     var state = context.watch<FilteredFavoritesBloc>().state;
     var sort = state.sortOrder;
-    
+
     List<Widget> children = [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +123,9 @@ class _FilterBarState extends State<FilterBar> {
           PopupMenuButton<SortOrder>(
             initialValue: sort,
             onSelected: ((value) {
-              context.read<FilteredFavoritesBloc>().add(SortOrderChanged(sortOrder: value));
+              context
+                  .read<FilteredFavoritesBloc>()
+                  .add(SortOrderChanged(sortOrder: value));
             }),
             itemBuilder: (context) => <PopupMenuEntry<SortOrder>>[
               const PopupMenuItem<SortOrder>(
@@ -137,7 +146,7 @@ class _FilterBarState extends State<FilterBar> {
     ];
 
     var searchTerm = state.filters.searchTerm;
-    if(searchTerm != null && searchTerm.isNotEmpty) {
+    if (searchTerm.isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 8.0,
@@ -149,18 +158,22 @@ class _FilterBarState extends State<FilterBar> {
     }
 
     var tags = state.filters.tags;
-    if(tags.isNotEmpty) {
+    if (tags.isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Wrap(
           spacing: context.sizes.spaceS,
           runSpacing: context.sizes.spaceS,
-          children: tags.map<Widget>((t) => InputChip(
-            label: Text(t),
-            onDeleted: () {
-              context.read<FilteredFavoritesBloc>().add(FilterTagRemoved(tag: t));
-            },
-          )).toList(),
+          children: tags
+              .map<Widget>((t) => InputChip(
+                    label: Text(t),
+                    onDeleted: () {
+                      context
+                          .read<FilteredFavoritesBloc>()
+                          .add(FilterTagRemoved(tag: t));
+                    },
+                  ))
+              .toList(),
         ),
       ));
     }

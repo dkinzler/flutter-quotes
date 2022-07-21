@@ -4,6 +4,13 @@ import 'insets.dart';
 import 'layout.dart';
 import 'sizes.dart';
 
+//TODO maybe we should listen to changes in MediaQuery.textScaleFactor
+//and if it changes we should also change our scale accordingly, so that icons and stuff also become bigger
+//we could also insert another MediaQuery with textScaleFactor set to 1
+//but we then set our fontSizeFactor
+//in any calculations we then only have to think about our scale and fontSizeFactor
+//and not about MediaQuery
+
 final ThemeData baseTheme = ThemeData.from(
   colorScheme: const ColorScheme.dark(),
   /*
