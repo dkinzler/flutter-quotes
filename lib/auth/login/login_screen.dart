@@ -79,7 +79,8 @@ class _LoginFormState extends State<LoginForm> {
                   var childHeight = (buttonTextStyle!.fontSize! *
                               (buttonTextStyle.height ?? 1.0) +
                           buttonPadding.vertical) *
-                      1.25;
+                      1.25 *
+                      MediaQuery.textScaleFactorOf(context);
 
                   if (state.loginInProgress) {
                     child = const Center(child: CircularProgressIndicator());
