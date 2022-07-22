@@ -43,11 +43,16 @@ class AppThemeData extends Equatable {
         insets,
       ];
 
+  IconThemeData get iconTheme => IconThemeData(
+        size: 24.0 * scale,
+      );
+
   ThemeData themeDataFrom(ThemeData base) {
     return base.copyWith(
       textTheme: base.textTheme.apply(fontSizeFactor: fontSizeFactor),
       primaryTextTheme:
           base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
+      iconTheme: base.iconTheme.merge(iconTheme),
     );
   }
 

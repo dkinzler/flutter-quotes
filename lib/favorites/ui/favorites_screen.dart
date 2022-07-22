@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/ui/actions.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/widgets/quote_buttons.dart';
 import 'package:flutter_sample/widgets/quote_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-//TODO show autocomplete for search field?
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -40,6 +38,42 @@ class FavoritesScreen extends StatelessWidget {
     } else if (favoritesState.favorites.isEmpty) {
       return const Center(child: Text('You have not favorited any quotes.'));
     } else {
+      var layout = context.layout;
+
+      itemBuilder(BuildContext context, int index) {
+        var favorite = favorites[index];
+        return QuoteCard(
+          quote: favorite.quote,
+          button: DeleteFavoriteButton(
+            favorite: favorite,
+          ),
+          onTagPressed: (String tag) {
+            context.read<FilteredFavoritesBloc>().add(FilterTagAdded(tag: tag));
+          },
+        );
+      }
+
+      ;
+
+      Widget quotesWidget;
+      if (layout == Layout.mobile) {
+        quotesWidget = ListView.builder(
+          itemCount: favorites.length,
+          padding: const EdgeInsets.all(16.0),
+          itemBuilder: itemBuilder,
+        );
+      } else {
+        quotesWidget = MasonryGridView.builder(
+          crossAxisSpacing: context.sizes.spaceS,
+          mainAxisSpacing: context.sizes.spaceS,
+          itemCount: favorites.length,
+          padding: const EdgeInsets.all(16.0),
+          gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemBuilder: itemBuilder,
+        );
+      }
+
       return Column(
         children: [
           const Padding(
@@ -50,34 +84,7 @@ class FavoritesScreen extends StatelessWidget {
             child: FilterBar(),
           ),
           Expanded(
-            child: MasonryGridView.builder(
-              crossAxisSpacing: context.sizes.spaceS,
-              mainAxisSpacing: context.sizes.spaceS,
-              itemCount: favorites.length,
-              padding: const EdgeInsets.all(16.0),
-              gridDelegate:
-                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-              itemBuilder: (context, index) {
-                var favorite = favorites[index];
-                return QuoteCard(
-                  quote: favorite.quote,
-                  showFavoriteButton: false,
-                  onDeleteButtonPressed: () {
-                    Actions.invoke<DeleteFavoriteIntent>(
-                        context,
-                        DeleteFavoriteIntent(
-                          favorite: favorite,
-                        ));
-                  },
-                  onTagPressed: (String tag) {
-                    context
-                        .read<FilteredFavoritesBloc>()
-                        .add(FilterTagAdded(tag: tag));
-                  },
-                );
-              },
-            ),
+            child: quotesWidget,
           ),
         ],
       );

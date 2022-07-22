@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
+import 'package:flutter_sample/theme/theme.dart';
 
 class NavRail extends StatefulWidget {
   final HomeTab selectedTab;
@@ -30,7 +31,7 @@ class _NavRailState extends State<NavRail> {
           });
         },
       ),
-      destinations: const[
+      destinations: const [
         NavigationRailDestination(
           icon: Icon(
             Icons.home,
@@ -49,7 +50,7 @@ class _NavRailState extends State<NavRail> {
         ),
         NavigationRailDestination(
           icon: Icon(
-            Icons.favorite_border,
+            Icons.favorite,
           ),
           label: Text(
             'Favorites',
@@ -59,7 +60,7 @@ class _NavRailState extends State<NavRail> {
       onDestinationSelected: (index) {
         context.go(HomeRoute(tab: _indexToTab(index)));
       },
-      trailing:IconButton(
+      trailing: IconButton(
         icon: const Icon(Icons.logout),
         onPressed: () => context.read<AuthCubit>().logout(),
       ),
@@ -78,34 +79,34 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _tabToIndex(selectedTab),
-      onTap: (index) {
-        context.go(HomeRoute(tab: _indexToTab(index)));
-      },
-      items: const[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Explore',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_border),
-          label: 'Favorites',
-        ),
-      ]
-    );
+        selectedItemColor: context.theme.colorScheme.primary,
+        currentIndex: _tabToIndex(selectedTab),
+        onTap: (index) {
+          context.go(HomeRoute(tab: _indexToTab(index)));
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+        ]);
   }
 }
 
 int _tabToIndex(HomeTab tab) {
   switch (tab) {
     case HomeTab.search:
-      return 1; 
+      return 1;
     case HomeTab.favorites:
-      return 2; 
+      return 2;
     default:
       return 0;
   }
