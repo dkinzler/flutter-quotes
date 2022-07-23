@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/explore/random_cubit.dart';
+import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/widgets/card.dart';
 import 'package:flutter_sample/widgets/error.dart';
-import 'package:flutter_sample/widgets/quote_card.dart';
+import 'package:flutter_sample/widgets/quote_buttons.dart';
+import 'package:flutter_sample/widgets/quote.dart';
 
 class PrevIntent extends Intent {
   const PrevIntent();
@@ -37,34 +40,45 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicQuoteCard(
+    return CustomCard(
       header: Text(
         'Random Quote',
         style: context.theme.textTheme.headlineSmall,
       ),
-      contentBuilder: (context) {
-        var randomCubit = context.watch<RandomCubit>();
-        var state = randomCubit.state;
-        if (state.quote != null) {
-          return WidgetOrQuote(quote: state.quote);
-        } else if (state.status == LoadingStatus.loading) {
-          return const WidgetOrQuote(
-              widget: Center(
-            child: CircularProgressIndicator(),
-          ));
-        } else {
-          return WidgetOrQuote(
-            widget: ErrorRetryWidget(
+      content: Builder(
+        builder: (context) {
+          var randomCubit = context.watch<RandomCubit>();
+          var state = randomCubit.state;
+          if (state.quote != null) {
+            var quote = state.quote!;
+            return QuoteWidget(
+              quote: state.quote!,
+              button: QuoteFavoriteButton(
+                quote: quote,
+              ),
+              onTagPressed: (String tag) {
+                //TODO do this with actions
+                context.read<SearchCubit>().search(query: tag);
+              },
+            );
+          } else if (state.status == LoadingStatus.loading) {
+            return Center(
+              child: Padding(
+                padding: context.insets.paddingM,
+                child: const CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            return ErrorRetryWidget(
               onPressed: () => randomCubit.next(),
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
       trailing: ElevatedButton(
         onPressed: () => context.read<RandomCubit>().next(),
         child: const Text('Next'),
       ),
-      showTags: false,
     );
 
     /*

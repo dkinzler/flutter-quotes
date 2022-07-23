@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/quote_buttons.dart';
-import 'package:flutter_sample/widgets/quote_card.dart';
+import 'package:flutter_sample/widgets/quote.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FavoritesScreen extends StatelessWidget {

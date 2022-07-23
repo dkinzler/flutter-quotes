@@ -5,7 +5,7 @@ import 'package:flutter_sample/search/search_bar.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/error.dart';
-import 'package:flutter_sample/widgets/quote_card.dart';
+import 'package:flutter_sample/widgets/quote.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 //TODO below search bar show a little text: Results for "xyz", 1337 Results found
