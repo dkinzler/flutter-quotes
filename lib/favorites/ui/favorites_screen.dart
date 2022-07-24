@@ -125,6 +125,9 @@ class _FilterBarState extends State<FilterBar> {
           Expanded(
             child: TextField(
               controller: _searchFieldController,
+              decoration: const InputDecoration(
+                suffixIcon: Icon(Icons.search),
+              ),
             ),
           ),
           PopupMenuButton<SortOrder>(

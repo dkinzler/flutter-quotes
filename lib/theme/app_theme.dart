@@ -47,6 +47,8 @@ class AppThemeData extends Equatable {
         size: 24.0 * scale,
       );
 
+  final Color cardColor = const Color.fromARGB(0xff, 0x26, 0x20, 0x2e);
+
   ThemeData themeDataFrom(ThemeData base) {
     return base.copyWith(
       textTheme: base.textTheme.apply(fontSizeFactor: fontSizeFactor),

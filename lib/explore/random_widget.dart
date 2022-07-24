@@ -49,9 +49,13 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
         builder: (context) {
           var randomCubit = context.watch<RandomCubit>();
           var state = randomCubit.state;
+
+          Widget child;
+
           if (state.quote != null) {
             var quote = state.quote!;
-            return QuoteWidget(
+            child = QuoteWidget(
+              key: ValueKey(quote.id),
               quote: state.quote!,
               button: QuoteFavoriteButton(
                 quote: quote,
@@ -62,17 +66,33 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
               },
             );
           } else if (state.status == LoadingStatus.loading) {
-            return Center(
+            child = Center(
               child: Padding(
                 padding: context.insets.paddingM,
                 child: const CircularProgressIndicator(),
               ),
             );
           } else {
-            return ErrorRetryWidget(
+            child = ErrorRetryWidget(
               onPressed: () => randomCubit.next(),
             );
           }
+
+          /*
+          return PageTransitionSwitcher(
+            transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+                FadeThroughTransition(
+              animation: primaryAnimation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            ),
+            child: child,
+          );
+          */
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            child: child,
+          );
         },
       ),
       trailing: ElevatedButton(
