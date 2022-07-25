@@ -3,12 +3,12 @@ import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 
 class SearchIntent extends Intent {
-  final bool gotoSearchScreen;
   final String query;
+  final bool gotoSearchScreen;
 
   const SearchIntent({
-    required this.gotoSearchScreen,
     required this.query,
+    this.gotoSearchScreen = false,
   });
 }
 
@@ -23,7 +23,7 @@ class SearchAction extends Action<SearchIntent> {
 
   @override
   void invoke(SearchIntent intent) {
-    if(intent.gotoSearchScreen) {
+    if (intent.gotoSearchScreen) {
       appRouter.go(const HomeRoute(tab: HomeTab.search));
     }
     searchCubit.search(query: intent.query);

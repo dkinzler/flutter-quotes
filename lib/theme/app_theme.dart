@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'insets.dart';
 import 'layout.dart';
 import 'sizes.dart';
@@ -13,11 +15,6 @@ import 'sizes.dart';
 
 final ThemeData baseTheme = ThemeData.from(
   colorScheme: const ColorScheme.dark(),
-  /*
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: Color.fromARGB(0xFF, 0x46, 0x70, 0x88),
-        brightness: Brightness.dark),
-        */
 );
 
 class AppThemeData extends Equatable {
@@ -29,14 +26,20 @@ class AppThemeData extends Equatable {
   final Sizes sizes;
   final Insets insets;
 
+  final bool darkMode;
+
   AppThemeData(
-      {required this.layout, this.scale = 1.0, this.fontSizeFactor = 1.0})
+      {required this.layout,
+      required this.darkMode,
+      this.scale = 1.0,
+      this.fontSizeFactor = 1.0})
       : sizes = Sizes(scale: scale),
         insets = Insets(scale: scale);
 
   @override
   List<Object?> get props => [
         layout,
+        darkMode,
         scale,
         fontSizeFactor,
         sizes,
@@ -55,16 +58,20 @@ class AppThemeData extends Equatable {
       primaryTextTheme:
           base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
       iconTheme: base.iconTheme.merge(iconTheme),
+      colorScheme:
+          darkMode ? const ColorScheme.dark() : const ColorScheme.light(),
     );
   }
 
   AppThemeData copyWith({
     Layout? layout,
+    bool? darkMode,
     double? scale,
     double? fontSizeFactor,
   }) {
     return AppThemeData(
       layout: layout ?? this.layout,
+      darkMode: darkMode ?? this.darkMode,
       scale: scale ?? this.scale,
       fontSizeFactor: fontSizeFactor ?? this.fontSizeFactor,
     );
@@ -91,8 +98,10 @@ class AppTheme extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var layout = Layout.fromSize(size);
     var theme = Theme.of(context);
+    var settings = context.watch<SettingsCubit>().state;
     var appThemeData = AppThemeData(
       layout: layout,
+      darkMode: settings.darkMode,
     );
     return _InheritedAppTheme(
       appThemeData: appThemeData,

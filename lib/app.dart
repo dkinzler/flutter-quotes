@@ -7,6 +7,7 @@ import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/favorites/bloc/filter_bloc.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
+import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,8 @@ class _AppState extends State<App> {
               value: _appController.favoritesCubit),
           BlocProvider<FilteredFavoritesBloc>.value(
               value: _appController.filterBloc),
+          BlocProvider<SettingsCubit>.value(
+              value: _appController.settingsCubit),
         ],
         child: MaterialApp.router(
           builder: builder,

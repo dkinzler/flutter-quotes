@@ -90,7 +90,7 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
           );
           */
           return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 300),
             child: child,
           );
         },

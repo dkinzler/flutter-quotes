@@ -8,6 +8,7 @@ class ExploreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO probably want to put this into singlechildscrollview
     return Padding(
       padding: context.insets.paddingL,
       child: Center(

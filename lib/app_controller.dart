@@ -5,6 +5,7 @@ import 'package:flutter_sample/quote/mock/apiclient.dart';
 import 'package:flutter_sample/explore/random_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
+import 'package:flutter_sample/settings/settings_cubit.dart';
 
 class AppController {
   final AppRouter router = AppRouter();
@@ -22,6 +23,8 @@ class AppController {
     favoritesCubit: favoritesCubit,
   );
 
+  final SettingsCubit settingsCubit = SettingsCubit();
+
   late StreamSubscription _authCubitSubscription;
 
   AppController() {
@@ -29,9 +32,8 @@ class AppController {
     _authCubitSubscription = authCubit.stream.listen(_handleAuthStateChange);
   }
 
-
   void _handleAuthStateChange(AuthState authState) {
-    if(authState.isAuthenticated) {
+    if (authState.isAuthenticated) {
       favoritesCubit.init(authState.user.email);
       router.go(const HomeRoute(tab: HomeTab.explore));
     } else {

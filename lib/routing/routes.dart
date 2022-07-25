@@ -14,8 +14,8 @@ so we won't need this custom solution anymore.
 
 abstract class AppRoute extends Equatable {
   String get name;
-  Map<String, String> get params => const{};
-  Map<String, String> get queryParams => const{};
+  Map<String, String> get params => const {};
+  Map<String, String> get queryParams => const {};
 
   const AppRoute();
 
@@ -42,9 +42,9 @@ enum HomeTab {
   favorites;
 
   static HomeTab fromString(String s) {
-    if(s == search.name) {
+    if (s == search.name) {
       return search;
-    } else if(s == favorites.name) {
+    } else if (s == favorites.name) {
       return favorites;
     } else {
       return explore;
@@ -60,8 +60,17 @@ class HomeRoute extends AppRoute {
   });
 
   @override
-  Map<String,String> get params => {'tab': tab.name};
+  Map<String, String> get params => {'tab': tab.name};
 
   @override
   String get name => homeRouteName;
+}
+
+const settingsRouteName = 'settings';
+
+class SettingsRoute extends AppRoute {
+  const SettingsRoute();
+
+  @override
+  String get name => settingsRouteName;
 }

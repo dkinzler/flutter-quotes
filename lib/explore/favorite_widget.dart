@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/favorites/bloc/favorite.dart';
@@ -19,76 +17,61 @@ class FavoriteWidget extends StatefulWidget {
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool loading = true;
-  bool hasError = false;
-  Favorite? favorite;
-
-  StreamSubscription? _favoriteCubitSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    var favoritesCubit = context.read<FavoritesCubit>();
-    _handleStateChange(favoritesCubit.state);
-    _favoriteCubitSubscription =
-        context.read<FavoritesCubit>().stream.listen(_handleStateChange);
-  }
-
-  void _handleStateChange(FavoritesState state) {
-    if (state.status == LoadingStatus.loading) {
-      setState(() {
-        loading = true;
-        hasError = false;
-        favorite = null;
-      });
-    } else if (state.status == LoadingStatus.error) {
-      setState(() {
-        loading = false;
-        hasError = true;
-        favorite = null;
-      });
-    } else {
-      Favorite? f;
-      if (state.favorites.isNotEmpty) {
-        f = state.favorites[Random().nextInt(state.favorites.length)];
-      }
-      setState(() {
-        loading = false;
-        hasError = false;
-        favorite = f;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    var status =
+        context.select<FavoritesCubit, LoadingStatus>((c) => c.state.status);
+    var favorites = context.read<FavoritesCubit>().state.favorites;
+
     Widget content;
-    if (loading) {
+    if (status == LoadingStatus.loading) {
       content = Padding(
         padding: context.insets.paddingM,
         child: const Center(
           child: CircularProgressIndicator(),
         ),
       );
-    } else if (hasError) {
+    } else if (status == LoadingStatus.error) {
       content = ErrorRetryWidget(
         onPressed: () => context.read<FavoritesCubit>().load(),
       );
-    } else if (favorite == null) {
-      content = Padding(
-        padding: context.insets.paddingM,
-        child: const Text('You have not added any quotes to favorites'),
-      );
     } else {
-      content = QuoteWidget(
-        quote: favorite!.quote,
-        onTagPressed: (String tag) {
-          Actions.invoke<SearchIntent>(
-              context,
-              SearchIntent(
-                gotoSearchScreen: true,
-                query: tag,
-              ));
+      Favorite? f;
+      if (favorites.isNotEmpty) {
+        f = favorites[Random().nextInt(favorites.length)];
+      }
+
+      if (f == null) {
+        content = Padding(
+          padding: context.insets.paddingM,
+          child: const Text('You have not added any quotes to favorites'),
+        );
+      } else {
+        content = QuoteWidget(
+          key: ValueKey(f.id),
+          quote: f.quote,
+          onTagPressed: (String tag) {
+            Actions.invoke<SearchIntent>(
+                context,
+                SearchIntent(
+                  gotoSearchScreen: true,
+                  query: tag,
+                ));
+          },
+        );
+      }
+    }
+
+    Widget? trailing;
+    if (status == LoadingStatus.loaded) {
+      trailing = ElevatedButton(
+        child: const Text('Another one'),
+        onPressed: () {
+          //Note: this is kind of a hack
+          //calling setState will cause the build function to run again, thus choosing another random quote
+          //alternatively we could add a Favorite field to the state of this widget and then
+          //recompute another random favorite whenever the button here is pressed
+          setState(() {});
         },
       );
     }
@@ -98,13 +81,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         'From your favorites',
         style: context.theme.textTheme.headlineSmall,
       ),
-      content: content,
+      content: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: content,
+      ),
+      trailing: trailing,
     );
-  }
-
-  @override
-  void dispose() {
-    _favoriteCubitSubscription?.cancel();
-    super.dispose();
   }
 }

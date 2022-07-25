@@ -34,7 +34,8 @@ class _QuoteTagListState extends State<QuoteTagList> {
       maxTagsToShow = widget.tags.length;
     }
 
-    var chips = widget.tags
+    var chips = <Widget>[const Chip(label: Text('Tags:'))];
+    chips.addAll(widget.tags
         .take(maxTagsToShow)
         .map<Widget>((t) => InputChip(
               label: Text(
@@ -47,7 +48,7 @@ class _QuoteTagListState extends State<QuoteTagList> {
                     }
                   : null,
             ))
-        .toList();
+        .toList());
 
     //TODO this logic is not as easy to follow
 

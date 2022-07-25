@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/login/login_screen.dart';
 import 'package:flutter_sample/home/home_screen.dart';
+import 'package:flutter_sample/settings/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
@@ -29,7 +30,6 @@ this allows us to listen to AppPage changes
 */
 
 class AppRouter {
-
   late final GoRouter _router = GoRouter(
     initialLocation: '/login',
     routes: [
@@ -48,6 +48,11 @@ class AppRouter {
           return HomeScreen(key: state.pageKey, tab: tab);
         },
       ),
+      GoRoute(
+        name: settingsRouteName,
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
     ],
     //TODO make error page
     //Override to use a custom ErrorPage
@@ -56,14 +61,21 @@ class AppRouter {
   );
 
   RouterDelegate<Object> get routerDelegate => _router.routerDelegate;
-  RouteInformationParser<Object> get routeInformationParser => _router.routeInformationParser;
-  RouteInformationProvider get routeInformationProvider => _router.routeInformationProvider;
-
+  RouteInformationParser<Object> get routeInformationParser =>
+      _router.routeInformationParser;
+  RouteInformationProvider get routeInformationProvider =>
+      _router.routeInformationProvider;
 
   AppRouter();
 
   void go(AppRoute appRoute) {
-    _router.goNamed(appRoute.name, params: appRoute.params, queryParams: appRoute.queryParams);
+    _router.goNamed(appRoute.name,
+        params: appRoute.params, queryParams: appRoute.queryParams);
+  }
+
+  void push(AppRoute appRoute) {
+    _router.pushNamed(appRoute.name,
+        params: appRoute.params, queryParams: appRoute.queryParams);
   }
 
   void close() {
