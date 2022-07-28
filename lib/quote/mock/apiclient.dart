@@ -5,9 +5,25 @@ import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/quote/quote.dart';
 
 class MockQuoteApiClient implements QuoteProvider {
+  Duration delay;
+
+  MockQuoteApiClient({
+    this.delay = const Duration(seconds: 2),
+  });
+
+  void setDelay(Duration delay) {
+    this.delay = delay;
+  }
+
+  Future<void> _applyDelay() async {
+    if (delay.inMicroseconds > 0) {
+      await Future.delayed(delay);
+    }
+  }
+
   @override
   Future<List<Quote>> random(int count) async {
-    await Future.delayed(const Duration(seconds: 4));
+    await _applyDelay();
     return _randomQuotes(count);
   }
 
@@ -28,6 +44,10 @@ class MockQuoteApiClient implements QuoteProvider {
     if (queryCursor is! MockQueryCursor?) {
       throw Exception(
           'passed invalid query cursor, type: ${queryCursor.runtimeType}');
+    }
+    await _applyDelay();
+    if (query == 'forceError') {
+      throw Exception('query failed');
     }
     var quotes = _randomQuotes(20);
     MockQueryCursor? nextCursor;

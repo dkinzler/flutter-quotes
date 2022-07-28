@@ -42,6 +42,8 @@ class AppController {
       //TODO there might be some subtle async issues here
       //e.g. if we logout while some operation to load stuff is still in progress
       //then we might reset the cubit but when the operation finishes it will alter the state
+      //it might be easier to create a new cubit instance
+      //after every login
       searchCubit.reset();
       randomCubit.reset();
       favoritesCubit.reset();
