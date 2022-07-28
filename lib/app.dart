@@ -50,6 +50,16 @@ class _AppState extends State<App> {
 
     return MultiProvider(
         providers: [
+          //TODO can we make this lazy somehow, so that only the cubits and stuff that are
+          //actually needed are created
+          //we could use normal Blocprovider constructor with create() func
+          //but this will call close() on the bloc when the provider widget gets out of scope
+          //would this be a problem
+          //is there another way?
+          //alternatively we could create the blocs outside of appController again?
+          //but then we have to read them to add them to blocprovider and then
+          //the always get created anyway?
+          //can we avoid this somehow by also passing a "create/get" func instead of the actual bloc/cubit instances?
           Provider<AppRouter>.value(value: _appController.router),
           BlocProvider<AuthCubit>.value(value: _appController.authCubit),
           BlocProvider<SearchCubit>.value(value: _appController.searchCubit),
@@ -61,14 +71,18 @@ class _AppState extends State<App> {
           BlocProvider<SettingsCubit>.value(
               value: _appController.settingsCubit),
         ],
-        child: MaterialApp.router(
-          builder: builder,
-          theme: baseTheme,
-          routeInformationParser: _router.routeInformationParser,
-          routeInformationProvider: _router.routeInformationProvider,
-          routerDelegate: _router.routerDelegate,
-          locale: widget.locale,
-          useInheritedMediaQuery: widget.useInheritedMediaQuery,
-        ));
+        child: Builder(builder: (context) {
+          var darkMode =
+              context.select<SettingsCubit, bool>((c) => c.state.darkMode);
+          return MaterialApp.router(
+            builder: builder,
+            theme: darkMode ? baseThemeDark : baseThemeLight,
+            routeInformationParser: _router.routeInformationParser,
+            routeInformationProvider: _router.routeInformationProvider,
+            routerDelegate: _router.routerDelegate,
+            locale: widget.locale,
+            useInheritedMediaQuery: widget.useInheritedMediaQuery,
+          );
+        }));
   }
 }

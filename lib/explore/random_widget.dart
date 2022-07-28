@@ -95,10 +95,12 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
           );
         },
       ),
+      /*
       trailing: ElevatedButton(
         onPressed: () => context.read<RandomCubit>().next(),
         child: const Text('Next'),
       ),
+      */
     );
 
     /*

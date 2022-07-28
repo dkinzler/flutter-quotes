@@ -15,10 +15,10 @@ void main() {
       quoteProvider = MockQuoteProvider();
     });
 
-    blocTest<RandomCubit, RandomState>('loading quotes fails',
+    blocTest<RandomCubit, RandomState>(
+      'loading quotes fails',
       build: () => RandomCubit(
         quoteProvider: quoteProvider,
-        loadQuotes: false,
       ),
       setUp: () {
         when(() => quoteProvider.random(any())).thenThrow(Exception());
@@ -43,7 +43,7 @@ void main() {
     );
 
     var exampleQuotes = <Quote>[
-      for(int i = 0; i < 10; i++)
+      for (int i = 0; i < 10; i++)
         Quote(
           text: 'Quote $i',
           author: 'Author',
@@ -52,13 +52,14 @@ void main() {
         )
     ];
 
-    blocTest<RandomCubit, RandomState>('loading quotes and moving to next quote works',
+    blocTest<RandomCubit, RandomState>(
+      'loading quotes and moving to next quote works',
       build: () => RandomCubit(
         quoteProvider: quoteProvider,
-        loadQuotes: false,
       ),
       setUp: () {
-        when(() => quoteProvider.random(any())).thenAnswer((_) async => exampleQuotes);
+        when(() => quoteProvider.random(any()))
+            .thenAnswer((_) async => exampleQuotes);
       },
       wait: const Duration(milliseconds: 10),
       act: (c) async {
@@ -98,19 +99,21 @@ void main() {
       ],
     );
 
-    blocTest<RandomCubit, RandomState>('more quotes will be loaded when cache runs out',
+    blocTest<RandomCubit, RandomState>(
+      'more quotes will be loaded when cache runs out',
       build: () => RandomCubit(
         quoteProvider: quoteProvider,
-        loadQuotes: false,
       ),
       setUp: () {
-        when(() => quoteProvider.random(any())).thenAnswer((_) async => exampleQuotes);
+        when(() => quoteProvider.random(any()))
+            .thenAnswer((_) async => exampleQuotes);
       },
       wait: const Duration(milliseconds: 10),
       act: (c) async {
         await c.loadMore();
-        when(() => quoteProvider.random(any())).thenAnswer((_) async => exampleQuotes);
-        for(int i = 0; i < 7; i++) {
+        when(() => quoteProvider.random(any()))
+            .thenAnswer((_) async => exampleQuotes);
+        for (int i = 0; i < 7; i++) {
           c.next();
         }
       },
@@ -126,10 +129,8 @@ void main() {
           status: LoadingStatus.idle,
           quote: null,
         ),
-        for(int i = 0; i < 10; i++)
-          isA<RandomState>(),
+        for (int i = 0; i < 10; i++) isA<RandomState>(),
       ],
     );
-
   });
 }

@@ -37,6 +37,11 @@ class QuoteWidget extends StatelessWidget {
         style: quoteTextStyle,
       ),
       SizedBox(height: context.sizes.spaceM),
+      Text(
+        '-${quote.author}',
+        style: authorTextStyle,
+      ),
+      /*
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -50,6 +55,7 @@ class QuoteWidget extends StatelessWidget {
           if (button != null) button!,
         ],
       ),
+      */
     ];
 
     Widget? tagsWidget;
@@ -63,11 +69,16 @@ class QuoteWidget extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...quoteTextWidgets,
         if (tagsWidget != null) ...[
           SizedBox(height: context.sizes.spaceM),
           tagsWidget,
+        ],
+        if (button != null) ...[
+          button!,
+          SizedBox(height: context.sizes.spaceM),
         ],
       ],
     );

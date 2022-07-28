@@ -30,11 +30,10 @@ class _SearchBarState extends State<SearchBar> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /*
             TextField(
               controller: _searchFieldController,
             ),
-            */
+            /*
             Autocomplete<String>(
               optionsBuilder: (textEditingValue) {
                 var favorites = context.read<FavoritesCubit>().state.favorites;
@@ -56,6 +55,7 @@ class _SearchBarState extends State<SearchBar> {
                     ));
               },
             ),
+            */
             SizedBox(height: context.sizes.spaceM),
             ElevatedButton(
               onPressed: () {

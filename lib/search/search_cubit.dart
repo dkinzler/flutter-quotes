@@ -17,7 +17,7 @@ The state of the cubit consists of the following:
   is null if no query has been performed yet or there are no more results
 */
 
-enum SearchStatus {idle, inProgress, error}
+enum SearchStatus { idle, inProgress, error }
 
 class SearchState extends Equatable {
   final SearchStatus status;
@@ -56,17 +56,36 @@ class SearchState extends Equatable {
 }
 
 class SearchCubit extends Cubit<SearchState> {
-  final _log  = Logger('SearchCubit');
+  final _log = Logger('SearchCubit');
 
-  QuoteProvider quoteProvider;
+  QuoteProvider? quoteProvider;
 
-  SearchCubit({required this.quoteProvider}) 
-    : super(const SearchState());
+  SearchCubit({this.quoteProvider}) : super(const SearchState());
+
+  void init(QuoteProvider quoteProvider) {
+    this.quoteProvider = quoteProvider;
+    emit(const SearchState());
+  }
+
+  bool get isInitialized {
+    if (quoteProvider == null) {
+      _log.warning('quote provider not initialized');
+      return false;
+    }
+    return true;
+  }
+
+  void reset() {
+    emit(const SearchState());
+  }
 
   //if no query is provided, search for state.query again (if non-null)
   Future<bool> search({String? query}) async {
     query ??= state.query;
-    if(query.isEmpty || state.status == SearchStatus.inProgress) {
+    if (query.isEmpty || state.status == SearchStatus.inProgress) {
+      return false;
+    }
+    if (!isInitialized) {
       return false;
     }
     emit(SearchState(
@@ -74,7 +93,7 @@ class SearchCubit extends Cubit<SearchState> {
       query: query,
     ));
     try {
-      var result = await quoteProvider.search(query);
+      var result = await quoteProvider!.search(query);
       emit(SearchState(
         status: SearchStatus.idle,
         query: query,
@@ -82,7 +101,7 @@ class SearchCubit extends Cubit<SearchState> {
         queryCursor: result.queryCursor,
       ));
       return true;
-    } catch(e) {
+    } catch (e) {
       emit(SearchState(
         status: SearchStatus.error,
         query: query,
@@ -93,26 +112,30 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<bool> loadMoreResults() async {
-    if(state.status == SearchStatus.inProgress) {
+    if (state.status == SearchStatus.inProgress) {
       return false;
     }
-    if(state.query.isEmpty || !state.hasResults) {
+    if (!isInitialized) {
+      return false;
+    }
+    if (state.query.isEmpty || !state.hasResults) {
       return false;
     }
     emit(state.copyWith(status: SearchStatus.inProgress));
     try {
-      var result = await quoteProvider.search(
+      var result = await quoteProvider!.search(
         state.query,
         queryCursor: state.queryCursor,
       );
-      var newQuotes = List<Quote>.from(state.quotes ?? [])..addAll(result.quotes);
+      var newQuotes = List<Quote>.from(state.quotes ?? [])
+        ..addAll(result.quotes);
       emit(state.copyWith(
         status: SearchStatus.idle,
         quotes: newQuotes,
         queryCursor: result.queryCursor,
       ));
       return true;
-    } catch(e) {
+    } catch (e) {
       emit(state.copyWith(status: SearchStatus.error));
       _log.warning('could not load more search results', e);
       return false;
