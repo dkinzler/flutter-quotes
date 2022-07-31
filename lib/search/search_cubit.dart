@@ -118,7 +118,7 @@ class SearchCubit extends Cubit<SearchState> {
     if (!isInitialized) {
       return false;
     }
-    if (state.query.isEmpty || !state.hasResults) {
+    if (state.query.isEmpty || !state.hasResults || !state.canLoadMore) {
       return false;
     }
     emit(state.copyWith(status: SearchStatus.inProgress));
@@ -129,9 +129,11 @@ class SearchCubit extends Cubit<SearchState> {
       );
       var newQuotes = List<Quote>.from(state.quotes ?? [])
         ..addAll(result.quotes);
-      emit(state.copyWith(
+      emit(SearchState(
         status: SearchStatus.idle,
+        query: state.query,
         quotes: newQuotes,
+        //Note: we can't use state.copyWith here, because if result.queryCursor is null the queryCursor field of state would not actually be set to null, since copyWith ignores null arguments
         queryCursor: result.queryCursor,
       ));
       return true;

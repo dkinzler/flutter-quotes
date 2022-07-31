@@ -1,11 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/search/actions.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
+
+/* TODO
+We could show search suggestions the Autocomplete widget.
+The suggestions could e.g. be based on tags from the user's favorites.
+*/
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -32,30 +32,15 @@ class _SearchBarState extends State<SearchBar> {
           children: [
             TextField(
               controller: _searchFieldController,
+              //onSubmitted is called when the user presses the enter key on desktop
+              //or the "done"/"search" button of the on-screen keyboard on mobile
+              onSubmitted: (String value) => Actions.invoke<SearchIntent>(
+                  context,
+                  SearchIntent(
+                    query: value,
+                  )),
+              textInputAction: TextInputAction.search,
             ),
-            /*
-            Autocomplete<String>(
-              optionsBuilder: (textEditingValue) {
-                var favorites = context.read<FavoritesCubit>().state.favorites;
-                List<String> results = [];
-                for (final favorite in favorites) {
-                  for (final tag in favorite.quote.tags) {
-                    if (tag.contains(textEditingValue.text)) {
-                      results.add(tag);
-                    }
-                  }
-                }
-                return results;
-              },
-              onSelected: (String s) {
-                Actions.invoke<SearchIntent>(
-                    context,
-                    SearchIntent(
-                      query: s,
-                    ));
-              },
-            ),
-            */
             SizedBox(height: context.sizes.spaceM),
             ElevatedButton(
               onPressed: () {

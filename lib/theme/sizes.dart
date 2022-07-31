@@ -13,6 +13,8 @@ class Sizes extends Equatable {
     this.scale = 1.0,
   });
 
+  double scaled(double size) => scale * size;
+
   @override
   List<Object?> get props => [scale];
 }

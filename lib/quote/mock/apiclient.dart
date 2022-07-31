@@ -52,17 +52,17 @@ class MockQuoteApiClient implements QuoteProvider {
     var quotes = _randomQuotes(20);
     MockQueryCursor? nextCursor;
     if (queryCursor == null) {
-      nextCursor = const MockQueryCursor(nextPage: 2, pageCount: 20);
-    } else if (queryCursor.nextPage < 20) {
+      nextCursor = const MockQueryCursor(nextPage: 2, pageCount: 4);
+    } else if (queryCursor.nextPage < 4) {
       nextCursor = MockQueryCursor(
         nextPage: queryCursor.nextPage + 1,
-        pageCount: 20,
+        pageCount: 4,
       );
     }
     return SearchResult(
       quotes: quotes,
       queryCursor: nextCursor,
-      totalNumberOfResults: 20 * 20,
+      totalNumberOfResults: 4 * 20,
     );
   }
 }

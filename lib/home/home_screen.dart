@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/explore/explore_screen.dart';
 import 'package:flutter_sample/favorites/ui/actions.dart';
+import 'package:flutter_sample/home/actions.dart';
+import 'package:flutter_sample/home/appbar.dart';
 import 'package:flutter_sample/search/actions.dart';
 import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/favorites/ui/favorites_screen.dart';
@@ -20,7 +23,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
@@ -42,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   int _tabToIndex(HomeTab tab) {
     switch (tab) {
       case HomeTab.search:
-        return 1; 
+        return 1;
       case HomeTab.favorites:
-        return 2; 
+        return 2;
       default:
         return 0;
     }
@@ -53,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void didUpdateWidget(covariant HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.tab != widget.tab) {
+    if (oldWidget.tab != widget.tab) {
       _tabController.animateTo(_tabToIndex(widget.tab));
     }
   }
@@ -64,14 +68,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
     Widget body = TabBarView(
       controller: _tabController,
-      children: const[
+      children: const [
         ExploreScreen(),
         SearchScreen(),
         FavoritesScreen(),
       ],
     );
 
-    if(!isMobile) {
+    if (!isMobile) {
       body = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -82,8 +86,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       );
     }
 
+    PreferredSizeWidget? appBar;
+    if (isMobile) {
+      appBar = CustomAppBar();
+    }
+
     return Actions(
       //TODO maybe define this somewhere else with a builder function?
+      //TODO or just do a custom widget that returns Actions
       actions: <Type, Action<Intent>>{
         SearchIntent: SearchAction(
           appRouter: context.read<AppRouter>(),
@@ -92,9 +102,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         DeleteFavoriteIntent: DeleteFavoriteAction(
           favoritesCubit: context.read<FavoritesCubit>(),
         ),
+        LogoutIntent: LogoutAction(
+          authCubit: context.read<AuthCubit>(),
+        ),
+        OpenSettingsIntent: OpenSettingsAction(
+          appRouter: context.read<AppRouter>(),
+        ),
       },
       child: Scaffold(
-        bottomNavigationBar: isMobile ? BottomNavBar(selectedTab: widget.tab) : null,
+        appBar: appBar,
+        bottomNavigationBar:
+            isMobile ? BottomNavBar(selectedTab: widget.tab) : null,
         body: SafeArea(child: body),
       ),
     );

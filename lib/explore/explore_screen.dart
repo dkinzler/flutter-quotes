@@ -8,24 +8,28 @@ class ExploreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO probably want to put this into singlechildscrollview
-    return Padding(
-      padding: context.insets.paddingL,
-      child: Center(
-        child: Column(
-          children: [
-            ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: 600 * context.appTheme.scale),
-              child: const RandomQuoteWidget(),
-            ),
-            SizedBox(height: context.sizes.spaceM),
-            ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: 600 * context.appTheme.scale),
-              child: const FavoriteWidget(),
-            ),
-          ],
+    var isMobile = context.layout == Layout.mobile;
+    var padding = isMobile ? context.insets.paddingM : context.insets.paddingL;
+
+    return Center(
+      child: Padding(
+        padding: padding,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ConstrainedBox(
+                constraints:
+                    BoxConstraints(maxWidth: 600 * context.appTheme.scale),
+                child: const RandomQuoteWidget(),
+              ),
+              SizedBox(height: context.sizes.spaceM),
+              ConstrainedBox(
+                constraints:
+                    BoxConstraints(maxWidth: 600 * context.appTheme.scale),
+                child: const FavoriteWidget(),
+              ),
+            ],
+          ),
         ),
       ),
     );

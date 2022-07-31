@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
+import 'package:flutter_sample/home/actions.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/theme/theme.dart';
 
@@ -20,11 +21,19 @@ class _NavRailState extends State<NavRail> {
   Widget build(BuildContext context) {
     //TODO if window gets too small we can't display it all, then a listview would be better, but with the ListView can we easily make it so that logout and settings is at the bottom?
     //should be fine though, if not use a singleChildScrollView
+    Widget extendIcon = const Icon(Icons.double_arrow);
+    if (extended) {
+      extendIcon = Transform.scale(
+        scaleX: -1.0,
+        child: extendIcon,
+      );
+    }
+
     return NavigationRail(
       extended: extended,
       selectedIndex: _tabToIndex(widget.selectedTab),
       leading: IconButton(
-        icon: const Icon(Icons.double_arrow),
+        icon: extendIcon,
         onPressed: () {
           setState(() {
             extended = !extended;
@@ -60,19 +69,44 @@ class _NavRailState extends State<NavRail> {
       onDestinationSelected: (index) {
         context.go(HomeRoute(tab: _indexToTab(index)));
       },
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () =>
-                context.read<AppRouter>().push(const SettingsRoute()),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthCubit>().logout(),
-          ),
-        ],
+      //Navigation rail places the widgets for the navigation destinations and the trailing widget inside a column
+      //that's why we can use expanded
+      trailing: Expanded(
+        //Use a nested navigation rail to form two groups of destinations
+        //i.e. one for the actual tabs: explore, search, favorites
+        //and one for settings and logout
+        child: NavigationRail(
+          extended: extended,
+          selectedIndex: null,
+          //align widgets to the bottom
+          groupAlignment: 1.0,
+          destinations: const [
+            NavigationRailDestination(
+              icon: Icon(
+                Icons.settings,
+              ),
+              label: Text(
+                'Settings',
+              ),
+            ),
+            NavigationRailDestination(
+              icon: Icon(
+                Icons.logout,
+              ),
+              label: Text(
+                'Logout',
+              ),
+            ),
+          ],
+          onDestinationSelected: (index) {
+            if (index == 0) {
+              Actions.invoke<OpenSettingsIntent>(
+                  context, const OpenSettingsIntent());
+            } else {
+              Actions.invoke<LogoutIntent>(context, const LogoutIntent());
+            }
+          },
+        ),
       ),
     );
   }

@@ -33,27 +33,35 @@ class ErrorRetryWidget extends StatelessWidget {
 
   final double? horizontalSpace;
 
+  final bool showErrorIcon;
+
   const ErrorRetryWidget({
     Key? key,
-    this.text = 'Ups, something went wrong',
+    this.text = 'Ups, something went wrong.',
     this.textStyle,
     this.textColor,
     this.buttonText = 'Try again',
     this.horizontalSpace,
     required this.onPressed,
+    this.showErrorIcon = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var c = textColor ?? context.theme.errorColor;
-    var ts = textStyle ?? context.theme.textTheme.bodyMedium;
-    ts = ts?.apply(color: c);
+    var ts = textStyle ?? context.theme.textTheme.bodyLarge;
+    ts = ts?.apply(color: textColor);
 
     var hs = horizontalSpace ?? context.sizes.spaceM;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (showErrorIcon)
+          Icon(
+            Icons.error,
+            size: context.sizes.scaled(64),
+          ),
+        SizedBox(height: hs),
         Text(
           'Ups, something went wrong',
           style: ts,
