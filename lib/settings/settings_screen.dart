@@ -26,14 +26,13 @@ class SettingsScreen extends StatelessWidget {
             ),
             child: Card(
               elevation: 8.0,
-              //TODO can wrap this in SingleChildScrollView to be safe
-              //should normally work, maybe not on a smaller phone in landscape mode
               child: Padding(
                 padding: context.insets.symmetricScaled(
                   horizontal: 8.0,
                   vertical: 16.0,
                 ),
-                child: Column(
+                //use a ListView since contents might not fit on screen, especially on smaller devices and when some of the tiles are expanded
+                child: ListView(
                   children: [
                     const MyAccountTile(),
                     const Divider(),
