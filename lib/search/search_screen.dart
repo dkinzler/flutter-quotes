@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sample/search/search_bar.dart';
+import 'package:flutter_sample/search/search_result_header.dart';
 import 'package:flutter_sample/search/search_results.dart';
 import 'package:flutter_sample/search/sliver_search_results.dart';
 import 'package:flutter_sample/theme/theme.dart';
-
-//TODO below search bar show a little text: Results for "xyz", 1337 Results found
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -34,6 +33,9 @@ class _SearchScreenState extends State<SearchScreen>
           const SliverToBoxAdapter(
             child: SearchBar(),
           ),
+          const SliverToBoxAdapter(
+            child: Center(child: SearchResultHeader()),
+          ),
           SliverToBoxAdapter(
             child: SizedBox(height: context.sizes.spaceM),
           ),
@@ -43,6 +45,7 @@ class _SearchScreenState extends State<SearchScreen>
     } else {
       return Column(children: [
         const SearchBar(),
+        const SearchResultHeader(),
         SizedBox(height: context.sizes.spaceM),
         const Expanded(child: SearchResultsWidget()),
       ]);

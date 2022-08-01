@@ -44,16 +44,11 @@ class AppThemeData extends Equatable {
         insets,
       ];
 
-  IconThemeData get iconTheme => IconThemeData(
-        size: 24.0 * scale,
-      );
-
   ThemeData themeDataFrom(ThemeData base) {
     return base.copyWith(
       textTheme: base.textTheme.apply(fontSizeFactor: fontSizeFactor),
       primaryTextTheme:
           base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
-      iconTheme: base.iconTheme.merge(iconTheme),
     );
   }
 
@@ -90,9 +85,12 @@ class AppTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var layout = Layout.fromSize(size);
+    var uiScale = context.select<SettingsCubit, double>((c) => c.state.uiScale);
     var theme = Theme.of(context);
     var appThemeData = AppThemeData(
       layout: layout,
+      scale: uiScale,
+      fontSizeFactor: uiScale,
     );
     return _InheritedAppTheme(
       appThemeData: appThemeData,

@@ -1,6 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
+/*
+Provides common insets/paddings that should be used across the app for consistency.
+They can be obtained using the extension on BuildContext by simply typing: context.insets.paddingM.
+The insets will be automatically scaled using the AppThemeData.scale factor that can be changed in the settings of the app.
+*/
 class Insets extends Equatable {
   final double scale;
 
@@ -19,8 +24,7 @@ class Insets extends Equatable {
       EdgeInsets.symmetric(
           horizontal: horizontal * scale, vertical: vertical * scale);
 
-  EdgeInsetsGeometry symmetricAll(double value) =>
-      EdgeInsets.all(value * scale);
+  EdgeInsetsGeometry allScaled(double value) => EdgeInsets.all(value * scale);
 
   @override
   List<Object?> get props => [scale];

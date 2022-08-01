@@ -13,6 +13,10 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var padding = context.layout == Layout.mobile
+        ? context.insets.paddingM
+        : context.insets.paddingL;
+
     return BlocProvider<LoginCubit>(
       create: (context) => LoginCubit(
         authCubit: context.read<AuthCubit>(),
@@ -20,7 +24,7 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         body: Center(
           child: Padding(
-            padding: context.insets.paddingL,
+            padding: padding,
             child: const LoginForm(),
           ),
         ),
@@ -46,6 +50,15 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    var padding = context.layout == Layout.mobile
+        ? context.insets.allScaled(
+            24.0,
+          )
+        : context.insets.symmetricScaled(
+            horizontal: 32.0,
+            vertical: 48.0,
+          );
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -54,10 +67,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
         child: Card(
           child: Padding(
-            padding: context.insets.symmetricScaled(
-              horizontal: 32.0,
-              vertical: 48.0,
-            ),
+            padding: padding,
             child: FormBuilder(
               key: _formKey,
               child: BlocBuilder<LoginCubit, LoginState>(

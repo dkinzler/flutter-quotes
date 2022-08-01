@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/quote/mock/apiclient.dart';
-import 'package:flutter_sample/quote/quotable/apiclient.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 //TODO right now these settings are global to the app
@@ -24,33 +22,42 @@ enum QuoteProvider {
 class Settings extends Equatable {
   final bool darkMode;
   final QuoteProvider quoteProvider;
+  final double uiScale;
 
   const Settings({
     this.darkMode = true,
     this.quoteProvider = QuoteProvider.mock,
+    this.uiScale = 1.0,
   });
 
   @override
-  List<Object?> get props => [darkMode, quoteProvider];
+  List<Object?> get props => [darkMode, quoteProvider, uiScale];
 
   Settings copyWith({
     bool? darkMode,
     QuoteProvider? quoteProvider,
+    double? uiScale,
   }) {
     return Settings(
       darkMode: darkMode ?? this.darkMode,
       quoteProvider: quoteProvider ?? this.quoteProvider,
+      uiScale: uiScale ?? this.uiScale,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {'darkMode': darkMode, 'quoteProvider': quoteProvider.name};
+    return {
+      'darkMode': darkMode,
+      'quoteProvider': quoteProvider.name,
+      'uiScale': uiScale
+    };
   }
 
   factory Settings.fromMap(Map<String, dynamic> map) {
     return Settings(
       darkMode: map['darkMode'],
       quoteProvider: QuoteProvider.fromString(map['quoteProvider']),
+      uiScale: map['uiScale'],
     );
   }
 }
@@ -64,6 +71,10 @@ class SettingsCubit extends HydratedCubit<Settings> {
 
   void setQuoteProvider(QuoteProvider quoteProvider) {
     emit(state.copyWith(quoteProvider: quoteProvider));
+  }
+
+  void setUIScale(double scale) {
+    emit(state.copyWith(uiScale: scale));
   }
 
   @override

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/home/actions.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/theme/theme.dart';
@@ -19,8 +17,6 @@ class _NavRailState extends State<NavRail> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO if window gets too small we can't display it all, then a listview would be better, but with the ListView can we easily make it so that logout and settings is at the bottom?
-    //should be fine though, if not use a singleChildScrollView
     Widget extendIcon = const Icon(Icons.double_arrow);
     if (extended) {
       extendIcon = Transform.scale(
@@ -29,8 +25,11 @@ class _NavRailState extends State<NavRail> {
       );
     }
 
+    var minExtendedWidth = 232 * context.appTheme.scale;
+
     return NavigationRail(
       extended: extended,
+      minExtendedWidth: minExtendedWidth,
       selectedIndex: _tabToIndex(widget.selectedTab),
       leading: IconButton(
         icon: extendIcon,
@@ -77,6 +76,7 @@ class _NavRailState extends State<NavRail> {
         //and one for settings and logout
         child: NavigationRail(
           extended: extended,
+          minExtendedWidth: minExtendedWidth,
           selectedIndex: null,
           //align widgets to the bottom
           groupAlignment: 1.0,

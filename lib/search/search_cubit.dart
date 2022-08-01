@@ -25,6 +25,7 @@ class SearchState extends Equatable {
   final String query;
   final List<Quote>? quotes;
   final Object? queryCursor;
+  final int? totalNumberOfResults;
 
   bool get canLoadMore => queryCursor != null;
   bool get hasResults => quotes != null;
@@ -35,22 +36,26 @@ class SearchState extends Equatable {
     this.query = '',
     this.quotes,
     this.queryCursor,
+    this.totalNumberOfResults,
   });
 
   @override
-  List<Object?> get props => [status, query, quotes, queryCursor];
+  List<Object?> get props =>
+      [status, query, quotes, queryCursor, totalNumberOfResults];
 
   SearchState copyWith({
     SearchStatus? status,
     String? query,
     List<Quote>? quotes,
     Object? queryCursor,
+    int? totalNumberOfResults,
   }) {
     return SearchState(
       status: status ?? this.status,
       query: query ?? this.query,
       quotes: quotes ?? this.quotes,
       queryCursor: queryCursor ?? this.queryCursor,
+      totalNumberOfResults: totalNumberOfResults ?? this.totalNumberOfResults,
     );
   }
 }
@@ -99,6 +104,7 @@ class SearchCubit extends Cubit<SearchState> {
         query: query,
         quotes: result.quotes,
         queryCursor: result.queryCursor,
+        totalNumberOfResults: result.totalNumberOfResults,
       ));
       return true;
     } catch (e) {
@@ -135,6 +141,7 @@ class SearchCubit extends Cubit<SearchState> {
         quotes: newQuotes,
         //Note: we can't use state.copyWith here, because if result.queryCursor is null the queryCursor field of state would not actually be set to null, since copyWith ignores null arguments
         queryCursor: result.queryCursor,
+        totalNumberOfResults: result.totalNumberOfResults,
       ));
       return true;
     } catch (e) {
