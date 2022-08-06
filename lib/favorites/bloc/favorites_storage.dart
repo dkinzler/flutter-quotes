@@ -25,9 +25,11 @@ class HiveFavoritesStorage implements FavoritesStorage {
 
   Future<bool> _init() async {
     try {
+      //TODO do we need to be careful here with the name of the box?
+      //e.g. if there are special characters in the userId might this cause errors?
       box = await Hive.openBox<String>('favorites:$userId');
       return true;
-    } catch(e) {
+    } catch (e) {
       _log.warning('could not init favorites storage');
       return false;
     }
@@ -38,7 +40,7 @@ class HiveFavoritesStorage implements FavoritesStorage {
     try {
       await box!.put(favorite.id, jsonEncode(favorite.toMap()));
       return true;
-    } catch(e) {
+    } catch (e) {
       _log.warning('could not store favorite');
       return false;
     }
@@ -46,15 +48,15 @@ class HiveFavoritesStorage implements FavoritesStorage {
 
   @override
   Future<bool> remove(String id) async {
-    if(box == null) {
-      if(!await _init()) {
+    if (box == null) {
+      if (!await _init()) {
         return false;
       }
     }
     try {
       await box!.delete(id);
       return true;
-    } catch(e) {
+    } catch (e) {
       _log.warning('could not store favorite');
       return false;
     }
@@ -62,14 +64,16 @@ class HiveFavoritesStorage implements FavoritesStorage {
 
   @override
   Future<List<Favorite>> load() async {
-    if(box == null) {
-      if(!await _init()) {
+    if (box == null) {
+      if (!await _init()) {
         throw Exception('could not init storage');
       }
     }
     try {
-      return box!.values.map<Favorite>((s) => Favorite.fromMap(jsonDecode(s))).toList();
-    } catch(e) {
+      return box!.values
+          .map<Favorite>((s) => Favorite.fromMap(jsonDecode(s)))
+          .toList();
+    } catch (e) {
       _log.warning('could not load favorites');
       rethrow;
     }

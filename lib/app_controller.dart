@@ -11,8 +11,8 @@ import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'package:flutter_sample/tips/bloc/bloc.dart';
 
 class AppController {
-  final AppRouter router = AppRouter();
   final AuthCubit authCubit = AuthCubit();
+  late final AppRouter router = AppRouter(authCubit: authCubit);
   final SearchCubit searchCubit = SearchCubit();
   final RandomCubit randomCubit = RandomCubit();
   final FavoritesCubit favoritesCubit = FavoritesCubit();

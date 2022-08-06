@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/auth/login/login_screen.dart';
 import 'package:flutter_sample/home/home_screen.dart';
 import 'package:flutter_sample/routing/error_screen.dart';
@@ -19,6 +20,9 @@ To catch these changes we would have to listen to the state of the GoRouter or G
 */
 
 class AppRouter {
+  //need auth cubit to check if a user is logged in or not, and if not prevent them from accessing certain routes
+  final AuthCubit? authCubit;
+
   late final GoRouter _router = GoRouter(
     initialLocation: '/login',
     routes: [
@@ -26,15 +30,44 @@ class AppRouter {
         name: loginRouteName,
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+        redirect: (state) {
+          //will prevent users from accessing the login screen if they are logged in
+          //this is mostly for web, where the user could manually change the url to /login
+          if (authCubit != null) {
+            if (authCubit!.state.isAuthenticated) {
+              var route = const HomeRoute(tab: HomeTab.explore);
+              return state.namedLocation(
+                route.name,
+                params: route.params,
+                queryParams: route.queryParams,
+              );
+            }
+          }
+          return null;
+        },
       ),
       GoRoute(
         name: homeRouteName,
         path: '/home/:tab',
         builder: (context, state) {
           var p = state.params['tab'] ?? HomeTab.explore.name;
-          //TODO how to move to an error page on invalid parameter
           var tab = HomeTab.fromString(p);
           return HomeScreen(key: state.pageKey, tab: tab);
+        },
+        redirect: (state) {
+          //will prevent users from accessing the home screen if they are not logged in
+          //this is mostly for web, where the user could manually change the url to e.g. /home/explore
+          if (authCubit != null) {
+            if (!authCubit!.state.isAuthenticated) {
+              var route = const LoginRoute();
+              return state.namedLocation(
+                route.name,
+                params: route.params,
+                queryParams: route.queryParams,
+              );
+            }
+          }
+          return null;
         },
       ),
       GoRoute(
@@ -52,7 +85,7 @@ class AppRouter {
   RouteInformationProvider get routeInformationProvider =>
       _router.routeInformationProvider;
 
-  AppRouter();
+  AppRouter({this.authCubit});
 
   void go(AppRoute route) {
     _router.goNamed(route.name,
