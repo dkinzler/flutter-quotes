@@ -69,6 +69,36 @@ class QuoteWidget extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: quoteTextWidgets,
+              ),
+            ),
+            if (button != null) ...[
+              SizedBox(width: context.sizes.spaceM),
+              button!,
+            ],
+          ],
+        ),
+        if (tagsWidget != null) ...[
+          SizedBox(height: context.sizes.spaceM),
+          tagsWidget,
+        ],
+      ],
+    );
+
+    /* 
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...quoteTextWidgets,
@@ -82,6 +112,7 @@ class QuoteWidget extends StatelessWidget {
         ],
       ],
     );
+    */
   }
 }
 

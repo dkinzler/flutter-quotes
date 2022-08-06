@@ -8,10 +8,12 @@ import 'logging.dart';
 import 'app.dart';
 
 Future<void> main() async {
+  var logger = ConsoleLogger();
+  //runZoneGuarded makes it possible to intercept any uncaught errors and log them
   return runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      initLogging();
+      initLogging(logger);
       await Hive.initFlutter();
       final storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
@@ -22,8 +24,7 @@ Future<void> main() async {
         () => runApp(const App()),
         storage: storage,
       );
-      //TODO set error logging function here, also set FlutterError.onError
     },
-    (error, stack) {},
+    (error, stack) => logger.logError(error, stackTrace: stack),
   );
 }

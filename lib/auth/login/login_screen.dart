@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/auth/login/login_cubit.dart';
+import 'package:flutter_sample/auth/login/tip.dart';
 import 'package:flutter_sample/keys.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/error.dart';
@@ -22,6 +23,7 @@ class LoginScreen extends StatelessWidget {
         authCubit: context.read<AuthCubit>(),
       ),
       child: Scaffold(
+        floatingActionButton: const LoginTipButton(),
         body: Center(
           child: Padding(
             padding: padding,

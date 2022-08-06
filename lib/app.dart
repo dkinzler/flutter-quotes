@@ -9,6 +9,7 @@ import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/tips/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatefulWidget {
@@ -70,6 +71,10 @@ class _AppState extends State<App> {
               value: _appController.filterBloc),
           BlocProvider<SettingsCubit>.value(
               value: _appController.settingsCubit),
+          //TODO move this into appController too
+          BlocProvider<TipsBloc>.value(
+            value: _appController.tipsBloc,
+          ),
         ],
         child: Builder(builder: (context) {
           var darkMode =

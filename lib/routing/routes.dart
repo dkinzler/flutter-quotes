@@ -5,10 +5,10 @@ Routing in this app is based on the go_router package.
 We use subclasses of AppRoute to navigate in a type-safe way.
 I.e. instead of relying on location strings, e.g. context.go('/example?x=y')),
 we can write context.go(ExampleRoute(x: 'y')).
-That way we can catch errors like missing parameters/wrong parameter type/etc 
-already at compile time.
+That way we can already catch errors like missing parameters/wrong parameter types/... 
+at compile time.
 
-In future updates go_router will support typed routing out of the box,
+In future updates go_router will probably support typed routing out of the box,
 so we won't need this custom solution anymore.
 */
 
@@ -23,8 +23,6 @@ abstract class AppRoute extends Equatable {
   List<Object?> get props => [params, queryParams];
 }
 
-//TODO there seems to be a bug in the go_router package
-//where one cannot navigate using a location name if it does not contain only lowercase letters
 const loginRouteName = 'login';
 
 class LoginRoute extends AppRoute {

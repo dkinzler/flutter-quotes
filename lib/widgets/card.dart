@@ -48,7 +48,7 @@ class CustomCard extends StatelessWidget {
         padding: padding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (headerWidgets != null) ...headerWidgets,
             content,

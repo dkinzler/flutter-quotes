@@ -2,31 +2,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/login/login_screen.dart';
 import 'package:flutter_sample/home/home_screen.dart';
+import 'package:flutter_sample/routing/error_screen.dart';
 import 'package:flutter_sample/settings/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
-//TODO explain this better, is this actually necessary, it wasn't below for HomeScreen
-//maybe only if we use page builders instead of widget builders?
-/*
-Note for page builders:
-  Whenever we create a some page that takes parameters, we should provide a key that is different
-  for different parameters. Because otherwise when the new page is pusehd, the page widget isn't actually rebuild.
-  Because without a key, flutter doesn't rebuild the widget when the type of widget is the same.
-  E.g. we have path '/somepath' with builder 
-    (context, state) {
-      var x = state.queryParams['xyz'];
-      return SomePage(x: x);
-    }
-  if we are already on SomePage with x='somestring' 
-  and then push SomePage with x='someotherstring', the ui won't actually update
-*/
-
 /*
 TODO
-AppRouter could implement ChangeNotifier and internally listen to _router or _routerDelegate
-whenever location changes we can parse the location back into an AppPage object
-this allows us to listen to AppPage changes
+AppRouter could maintain the current stack of AppRoutes (i.e. the current routing state represented by our own typed route objects rather than the string/uri locations used by the go_router package)
+that are shown and implement ChangeNotifier to make this information
+available to interested listeners, e.g. to track and record analytics about the behaviour of the users.
+
+Updating the information whenever the routes are changed using AppRouter (i.e. using the AppRouter.go or AppRouter.push methods) is easy.
+However the routes are usually also changed without involvement of AppRouter, e.g. when the user presses the back button (either in the app or the system back button on some android devices).
+To catch these changes we would have to listen to the state of the GoRouter or GoRouterDelegate object.
 */
 
 class AppRouter {
@@ -54,10 +43,7 @@ class AppRouter {
         builder: (context, state) => const SettingsScreen(),
       ),
     ],
-    //TODO make error page
-    //Override to use a custom ErrorPage
-    //error page might be shown if we try to navigate to an undefined location
-    //errorBuilder: (context, state) => const ErrorPage(),
+    errorBuilder: (context, state) => const ErrorScreen(),
   );
 
   RouterDelegate<Object> get routerDelegate => _router.routerDelegate;
@@ -68,14 +54,14 @@ class AppRouter {
 
   AppRouter();
 
-  void go(AppRoute appRoute) {
-    _router.goNamed(appRoute.name,
-        params: appRoute.params, queryParams: appRoute.queryParams);
+  void go(AppRoute route) {
+    _router.goNamed(route.name,
+        params: route.params, queryParams: route.queryParams);
   }
 
-  void push(AppRoute appRoute) {
-    _router.pushNamed(appRoute.name,
-        params: appRoute.params, queryParams: appRoute.queryParams);
+  void push(AppRoute route) {
+    _router.pushNamed(route.name,
+        params: route.params, queryParams: route.queryParams);
   }
 
   void close() {
@@ -83,8 +69,16 @@ class AppRouter {
   }
 }
 
+/*
+For convenience this extension on BuildContext allows us to write:
+context.go(LoginRoute()) instead of context.read<AppRouter>().go(LoginRoute())
+*/
 extension AppRouterHelper on BuildContext {
-  void go(AppRoute appRoute) {
-    read<AppRouter>().go(appRoute);
+  void go(AppRoute route) {
+    read<AppRouter>().go(route);
+  }
+
+  void push(AppRoute route) {
+    read<AppRouter>().push(route);
   }
 }

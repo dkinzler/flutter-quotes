@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_sample/tips/bloc/bloc.dart';
+import 'package:flutter_sample/tips/bloc/events.dart';
 import 'package:intl/intl.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -10,8 +12,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var settings = context.watch<SettingsCubit>().state;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -33,28 +33,23 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 //use a ListView since contents might not fit on screen, especially on smaller devices and when some of the tiles are expanded
                 child: ListView(
-                  children: [
-                    const MyAccountTile(),
-                    const Divider(),
-                    SwitchListTile(
-                      title: const Text('Dark mode'),
-                      secondary: const Icon(Icons.color_lens),
-                      value: settings.darkMode,
-                      onChanged: (value) {
-                        context.read<SettingsCubit>().setDarkMode(value);
-                      },
-                    ),
-                    const Divider(),
-                    const UIScaleSliderTile(),
-                    const Divider(),
-                    const QuoteProviderSelectionTile(),
-                    const Divider(),
-                    const AboutListTile(
+                  children: const [
+                    MyAccountTile(),
+                    Divider(),
+                    DarkModeSwitchListTile(),
+                    Divider(),
+                    UIScaleSliderTile(),
+                    Divider(),
+                    QuoteProviderSelectionTile(),
+                    Divider(),
+                    AboutListTile(
                       icon: Icon(Icons.info),
                       applicationName: 'Flutter Quotes',
                       applicationVersion: '1.0',
                       child: Text('About this app'),
                     ),
+                    Divider(),
+                    TipsSwitchListTile(),
                   ],
                 ),
               ),
@@ -62,6 +57,23 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DarkModeSwitchListTile extends StatelessWidget {
+  const DarkModeSwitchListTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var settings = context.watch<SettingsCubit>().state;
+    return SwitchListTile(
+      title: const Text('Dark mode'),
+      secondary: const Icon(Icons.color_lens),
+      value: settings.darkMode,
+      onChanged: (value) {
+        context.read<SettingsCubit>().setDarkMode(value);
+      },
     );
   }
 }
@@ -161,6 +173,23 @@ class MyAccountTile extends StatelessWidget {
       leading: const Icon(Icons.account_box),
       title: const Text('My Account'),
       children: children,
+    );
+  }
+}
+
+class TipsSwitchListTile extends StatelessWidget {
+  const TipsSwitchListTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var showTips = context.watch<TipsBloc>().state.showTips;
+    return SwitchListTile(
+      title: const Text('Show tips'),
+      secondary: const Icon(Icons.lightbulb_outline),
+      value: showTips,
+      onChanged: (value) {
+        context.read<TipsBloc>().add(TipSettingsChanged(showTips: value));
+      },
     );
   }
 }

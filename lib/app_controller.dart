@@ -8,6 +8,7 @@ import 'package:flutter_sample/quote/quotable/apiclient.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/settings/settings_cubit.dart';
+import 'package:flutter_sample/tips/bloc/bloc.dart';
 
 class AppController {
   final AppRouter router = AppRouter();
@@ -19,6 +20,7 @@ class AppController {
     favoritesCubit: favoritesCubit,
   );
   final SettingsCubit settingsCubit = SettingsCubit();
+  final TipsBloc tipsBloc = TipsBloc();
 
   late StreamSubscription _authCubitSubscription;
 
