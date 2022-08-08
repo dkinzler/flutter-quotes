@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
+import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/settings/settings_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/tips/bloc/bloc.dart';
@@ -12,13 +13,17 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //use smaller padding on mobile
+    var isMobile = context.layout == Layout.mobile;
+    var padding = isMobile ? context.insets.paddingM : context.insets.paddingL;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
       ),
       body: Padding(
-        padding: context.insets.paddingL,
+        padding: padding,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -84,12 +89,12 @@ class QuoteProviderSelectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var currentQuoteProvider = context
-        .select<SettingsCubit, QuoteProvider>((c) => c.state.quoteProvider);
+        .select<SettingsCubit, QuoteProviderType>((c) => c.state.quoteProvider);
     return ExpansionTile(
       leading: const Icon(Icons.api),
       title: const Text('Select quote provider API'),
-      children: QuoteProvider.values
-          .map<Widget>((quoteProvider) => RadioListTile<QuoteProvider>(
+      children: QuoteProviderType.values
+          .map<Widget>((quoteProvider) => RadioListTile<QuoteProviderType>(
                 value: quoteProvider,
                 groupValue: currentQuoteProvider,
                 title: Text(quoteProviderToName(quoteProvider)),
@@ -103,8 +108,8 @@ class QuoteProviderSelectionTile extends StatelessWidget {
     );
   }
 
-  String quoteProviderToName(QuoteProvider quoteProvider) {
-    if (quoteProvider == QuoteProvider.mock) {
+  String quoteProviderToName(QuoteProviderType quoteProvider) {
+    if (quoteProvider == QuoteProviderType.mock) {
       return 'Mock';
     } else {
       return 'Quotable (api.quotable.io)';

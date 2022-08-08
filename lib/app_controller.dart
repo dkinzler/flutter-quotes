@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
 import 'package:flutter_sample/explore/random_cubit.dart';
-import 'package:flutter_sample/quote/mock/apiclient.dart';
-import 'package:flutter_sample/quote/provider.dart' as p;
-import 'package:flutter_sample/quote/quotable/apiclient.dart';
+import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/settings/settings_cubit.dart';
@@ -64,13 +62,8 @@ class AppController {
     _currentSettings = settings;
   }
 
-  void _updateQuoteProvider(QuoteProvider qp) {
-    p.QuoteProvider quoteProvider;
-    if (qp == QuoteProvider.quotable) {
-      quoteProvider = QuotableApiClient();
-    } else {
-      quoteProvider = MockQuoteApiClient();
-    }
+  void _updateQuoteProvider(QuoteProviderType qp) {
+    var quoteProvider = QuoteProviderFactory.buildQuoteProvider(qp);
     searchCubit.init(quoteProvider);
     randomCubit.init(quoteProvider: quoteProvider);
   }

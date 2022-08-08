@@ -6,13 +6,6 @@ import 'insets.dart';
 import 'layout.dart';
 import 'sizes.dart';
 
-//TODO maybe we should listen to changes in MediaQuery.textScaleFactor
-//and if it changes we should also change our scale accordingly, so that icons and stuff also become bigger
-//we could also insert another MediaQuery with textScaleFactor set to 1
-//but we then set our fontSizeFactor
-//in any calculations we then only have to think about our scale and fontSizeFactor
-//and not about MediaQuery
-
 ThemeData get baseThemeDark => ThemeData.from(
       colorScheme: const ColorScheme.dark(),
     );
@@ -21,17 +14,40 @@ ThemeData get baseThemeLight => ThemeData.from(
       colorScheme: const ColorScheme.light(),
     );
 
+/*
+AppThemeData defines all the custom theme data of the app.
+It is inserted into the widget tree using the AppTheme widget and can be accessed with
+"AppTheme.of(context)" or simply "context.appTheme".
+
+This is the place to define icon themes, card themes, paddings, size constants, etc
+that can be used across the app.
+Some of elements are grouped into separate classes, e.g. there is a class Insets that 
+contains predefined paddings and a class Sizes that contains predefined size constants.
+To make things consistent and easy to change across the entire app, one should always try
+to use themes and constants from AppThemeData instead of using hard-coded values for widgets.
+
+Some AppThemeData properties can be directly accessed using a BuildContext,
+e.g. "context.insets.paddingL".
+To add this behaviour for more properties, simply edit the AppThemeContext extension on BuildContext below.
+*/
 class AppThemeData extends Equatable {
+  //device/screen size type
+  //can be used to build adaptive layouts, e.g. a list on mobile
+  //and a grid with multiple columns on larger screens like a tablet or desktop
   final Layout layout;
 
+  //UI scaling factor that is applied to sizes, paddings, text themes, etc.
+  //Scale can be changed by the user in the app settings.
   final double scale;
-  final double fontSizeFactor;
 
+  //contains different size constants that are scaled by "scale"
+  //can e.g. be used to insert whitespace in rows or columns using a SizedBox
   final Sizes sizes;
+
+  //contains different paddings that are scaled by "scale"
   final Insets insets;
 
-  AppThemeData(
-      {required this.layout, this.scale = 1.0, this.fontSizeFactor = 1.0})
+  AppThemeData({required this.layout, this.scale = 1.0})
       : sizes = Sizes(scale: scale),
         insets = Insets(scale: scale);
 
@@ -39,16 +55,14 @@ class AppThemeData extends Equatable {
   List<Object?> get props => [
         layout,
         scale,
-        fontSizeFactor,
         sizes,
         insets,
       ];
 
   ThemeData themeDataFrom(ThemeData base) {
     return base.copyWith(
-      textTheme: base.textTheme.apply(fontSizeFactor: fontSizeFactor),
-      primaryTextTheme:
-          base.primaryTextTheme.apply(fontSizeFactor: fontSizeFactor),
+      textTheme: base.textTheme.apply(fontSizeFactor: scale),
+      primaryTextTheme: base.primaryTextTheme.apply(fontSizeFactor: scale),
     );
   }
 
@@ -56,25 +70,26 @@ class AppThemeData extends Equatable {
     Layout? layout,
     bool? darkMode,
     double? scale,
-    double? fontSizeFactor,
   }) {
     return AppThemeData(
       layout: layout ?? this.layout,
       scale: scale ?? this.scale,
-      fontSizeFactor: fontSizeFactor ?? this.fontSizeFactor,
     );
   }
 }
 
 /*
+AppTheme builds an AppThemeData instance and makes it available to the widget tree.
+It depends on the screen size (using MediaQuery) and the app settings. Whenever one of these
+dependencies change, AppTheme automatically rebuilds a new AppThemeData instance.
+
 AppTheme should be inserted below MaterialApp in the widget tree, by passing AppTheme.appBuilder to the builder argument of the MaterialApp constructor.
 This ensures that a MediaQuery and Theme ancestor can be found.
-
-Furthermore we need a Theme ancestor to make fontScaling work.
+We need a Theme ancestor to make font scaling work.
 When a ThemeData object is created (e.g. with the ThemeData.from constructor), the contained TextStyles do not yet contain geometry data (font size, weight, ...).
 These are added based on localization, whenever the Theme.of method is called.
 Without fontSize set on the TextStyles we cannot apply font scaling (TextStyle.apply will throw an exception if fontSize is null, but a fontScaleFactor != 1.0 is provided).
-To fix this, AppTheme inserts another Theme widget, which has font scaling applied to Theme.of(context).
+To work around this, AppTheme inserts another Theme widget, which has font scaling applied to Theme.of(context).
 */
 class AppTheme extends StatelessWidget {
   final Widget child;
@@ -83,14 +98,23 @@ class AppTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    var mediaQueryData = MediaQuery.of(context);
+
+    var size = mediaQueryData.size;
     var layout = Layout.fromSize(size);
-    var uiScale = context.select<SettingsCubit, double>((c) => c.state.uiScale);
+
+    //if a textScaleFactor other than 1.0 is set we will use this factor
+    //instead of the one defined in the app settings
+    //textScaleFactor might not be 1.0 e.g. if the user changes OS wide scaling settings
+    var textScaleFactor = mediaQueryData.textScaleFactor;
+    var settingsScale =
+        context.select<SettingsCubit, double>((c) => c.state.uiScale);
+    var scale = textScaleFactor == 1.0 ? settingsScale : textScaleFactor;
+
     var theme = Theme.of(context);
     var appThemeData = AppThemeData(
       layout: layout,
-      scale: uiScale,
-      fontSizeFactor: uiScale,
+      scale: scale,
     );
     return _InheritedAppTheme(
       appThemeData: appThemeData,

@@ -3,8 +3,9 @@ import 'package:flutter/widgets.dart';
 
 /*
 Provides common insets/paddings that should be used across the app for consistency.
-They can be obtained using the extension on BuildContext by simply typing: context.insets.paddingM.
+They can be obtained using the extension on BuildContext by simply typing e.g. context.insets.paddingM.
 The insets will be automatically scaled using the AppThemeData.scale factor that can be changed in the settings of the app.
+One can also obtain custom scaled paddings by using the symmetricScaled() and allScaled() methods.
 */
 class Insets extends Equatable {
   final double scale;

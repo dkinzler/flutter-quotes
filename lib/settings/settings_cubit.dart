@@ -1,32 +1,30 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_sample/quote/provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-//TODO right now these settings are global to the app
-//not to each logged in user
+/*
+SettingsCubit keeps and stores app settings:
+- dark or light app theme
+- the api to use to get quotes
+- a ui scaling factor
 
-enum QuoteProvider {
-  mock,
-  quotable;
+Not all settings that can be changed on the settings screen are maintained by SettingsCubit.
 
-  factory QuoteProvider.fromString(String s) {
-    if (s == quotable.name) {
-      return quotable;
-    } else {
-      //return mock even if the given string doesn't match any of the providers
-      //alternatively we could also throw an exception if there is no match
-      return mock;
-    }
-  }
-}
+TODO
+Right now the settings are global, i.e. they apply to all users.
+It's not hard to adapt this to keep individual settings for each user.
+Probably just need to override the "id" getter and rebuild the cubit
+whenever a user logs out and a new user in.
+*/
 
 class Settings extends Equatable {
   final bool darkMode;
-  final QuoteProvider quoteProvider;
+  final QuoteProviderType quoteProvider;
   final double uiScale;
 
   const Settings({
     this.darkMode = true,
-    this.quoteProvider = QuoteProvider.mock,
+    this.quoteProvider = QuoteProviderType.mock,
     this.uiScale = 1.0,
   });
 
@@ -35,7 +33,7 @@ class Settings extends Equatable {
 
   Settings copyWith({
     bool? darkMode,
-    QuoteProvider? quoteProvider,
+    QuoteProviderType? quoteProvider,
     double? uiScale,
   }) {
     return Settings(
@@ -56,7 +54,7 @@ class Settings extends Equatable {
   factory Settings.fromMap(Map<String, dynamic> map) {
     return Settings(
       darkMode: map['darkMode'],
-      quoteProvider: QuoteProvider.fromString(map['quoteProvider']),
+      quoteProvider: QuoteProviderType.fromString(map['quoteProvider']),
       uiScale: map['uiScale'],
     );
   }
@@ -69,7 +67,7 @@ class SettingsCubit extends HydratedCubit<Settings> {
     emit(state.copyWith(darkMode: enabled));
   }
 
-  void setQuoteProvider(QuoteProvider quoteProvider) {
+  void setQuoteProvider(QuoteProviderType quoteProvider) {
     emit(state.copyWith(quoteProvider: quoteProvider));
   }
 
