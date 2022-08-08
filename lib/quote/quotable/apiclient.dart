@@ -5,6 +5,7 @@ import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/quote/quotable/model.dart';
 
+//API client for the Quotable API.
 class QuotableApiClient implements QuoteProvider {
   static final _baseUri = Uri(
     scheme: 'https',
@@ -17,20 +18,21 @@ class QuotableApiClient implements QuoteProvider {
 
   @override
   Future<List<Quote>> random(int count) async {
-    if(count > 20) {
+    if (count > 20) {
       count = 20;
     }
     try {
       //TODO maybe don't fail if only a single request fails?
       List<Quote> results = [];
-      for(int i = 0; i < count; i++) {
+      for (int i = 0; i < count; i++) {
         results.add(await _singleRandom());
       }
       return results;
     } on QuotableApiError {
       rethrow;
-    } catch(e) {
-      throw QuotableApiError(message: 'could not get random quotes', exception: e);
+    } catch (e) {
+      throw QuotableApiError(
+          message: 'could not get random quotes', exception: e);
     }
   }
 
@@ -39,13 +41,13 @@ class QuotableApiClient implements QuoteProvider {
       var resp = await _httpClient.get(_baseUri.replace(
         path: 'random',
       ));
-      if(resp.statusCode != 200) {
+      if (resp.statusCode != 200) {
         throw _parseApiError(resp);
       }
       return _parseSingleResult(resp.body);
-    } on QuotableApiError { 
+    } on QuotableApiError {
       rethrow;
-    } catch(e) {
+    } catch (e) {
       throw QuotableApiError(message: 'http request failed', exception: e);
     }
   }
@@ -54,31 +56,34 @@ class QuotableApiClient implements QuoteProvider {
     try {
       Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
       return QuotableQuote.fromMap(jsonResponse).toQuote();
-    } catch(e) {
-      throw QuotableApiError(message: 'could not parse search result', exception: e);
+    } catch (e) {
+      throw QuotableApiError(
+          message: 'could not parse search result', exception: e);
     }
   }
 
   @override
   Future<SearchResult> search(String query, {Object? queryCursor}) async {
     try {
-      if(queryCursor is! QuotableQueryCursor?) {
-        throw QuotableApiError(message: 'passed invalid query cursor, type: ${queryCursor.runtimeType}');
+      if (queryCursor is! QuotableQueryCursor?) {
+        throw QuotableApiError(
+            message:
+                'passed invalid query cursor, type: ${queryCursor.runtimeType}');
       }
       var resp = await _httpClient.get(_baseUri.replace(
         path: 'search/quotes',
         queryParameters: {
           'query': query,
-          if(queryCursor != null) 'page': queryCursor.nextPage.toString(),
+          if (queryCursor != null) 'page': queryCursor.nextPage.toString(),
         },
       ));
-      if(resp.statusCode != 200) {
+      if (resp.statusCode != 200) {
         throw _parseApiError(resp);
       }
       return _parseSearchResult(resp.body);
     } on QuotableApiError {
       rethrow;
-    } catch(e) {
+    } catch (e) {
       throw QuotableApiError(message: 'http request failed', exception: e);
     }
   }
@@ -89,18 +94,23 @@ class QuotableApiClient implements QuoteProvider {
       int page = jsonResponse['page'];
       int pageCount = jsonResponse['totalPages'];
       int totalResultCount = jsonResponse['totalCount'];
-      var nextPage = page+1;
-      var cursor = nextPage <= pageCount ? QuotableQueryCursor(nextPage: nextPage, pageCount: pageCount) : null;
+      var nextPage = page + 1;
+      var cursor = nextPage <= pageCount
+          ? QuotableQueryCursor(nextPage: nextPage, pageCount: pageCount)
+          : null;
 
       List<dynamic> results = jsonResponse['results'];
-      var quotes = results.map<Quote>((e) => QuotableQuote.fromMap(e).toQuote()).toList();
+      var quotes = results
+          .map<Quote>((e) => QuotableQuote.fromMap(e).toQuote())
+          .toList();
       return SearchResult(
         quotes: quotes,
         queryCursor: cursor,
         totalNumberOfResults: totalResultCount,
       );
-    } catch(e) {
-      throw QuotableApiError(message: 'could not parse search result', exception: e);
+    } catch (e) {
+      throw QuotableApiError(
+          message: 'could not parse search result', exception: e);
     }
   }
 
@@ -121,7 +131,7 @@ class QuotableQueryCursor extends Equatable {
     required this.nextPage,
     required this.pageCount,
   });
-  
+
   @override
   List<Object?> get props => [nextPage, pageCount];
 }
@@ -145,22 +155,20 @@ class QuotableApiError extends Equatable implements Exception {
 
   @override
   List<Object?> get props => [
-    message,
-    httpStatusCode,
-    httpResponseBody,
-    exception,
-  ];
+        message,
+        httpStatusCode,
+        httpResponseBody,
+        exception,
+      ];
 
-  @override 
+  @override
   String toString() {
     var properties = <String>[
       'message: $message',
-      if(httpStatusCode != null) 'httpStatusCode: $httpStatusCode',
-      if(httpResponseBody != null) 'httpResponseBody: $httpResponseBody',
-      if(exception != null) 'exception: $exception',
+      if (httpStatusCode != null) 'httpStatusCode: $httpStatusCode',
+      if (httpResponseBody != null) 'httpResponseBody: $httpResponseBody',
+      if (exception != null) 'exception: $exception',
     ];
     return 'QuotableApiError {${properties.join(', ')}}';
   }
 }
-
-

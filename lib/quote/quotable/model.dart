@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_sample/quote/quote.dart';
 
+/*
+A quote as returned by the Quotable API.
+*/
 class QuotableQuote extends Equatable {
   final String id;
   final String content;
@@ -9,14 +12,13 @@ class QuotableQuote extends Equatable {
   final int length;
   final List<String> tags;
 
-  const QuotableQuote({
-    required this.id,
-    required this.content,
-    required this.author,
-    required this.authorSlug,
-    required this.length,
-    required this.tags
-  });
+  const QuotableQuote(
+      {required this.id,
+      required this.content,
+      required this.author,
+      required this.authorSlug,
+      required this.length,
+      required this.tags});
 
   @override
   List<Object?> get props => [id, content, author, authorSlug, length, tags];

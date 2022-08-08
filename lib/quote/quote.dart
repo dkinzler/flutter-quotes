@@ -1,18 +1,30 @@
 import 'package:equatable/equatable.dart';
 
 class Quote extends Equatable {
+  //the actual quote text
   final String text;
 
+  //the author of the quote
   final String author;
+  //author id
+  //can be null, depends on the QuoteProvider from which this quote originates
+  //some quote providers assign unique author ids
   final String? authorId;
 
+  //a possibly empty list of tags
   final List<String> tags;
 
+  //a unique string identifying the QuoteProvider from which this quote originates
+  //e.g. 'quotable.io' or 'mock'
   final String source;
+  //a unique id for the quote, not supported by all quote providers
   final String? sourceId;
 
+  //quote id
+  //if the quote provider assigned a unique id, use it
+  //otherwise simply use the quote text
   String get id {
-    if(sourceId != null) {
+    if (sourceId != null) {
       return '$source:$sourceId';
     }
     return text;
@@ -22,13 +34,13 @@ class Quote extends Equatable {
     required this.text,
     required this.author,
     this.authorId,
-    this.tags = const[],
+    this.tags = const [],
     this.sourceId,
     required this.source,
   });
-  
+
   @override
-  List<Object?> get props => [text, author, authorId, tags , sourceId, source];
+  List<Object?> get props => [text, author, authorId, tags, sourceId, source];
 
   Map<String, dynamic> toMap() {
     return {
@@ -36,8 +48,8 @@ class Quote extends Equatable {
       'author': author,
       'authorId': authorId,
       'tags': tags,
-      'sourceId': sourceId,
       'source': source,
+      'sourceId': sourceId,
     };
   }
 
@@ -47,8 +59,8 @@ class Quote extends Equatable {
       author: map['author'] ?? '',
       authorId: map['authorId'],
       tags: List<String>.from(map['tags']),
-      sourceId: map['sourceId'],
       source: map['source'] ?? '',
+      sourceId: map['sourceId'],
     );
   }
 }

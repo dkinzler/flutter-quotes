@@ -2,14 +2,33 @@ import 'package:flutter_sample/quote/mock/apiclient.dart';
 import 'package:flutter_sample/quote/quotable/apiclient.dart';
 import 'package:flutter_sample/quote/quote.dart';
 
+/*
+Interface for loading random quotes/searching for quotes.
+Any class implementing this interface can be used as the source of quotes for the app.
+
+There are currently 2 implementations of QuoteProvider:
+- an api client for the online quote API api.quotable.io
+- a mock API that returns random quotes from a fixed list of 50 quotes
+
+To support another quote API, create an api client class that implements this interface, 
+add it to the QuoteProviderType enum and update QuoteProviderFactory below.
+*/
 abstract class QuoteProvider {
   Future<List<Quote>> random(int count);
+
+  //the query cursor object is used to implement pagination
+  //we can pass a query cursor, obtained from the search result of a previous call to search,
+  //to load the next page of results
   Future<SearchResult> search(String query, {Object? queryCursor});
 }
 
 class SearchResult {
   final List<Quote> quotes;
   final int? totalNumberOfResults;
+
+  //a query cursor object
+  //if non-null and passed to the search() method of QuoteProvider, the next page of results
+  //should be returned
   final Object? queryCursor;
 
   const SearchResult({

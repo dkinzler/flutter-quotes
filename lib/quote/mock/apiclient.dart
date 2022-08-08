@@ -5,6 +5,10 @@ import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/quote/quote.dart';
 
 class MockQuoteApiClient implements QuoteProvider {
+  //an artifical delay that is applied to the query methods
+  //this makes it easy to simulate slow api requests and e.g. observe what is going
+  //in the UI while an api request is in progress
+  //e.g. while a search query is running, the UI would probably show a progress indicator
   Duration delay;
 
   MockQuoteApiClient({
@@ -39,6 +43,7 @@ class MockQuoteApiClient implements QuoteProvider {
     return quotes;
   }
 
+  //ignores the query term and just return a random list of quotes
   @override
   Future<SearchResult> search(String query, {Object? queryCursor}) async {
     if (queryCursor is! MockQueryCursor?) {

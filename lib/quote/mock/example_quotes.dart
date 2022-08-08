@@ -1,5 +1,8 @@
 import 'package:flutter_sample/quote/quote.dart';
 
+/*
+A list of 50 random quotes obtained from the Quotable API (api.quotable.io).
+*/
 const exampleQuotes = <Quote>[
   Quote(
     text: 'A jug fills drop by drop.',
