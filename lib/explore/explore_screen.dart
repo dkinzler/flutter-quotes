@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sample/explore/favorite_widget.dart';
-import 'package:flutter_sample/explore/random_widget.dart';
+import 'package:flutter_sample/explore/random/random_widget.dart';
 import 'package:flutter_sample/theme/theme.dart';
 
 class ExploreScreen extends StatelessWidget {

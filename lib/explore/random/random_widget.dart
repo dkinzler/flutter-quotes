@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/explore/random_cubit.dart';
+import 'package:flutter_sample/explore/random/random_cubit.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/theme/theme.dart';
 import 'package:flutter_sample/widgets/card.dart';

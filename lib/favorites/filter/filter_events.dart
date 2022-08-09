@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/bloc/filter_state.dart';
+import 'package:flutter_sample/favorites/filter/filter_state.dart';
 
 class FilteredFavoritesEvent extends Equatable {
   const FilteredFavoritesEvent();

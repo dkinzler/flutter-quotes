@@ -1,5 +1,5 @@
 import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/bloc/filter_state.dart';
+import 'package:flutter_sample/favorites/filter/filter_state.dart';
 import 'package:flutter_sample/quote/quote.dart';
 import 'package:flutter_sample/util/time.dart';
 import 'package:test/test.dart';
@@ -9,13 +9,29 @@ void main() {
     return DateTime(2022);
   };
 
-  List<Quote> exampleQuotes = const[
-    Quote(text: 'abc', author: '123', source: 'test', sourceId: '1', tags: ['tag1', 'tag2']),
-    Quote(text: 'def', author: '456', source: 'test', sourceId: '2', tags: ['tag2', 'tag3']),
-    Quote(text: 'ghi', author: '789a', source: 'test', sourceId: '3', tags: ['tag1', 'tag3']),
+  List<Quote> exampleQuotes = const [
+    Quote(
+        text: 'abc',
+        author: '123',
+        source: 'test',
+        sourceId: '1',
+        tags: ['tag1', 'tag2']),
+    Quote(
+        text: 'def',
+        author: '456',
+        source: 'test',
+        sourceId: '2',
+        tags: ['tag2', 'tag3']),
+    Quote(
+        text: 'ghi',
+        author: '789a',
+        source: 'test',
+        sourceId: '3',
+        tags: ['tag1', 'tag3']),
   ];
 
-  List<Favorite> exampleFavorites = exampleQuotes.map<Favorite>((q) => Favorite.fromQuote(quote: q)).toList();
+  List<Favorite> exampleFavorites =
+      exampleQuotes.map<Favorite>((q) => Favorite.fromQuote(quote: q)).toList();
 
   group('Filters', () {
     test('empty filters work', () {
@@ -41,7 +57,8 @@ void main() {
       filters = const Filters(tags: ['tag2', 'tag3']);
       filtered = filters.filter(exampleFavorites);
       expect(filtered, hasLength(3));
-      expect(filtered, [exampleFavorites[0], exampleFavorites[1], exampleFavorites[2]]);
+      expect(filtered,
+          [exampleFavorites[0], exampleFavorites[1], exampleFavorites[2]]);
     });
 
     test('filterng by searchTerm and tag works', () {
@@ -54,20 +71,11 @@ void main() {
     test('adding and removing tags works', () {
       var filters = const Filters(searchTerm: 'a', tags: ['tag2']);
       filters = filters.copyWithTag('tag1');
-      expect(filters, const Filters(
-        searchTerm: 'a',
-        tags: ['tag2', 'tag1']
-      ));
+      expect(filters, const Filters(searchTerm: 'a', tags: ['tag2', 'tag1']));
       filters = filters.copyWithTag('tag1');
-      expect(filters, const Filters(
-        searchTerm: 'a',
-        tags: ['tag2', 'tag1']
-      ));
+      expect(filters, const Filters(searchTerm: 'a', tags: ['tag2', 'tag1']));
       filters = filters.copyWithTagRemoved('tag2');
-      expect(filters, const Filters(
-        searchTerm: 'a',
-        tags: ['tag1']
-      ));
+      expect(filters, const Filters(searchTerm: 'a', tags: ['tag1']));
     });
   });
 

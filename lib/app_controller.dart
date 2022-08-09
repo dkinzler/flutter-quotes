@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/favorites/bloc/bloc.dart';
-import 'package:flutter_sample/explore/random_cubit.dart';
+import 'package:flutter_sample/favorites/filter/filter.dart';
+import 'package:flutter_sample/explore/random/random_cubit.dart';
 import 'package:flutter_sample/quote/provider.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
@@ -12,6 +13,8 @@ class AppController {
   final AuthCubit authCubit = AuthCubit();
   late final AppRouter router = AppRouter(authCubit: authCubit);
   final SearchCubit searchCubit = SearchCubit();
+
+  //TODO do we even need to create this here?
   final RandomCubit randomCubit = RandomCubit();
   final FavoritesCubit favoritesCubit = FavoritesCubit();
   late final FilteredFavoritesBloc filterBloc = FilteredFavoritesBloc(

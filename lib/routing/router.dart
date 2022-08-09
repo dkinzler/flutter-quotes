@@ -9,6 +9,20 @@ import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
 /*
+Routing in this app is based on the go_router package.
+We use subclasses of AppRoute to navigate in a type-safe way.
+I.e. instead of relying on location strings, e.g. context.go('/example?x=y')),
+we can write context.go(ExampleRoute(x: 'y')).
+That way we can already catch errors like missing parameters/wrong parameter types/... 
+at compile time.
+
+In future updates go_router will probably support typed routing out of the box,
+so we won't need this custom solution anymore.
+*/
+
+/*
+AppRouter wraps an instance of GoRouter to provide type-safe routing.
+
 TODO
 AppRouter could maintain the current stack of AppRoutes (i.e. the current routing state represented by our own typed route objects rather than the string/uri locations used by the go_router package)
 that are shown and implement ChangeNotifier to make this information
@@ -18,7 +32,6 @@ Updating the information whenever the routes are changed using AppRouter (i.e. u
 However the routes are usually also changed without involvement of AppRouter, e.g. when the user presses the back button (either in the app or the system back button on some android devices).
 To catch these changes we would have to listen to the state of the GoRouter or GoRouterDelegate object.
 */
-
 class AppRouter {
   //need auth cubit to check if a user is logged in or not, and if not prevent them from accessing certain routes
   final AuthCubit? authCubit;

@@ -7,15 +7,29 @@ import 'package:flutter_sample/tips/bloc/bloc.dart';
 import 'package:flutter_sample/tips/bloc/events.dart';
 import 'package:flutter_sample/tips/bloc/state.dart';
 
+/*
+A button that shows a tip dialog when pressed.
+
+This widget integrates with TipsBloc out of the box
+* when the user closes the dialog the tip will update TipsBloc by marking the tip as seen.
+* if tips are enabled in the settings and the user hasn't seen the tip before, the tip dialog will automatically be opened
+*/
 class TipButton extends StatefulWidget {
+  //a value from the Tip enum
+  //TipsBloc uses this value to identify a particular tip, to be able to assign additonal state to this type of tip (e.g. whether or not it has been seen by the user before)
   final Tip tip;
 
+  //title of the tip dialog, defaults to a lightbulb icon with the text 'Tip'
   final Widget? dialogTitle;
+  //content of the tip dialog, usually the actual tip text
   final Widget dialogContent;
+  //alignment of the dialog on the screen, defaults to Alignment.center, i.e. the dialog will be shown in the center of the screen
   final AlignmentGeometry dialogAlignment;
 
+  //will be called when the dialog is closed
   final void Function(TipDialogResult)? onClose;
 
+  //whether or not to show a checkbox in the dialog that allows the user to prevent tip dialogs from autoamtically being opened
   final bool showDisableTipsCheckbox;
 
   const TipButton({
