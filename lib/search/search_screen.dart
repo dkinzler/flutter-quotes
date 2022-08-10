@@ -28,16 +28,20 @@ class _SearchScreenState extends State<SearchScreen>
     var isMobile = context.layout == Layout.mobile;
 
     if (isMobile) {
+      //on mobile the search bar will be scrolled out of view, on tablet on desktop the search bar stays visible at the top of the screen
+      //as the user scrolls through results
       return CustomScrollView(
         slivers: [
           const SliverToBoxAdapter(
             child: SearchBar(),
           ),
-          const SliverToBoxAdapter(
-            child: Center(child: SearchResultHeader()),
-          ),
           SliverToBoxAdapter(
-            child: SizedBox(height: context.sizes.spaceM),
+            child: Center(
+              child: Padding(
+                padding: context.insets.paddingM,
+                child: const SearchResultHeader(),
+              ),
+            ),
           ),
           const SliverSearchResultsWidget(),
         ],
@@ -45,8 +49,10 @@ class _SearchScreenState extends State<SearchScreen>
     } else {
       return Column(children: [
         const SearchBar(),
-        const SearchResultHeader(),
-        SizedBox(height: context.sizes.spaceM),
+        Padding(
+          padding: context.insets.paddingM,
+          child: const SearchResultHeader(),
+        ),
         const Expanded(child: SearchResultsWidget()),
       ]);
     }

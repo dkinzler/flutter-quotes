@@ -83,12 +83,6 @@ class SliverSearchResultsWidget extends StatelessWidget {
       );
     }
 
-    //TODO what about this padding
-    /*
-    var isMobile = context.layout == Layout.desktop;
-    var padding = isMobile ? context.insets.paddingS : context.insets.paddingM;
-    */
-
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         itemBuilder,

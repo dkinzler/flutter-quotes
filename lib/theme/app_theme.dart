@@ -63,6 +63,7 @@ class AppThemeData extends Equatable {
     return base.copyWith(
       textTheme: base.textTheme.apply(fontSizeFactor: scale),
       primaryTextTheme: base.primaryTextTheme.apply(fontSizeFactor: scale),
+      //here we can set any other theme properties like iconTheme, cardTheme, ...
     );
   }
 

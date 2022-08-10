@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
-import 'package:flutter_sample/theme/theme.dart';
 
 class SearchResultHeader extends StatelessWidget {
   const SearchResultHeader({Key? key}) : super(key: key);
@@ -18,10 +17,8 @@ class SearchResultHeader extends StatelessWidget {
       } else {
         text = 'Showing results for \'$query\'';
       }
-      return Padding(
-        padding: context.insets.paddingM,
-        child: Text(text),
-      );
+
+      return Text(text);
     }
     return const SizedBox.shrink();
   }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
 
+/*
+See lib/search/actions.dart for an explanation of how intents and actions work and why we use them in this app.
+*/
+
 class LogoutIntent extends Intent {
   const LogoutIntent();
 }

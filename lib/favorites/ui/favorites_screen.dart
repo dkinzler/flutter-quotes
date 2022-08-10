@@ -55,8 +55,6 @@ class FavoritesScreen extends StatelessWidget {
         );
       }
 
-      ;
-
       Widget quotesWidget;
       if (layout == Layout.mobile) {
         quotesWidget = ListView.builder(
