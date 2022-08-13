@@ -20,33 +20,44 @@ Different widgets will be shown based on the results and current status of the s
 - text indicating that there are no (more) results
 */
 class SearchResultsWidget extends StatefulWidget {
-  const SearchResultsWidget({Key? key}) : super(key: key);
+  final bool useInfiniteScroll;
+
+  const SearchResultsWidget({
+    Key? key,
+    this.useInfiniteScroll = false,
+  }) : super(key: key);
 
   @override
   State<SearchResultsWidget> createState() => _SearchResultsWidgetState();
 }
 
 class _SearchResultsWidgetState extends State<SearchResultsWidget> {
-  late final ScrollController _scrollController;
+  final ScrollController _scrollController = ScrollController();
 
-  //bool _loadInProgress = false;
+  bool _loadInProgress = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
 
-    //TODO Uncomment the code below to automatically load more results/infinite scroll.
-    /*
-    _scrollController.addListener(() async {
-      var trigger = 0.9 * _scrollController.position.maxScrollExtent;
-      if (!_loadInProgress && _scrollController.position.pixels > trigger) {
-        _loadInProgress = true;
-        await context.read<SearchCubit>().loadMoreResults();
-        _loadInProgress = false;
-      }
-    });
-    */
+    if (widget.useInfiniteScroll) {
+      _scrollController.addListener(_autoLoadMore);
+    }
+  }
+
+  Future<void> _autoLoadMore() async {
+    var trigger = 0.9 * _scrollController.position.maxScrollExtent;
+    if (!_loadInProgress && _scrollController.position.pixels > trigger) {
+      _loadInProgress = true;
+      await context.read<SearchCubit>().loadMoreResults();
+      _loadInProgress = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_autoLoadMore);
+    super.dispose();
   }
 
   @override
