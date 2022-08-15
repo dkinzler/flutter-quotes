@@ -104,7 +104,7 @@ class RandomCubit extends Cubit<RandomState> {
       var quote = _cache.removeFirst();
       emit(state.copyWith(quote: quote));
       //load more quotes before cache is empty
-      if (_cache.length < 4) {
+      if (_cache.length < 2) {
         loadMore();
       }
     } else if (state.quote != null) {

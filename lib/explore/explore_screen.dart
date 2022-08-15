@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/explore/favorite_widget.dart';
+import 'package:flutter_sample/explore/favorites/favorite_widget.dart';
 import 'package:flutter_sample/explore/random/random_widget.dart';
 import 'package:flutter_sample/theme/theme.dart';
 
@@ -19,13 +19,13 @@ class ExploreScreen extends StatelessWidget {
             children: [
               ConstrainedBox(
                 constraints:
-                    BoxConstraints(maxWidth: 600 * context.appTheme.scale),
+                    BoxConstraints(maxWidth: context.sizes.scaled(600)),
                 child: const RandomQuoteWidget(),
               ),
               SizedBox(height: context.sizes.spaceM),
               ConstrainedBox(
                 constraints:
-                    BoxConstraints(maxWidth: 600 * context.appTheme.scale),
+                    BoxConstraints(maxWidth: context.sizes.scaled(600)),
                 child: const FavoriteWidget(),
               ),
             ],

@@ -30,30 +30,59 @@ class _SearchScreenState extends State<SearchScreen>
     if (isMobile) {
       //on mobile the search bar will be scrolled out of view, on tablet on desktop the search bar stays visible at the top of the screen
       //as the user scrolls through results
-      return CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: SearchBar(),
-          ),
-          SliverToBoxAdapter(
-            child: Center(
-              child: Padding(
-                padding: context.insets.paddingM,
-                child: const SearchResultHeader(),
+      var padding = context.insets.paddingM;
+      return Padding(
+        padding: padding,
+        child: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(
+              child: SearchBar(),
+            ),
+            SliverToBoxAdapter(
+              child: Center(
+                child: Padding(
+                  padding: context.insets.paddingM,
+                  child: const SearchResultHeader(),
+                ),
               ),
             ),
-          ),
-          const SliverSearchResultsWidget(),
-        ],
+            const SliverSearchResultsWidget(),
+          ],
+        ),
       );
     } else {
+      var spaceL = context.sizes.spaceL;
       return Column(children: [
-        const SearchBar(),
+        /*
+        Need to apply padding to each widget separately.
+        If we just wrapped the column in a padding, the scroll bar for the results list
+        would be padded in as well.
+        Instead we need to pass the padding to SearchResultsWidget, which can pass it directly
+        to the ListView/GridView widget.
+        */
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            spaceL,
+            spaceL,
+            spaceL,
+            0,
+          ),
+          child: const SearchBar(),
+        ),
         Padding(
           padding: context.insets.paddingM,
           child: const SearchResultHeader(),
         ),
-        const Expanded(child: SearchResultsWidget()),
+        Expanded(
+          child: SearchResultsWidget(
+            padding: EdgeInsets.fromLTRB(
+              spaceL,
+              0,
+              spaceL,
+              spaceL,
+            ),
+          ),
+        ),
       ]);
     }
   }

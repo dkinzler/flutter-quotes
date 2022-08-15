@@ -21,10 +21,12 @@ Different widgets will be shown based on the results and current status of the s
 */
 class SearchResultsWidget extends StatefulWidget {
   final bool useInfiniteScroll;
+  final EdgeInsetsGeometry? padding;
 
   const SearchResultsWidget({
     Key? key,
     this.useInfiniteScroll = false,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -77,14 +79,24 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
         );
       }
 
-      return Center(child: child);
+      return Center(
+        child: Padding(
+          padding: widget.padding ?? EdgeInsets.zero,
+          child: child,
+        ),
+      );
     }
 
     //if there are search results, those results will always be shown
     //any loading indicators or error widgets will be shown at the end of the results
     var quotes = state.quotes!;
     if (quotes.isEmpty) {
-      return const Center(child: Text('No results found'));
+      return Center(
+        child: Padding(
+          padding: widget.padding ?? EdgeInsets.zero,
+          child: const Text('No results found'),
+        ),
+      );
     }
 
     //an extra widget will always be shown in the search results list
@@ -133,9 +145,6 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
       );
     }
 
-    var isMobile = context.layout == Layout.desktop;
-    var padding = isMobile ? context.insets.paddingS : context.insets.paddingM;
-
     //compute number of columns based on the size of the screen
     //we might want to use a LayoutBuilder to get the actual size that will be available to this widget, not the total size of the screen
     //however the only other widget that takes up width is the nav bar, so this is good enough
@@ -152,14 +161,14 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
         gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: numColumns,
         ),
-        padding: padding,
+        padding: widget.padding,
         itemBuilder: itemBuilder,
       );
     } else {
       return ListView.builder(
         controller: _scrollController,
         itemCount: itemCount,
-        padding: padding,
+        padding: widget.padding,
         itemBuilder: itemBuilder,
       );
     }
