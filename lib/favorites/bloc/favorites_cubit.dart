@@ -19,21 +19,22 @@ FavoritesCubit uses a class extending the FavoritesStorage interface to persist 
 FavoritesCubit is not concerned with sorting, seearching and filtering the favorites, see FilterCubit for this.
 */
 
-enum LoadingStatus {loading, error, loaded}
+enum LoadingStatus { loading, error, loaded }
 
 class FavoritesState extends Equatable {
   final LoadingStatus status;
-  final List<Favorite> favorites; 
+  final List<Favorite> favorites;
 
   bool containsQuote(Quote quote) {
     var id = quote.id;
     return favorites.any((i) => i.id == id);
   }
 
-  const FavoritesState({
-    required this.status,
-    required this.favorites
-  });
+  bool containsId(String id) {
+    return favorites.any((i) => i.id == id);
+  }
+
+  const FavoritesState({required this.status, required this.favorites});
 
   @override
   List<Object?> get props => [status, favorites];
@@ -54,10 +55,11 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   FavoritesCubit({
     StorageBuilder storageBuilder = _defaultStorageBuilder,
-  }) : _storageBuilder = storageBuilder, super(const FavoritesState(
-    status: LoadingStatus.loading,
-    favorites: [],
-  ));
+  })  : _storageBuilder = storageBuilder,
+        super(const FavoritesState(
+          status: LoadingStatus.loading,
+          favorites: [],
+        ));
 
   FavoritesStorage? _storage;
 
@@ -83,7 +85,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
         status: LoadingStatus.loaded,
         favorites: favorites,
       ));
-    } catch(e, st) {
+    } catch (e, st) {
       emit(const FavoritesState(
         status: LoadingStatus.error,
         favorites: [],
@@ -93,17 +95,17 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<bool> add(Quote quote) async {
-    if(state.status != LoadingStatus.loaded) {
+    if (state.status != LoadingStatus.loaded) {
       return false;
     }
-    if(state.containsQuote(quote)) {
+    if (state.containsQuote(quote)) {
       return false;
     }
 
     var favorite = Favorite.fromQuote(quote: quote);
     try {
       bool success = await _storage!.add(favorite);
-      if(success) {
+      if (success) {
         var favorites = List<Favorite>.from(state.favorites)..add(favorite);
         emit(FavoritesState(
           status: LoadingStatus.loaded,
@@ -113,7 +115,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       } else {
         return false;
       }
-    } catch(e, st) {
+    } catch (e, st) {
       _log.warning('could not add favorite', e, st);
       return false;
     }
@@ -125,26 +127,28 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   Future<bool> removeById(String id) async {
-    if(state.status != LoadingStatus.loaded) {
+    if (state.status != LoadingStatus.loaded) {
       return false;
     }
     try {
       var success = await _storage!.remove(id);
-      if(success) {
-        var favorites = state.favorites.where((favorite) => favorite.id != id).toList();
-        emit(FavoritesState(status: LoadingStatus.loaded, favorites: favorites));
+      if (success) {
+        var favorites =
+            state.favorites.where((favorite) => favorite.id != id).toList();
+        emit(
+            FavoritesState(status: LoadingStatus.loaded, favorites: favorites));
         return true;
       } else {
         return false;
       }
-    } catch(e, st) {
+    } catch (e, st) {
       _log.warning('could not remove quote', e, st);
       return false;
     }
   }
 
   Future<bool> toggle(Quote quote) {
-    if(state.containsQuote(quote)) {
+    if (state.containsQuote(quote)) {
       return remove(quote);
     } else {
       return add(quote);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sample/routing/routing.dart';
 import 'package:flutter_sample/search/search_cubit.dart';
+import 'package:provider/provider.dart';
 
 /*
 We can use intents and actions as a more general approach to coding actions a user can perform in the app.
@@ -61,4 +62,13 @@ class SearchAction extends Action<SearchIntent> {
     }
     searchCubit.search(query: intent.query);
   }
+}
+
+Map<Type, Action<Intent>> getSearchActions(BuildContext context) {
+  return <Type, Action<Intent>>{
+    SearchIntent: SearchAction(
+      appRouter: context.read<AppRouter>(),
+      searchCubit: context.read<SearchCubit>(),
+    )
+  };
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/routing/routing.dart';
+import 'package:provider/provider.dart';
 
 /*
 See lib/search/actions.dart for an explanation of how intents and actions work and why we use them in this app.
@@ -59,4 +60,15 @@ class OpenSettingsAction extends Action<OpenSettingsIntent> {
   void invoke(OpenSettingsIntent intent) {
     appRouter.push(const SettingsRoute());
   }
+}
+
+Map<Type, Action<Intent>> getHomeActions(BuildContext context) {
+  return <Type, Action<Intent>>{
+    LogoutIntent: LogoutAction(
+      authCubit: context.read<AuthCubit>(),
+    ),
+    OpenSettingsIntent: OpenSettingsAction(
+      appRouter: context.read<AppRouter>(),
+    )
+  };
 }

@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
 import 'package:flutter_sample/explore/explore_screen.dart';
 import 'package:flutter_sample/favorites/ui/actions.dart';
 import 'package:flutter_sample/home/actions.dart';
 import 'package:flutter_sample/home/appbar.dart';
 import 'package:flutter_sample/search/actions.dart';
-import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_sample/favorites/ui/favorites_screen.dart';
 import 'package:flutter_sample/home/nav.dart';
 import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
 import 'package:flutter_sample/search/search_screen.dart';
 import 'package:flutter_sample/theme/theme.dart';
 
@@ -92,22 +88,10 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     return Actions(
-      //TODO maybe define this somewhere else with a builder function?
-      //TODO or just do a custom widget that returns Actions
       actions: <Type, Action<Intent>>{
-        SearchIntent: SearchAction(
-          appRouter: context.read<AppRouter>(),
-          searchCubit: context.read<SearchCubit>(),
-        ),
-        DeleteFavoriteIntent: DeleteFavoriteAction(
-          favoritesCubit: context.read<FavoritesCubit>(),
-        ),
-        LogoutIntent: LogoutAction(
-          authCubit: context.read<AuthCubit>(),
-        ),
-        OpenSettingsIntent: OpenSettingsAction(
-          appRouter: context.read<AppRouter>(),
-        ),
+        ...getSearchActions(context),
+        ...getHomeActions(context),
+        ...getFavoriteActions(context),
       },
       child: Scaffold(
         appBar: appBar,
