@@ -3,12 +3,12 @@ import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/filter/filter_events.dart';
-import 'package:flutter_sample/favorites/filter/filter_state.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/filter/filter_events.dart';
+import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
 
 /*
 TODO

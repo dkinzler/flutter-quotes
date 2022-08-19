@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/tips/bloc/state.dart';
-import 'package:flutter_sample/tips/tip_button.dart';
+import 'package:flutter_quotes/tips/bloc/state.dart';
+import 'package:flutter_quotes/tips/tip_button.dart';
 
 class LoginTipButton extends StatelessWidget {
   const LoginTipButton({Key? key}) : super(key: key);

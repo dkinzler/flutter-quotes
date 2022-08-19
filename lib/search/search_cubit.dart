@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/quote/quote.dart';
-import 'package:flutter_sample/quote/provider.dart';
+import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/provider.dart';
 import 'package:logging/logging.dart';
 
 /*

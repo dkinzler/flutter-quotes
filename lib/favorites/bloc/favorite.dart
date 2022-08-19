@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/util/time.dart';
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/util/time.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 
 class Favorite extends Equatable {
   String get id => quote.id;
@@ -22,7 +22,7 @@ class Favorite extends Equatable {
       timeAdded: ta,
     );
   }
-  
+
   @override
   List<Object?> get props => [quote, timeAdded];
 

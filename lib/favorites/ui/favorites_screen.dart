@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/favorites/ui/favorites_list.dart';
-import 'package:flutter_sample/favorites/ui/filter_bar.dart';
-import 'package:flutter_sample/favorites/ui/sliver_favorites_list.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/favorites/ui/favorites_list.dart';
+import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
+import 'package:flutter_quotes/favorites/ui/sliver_favorites_list.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({Key? key}) : super(key: key);

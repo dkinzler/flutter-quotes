@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/routing/routing.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/routing/routing.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/search/search_bar.dart';
-import 'package:flutter_sample/search/search_result_header.dart';
-import 'package:flutter_sample/search/search_results.dart';
-import 'package:flutter_sample/search/sliver_search_results.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/search/search_bar.dart';
+import 'package:flutter_quotes/search/search_result_header.dart';
+import 'package:flutter_quotes/search/search_results.dart';
+import 'package:flutter_quotes/search/sliver_search_results.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);

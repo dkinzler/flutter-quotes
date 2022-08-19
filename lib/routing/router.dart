@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/auth/login/login_screen.dart';
-import 'package:flutter_sample/home/home_screen.dart';
-import 'package:flutter_sample/routing/error_screen.dart';
-import 'package:flutter_sample/settings/settings_screen.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/login/login_screen.dart';
+import 'package:flutter_quotes/home/home_screen.dart';
+import 'package:flutter_quotes/routing/error_screen.dart';
+import 'package:flutter_quotes/settings/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
 

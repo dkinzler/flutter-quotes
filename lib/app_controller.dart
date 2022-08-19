@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/favorites/bloc/bloc.dart';
-import 'package:flutter_sample/favorites/filter/filter.dart';
-import 'package:flutter_sample/explore/random/random_cubit.dart';
-import 'package:flutter_sample/quote/provider.dart';
-import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
-import 'package:flutter_sample/settings/settings_cubit.dart';
-import 'package:flutter_sample/tips/bloc/bloc.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/favorites/bloc/bloc.dart';
+import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/search/search_cubit.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
+import 'package:flutter_quotes/tips/bloc/bloc.dart';
 
 class AppController {
   final AuthCubit authCubit = AuthCubit();

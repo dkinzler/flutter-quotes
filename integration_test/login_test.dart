@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sample/home/home_screen.dart';
-import 'package:flutter_sample/keys.dart';
-import 'package:flutter_sample/search/search_screen.dart';
+import 'package:flutter_quotes/home/home_screen.dart';
+import 'package:flutter_quotes/keys.dart';
+import 'package:flutter_quotes/search/search_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'robot.dart';
-import 'package:flutter_sample/main.dart' as app;
+import 'package:flutter_quotes/main.dart' as app;
 
 //TODO don't need to integration test everything, just enough to showcase how different things work
 
@@ -26,7 +26,7 @@ void main() {
 
     testWidgets('login works', (WidgetTester tester) async {
       setUp(tester, 'login');
-      
+
       await app.main();
       await tester.pumpAndSettle();
 
@@ -48,9 +48,11 @@ class LoginRobot extends Robot {
     super.binding,
   });
 
-  Future<void> enterEmail(String text) => enterText(const ValueKey(AppKey.loginEmailTextField), text);
+  Future<void> enterEmail(String text) =>
+      enterText(const ValueKey(AppKey.loginEmailTextField), text);
 
-  Future<void> enterPassword(String text) => enterText(const ValueKey(AppKey.loginPasswordTextField), text);
+  Future<void> enterPassword(String text) =>
+      enterText(const ValueKey(AppKey.loginPasswordTextField), text);
 
   Future<void> tapLoginButton() => tap(const ValueKey(AppKey.loginButton));
 }

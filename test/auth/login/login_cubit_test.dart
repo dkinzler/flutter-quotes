@@ -1,26 +1,30 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/auth/login/login_cubit.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/login/login_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('LoginCubit', () {
     late AuthCubit authCubit;
 
-    blocTest<LoginCubit, LoginState>('correct initial state',
+    blocTest<LoginCubit, LoginState>(
+      'correct initial state',
       setUp: () => authCubit = AuthCubit(),
       build: () => LoginCubit(authCubit: authCubit),
       verify: (c) {
-        expect(c.state, const LoginState(
-          email: '',
-          password: '',
-          loginInProgress: false,
-          loginResult: null,
-        ));
+        expect(
+            c.state,
+            const LoginState(
+              email: '',
+              password: '',
+              loginInProgress: false,
+              loginResult: null,
+            ));
       },
     );
 
-    blocTest<LoginCubit, LoginState>('changing username and password works',
+    blocTest<LoginCubit, LoginState>(
+      'changing username and password works',
       setUp: () => authCubit = AuthCubit(),
       build: () => LoginCubit(authCubit: authCubit),
       wait: const Duration(milliseconds: 10),
@@ -44,7 +48,8 @@ void main() {
       ],
     );
 
-    blocTest<LoginCubit, LoginState>('resetting login result works',
+    blocTest<LoginCubit, LoginState>(
+      'resetting login result works',
       setUp: () => authCubit = AuthCubit(),
       build: () => LoginCubit(authCubit: authCubit),
       seed: () => const LoginState(
@@ -65,7 +70,8 @@ void main() {
       ],
     );
 
-    blocTest<LoginCubit, LoginState>('login works',
+    blocTest<LoginCubit, LoginState>(
+      'login works',
       setUp: () => authCubit = AuthCubit(),
       build: () => LoginCubit(authCubit: authCubit),
       wait: const Duration(milliseconds: 10),

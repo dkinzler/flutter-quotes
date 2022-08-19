@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/filter/filter.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class FilterBar extends StatelessWidget {
   const FilterBar({Key? key}) : super(key: key);

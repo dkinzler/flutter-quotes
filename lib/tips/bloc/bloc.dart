@@ -1,6 +1,6 @@
-import 'package:flutter_sample/tips/bloc/events.dart';
-import 'package:flutter_sample/tips/bloc/state.dart';
-import 'package:flutter_sample/util/time.dart';
+import 'package:flutter_quotes/tips/bloc/events.dart';
+import 'package:flutter_quotes/tips/bloc/state.dart';
+import 'package:flutter_quotes/util/time.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logging/logging.dart';
 

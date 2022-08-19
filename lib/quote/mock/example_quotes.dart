@@ -1,4 +1,4 @@
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 
 /*
 A list of 50 random quotes obtained from the Quotable API (api.quotable.io).

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 //TODO show an animation here
 class QuoteTagList extends StatefulWidget {

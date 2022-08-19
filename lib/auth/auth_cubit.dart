@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/auth/user.dart';
-import 'package:flutter_sample/util/time.dart';
+import 'package:flutter_quotes/auth/user.dart';
+import 'package:flutter_quotes/util/time.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 

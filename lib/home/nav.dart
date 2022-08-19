@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/home/actions.dart';
-import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/home/actions.dart';
+import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class NavRail extends StatefulWidget {
   final HomeTab selectedTab;

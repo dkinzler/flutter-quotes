@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/quote/provider.dart';
-import 'package:flutter_sample/settings/settings_cubit.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/tips/bloc/bloc.dart';
-import 'package:flutter_sample/tips/bloc/events.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/tips/bloc/bloc.dart';
+import 'package:flutter_quotes/tips/bloc/events.dart';
 import 'package:intl/intl.dart';
 
 class SettingsScreen extends StatelessWidget {

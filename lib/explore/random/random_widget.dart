@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/explore/random/random_cubit.dart';
-import 'package:flutter_sample/search/actions.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/widgets/card.dart';
-import 'package:flutter_sample/widgets/error.dart';
-import 'package:flutter_sample/widgets/quote_buttons.dart';
-import 'package:flutter_sample/widgets/quote.dart';
+import 'package:flutter_quotes/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/widgets/card.dart';
+import 'package:flutter_quotes/widgets/error.dart';
+import 'package:flutter_quotes/widgets/quote_buttons.dart';
+import 'package:flutter_quotes/widgets/quote.dart';
 
 class RandomQuoteWidget extends StatelessWidget {
   const RandomQuoteWidget({Key? key}) : super(key: key);

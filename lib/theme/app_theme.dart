@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/settings/settings_cubit.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'insets.dart';
 import 'layout.dart';
 import 'sizes.dart';

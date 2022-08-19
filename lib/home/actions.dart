@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/routing/routing.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/routing/routing.dart';
 import 'package:provider/provider.dart';
 
 /*

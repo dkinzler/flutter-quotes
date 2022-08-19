@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
+import 'package:flutter_quotes/search/search_cubit.dart';
 
 class SearchResultHeader extends StatelessWidget {
   const SearchResultHeader({Key? key}) : super(key: key);

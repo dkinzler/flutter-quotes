@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/auth/login/login_cubit.dart';
-import 'package:flutter_sample/auth/login/login_screen.dart';
-import 'package:flutter_sample/keys.dart';
-import 'package:flutter_sample/theme/app_theme.dart';
-import 'package:flutter_sample/widgets/error.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/login/login_cubit.dart';
+import 'package:flutter_quotes/auth/login/login_screen.dart';
+import 'package:flutter_quotes/keys.dart';
+import 'package:flutter_quotes/theme/app_theme.dart';
+import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

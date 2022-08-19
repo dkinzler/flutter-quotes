@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/tips/bloc/state.dart';
+import 'package:flutter_quotes/tips/bloc/state.dart';
 
 abstract class TipEvent extends Equatable {
   const TipEvent();

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/bloc/favorites_storage.dart';
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/bloc/favorites_storage.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 import 'package:logging/logging.dart';
 
 /*

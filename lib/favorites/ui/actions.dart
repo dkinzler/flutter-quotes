@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 import 'package:provider/provider.dart';
 
 /*

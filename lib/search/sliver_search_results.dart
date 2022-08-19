@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/search/actions.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/widgets/error.dart';
-import 'package:flutter_sample/widgets/quote.dart';
+import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/search/search_cubit.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/widgets/error.dart';
+import 'package:flutter_quotes/widgets/quote.dart';
 
 class SliverSearchResultsWidget extends StatelessWidget {
   const SliverSearchResultsWidget({Key? key}) : super(key: key);

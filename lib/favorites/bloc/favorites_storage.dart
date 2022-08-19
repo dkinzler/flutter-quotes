@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 

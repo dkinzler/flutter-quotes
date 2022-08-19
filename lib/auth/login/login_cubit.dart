@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
 
 /*
 LoginCubit manages the login form state, which consists of the following:
@@ -69,7 +69,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void resetResult() {
-    //need to do this manually, since passing null as an optional parameter doesn't work (i.e. state.copyWith(loginResult: null)) 
+    //need to do this manually, since passing null as an optional parameter doesn't work (i.e. state.copyWith(loginResult: null))
     emit(LoginState(
       email: state.email,
       password: state.password,
@@ -80,13 +80,13 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login() async {
     //don't allow multiple login attempts to run at once
-    if(state.loginInProgress) {
+    if (state.loginInProgress) {
       return;
     }
 
     var email = state.email;
     var password = state.password;
-    if(email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       return;
     }
 

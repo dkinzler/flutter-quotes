@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 
 /*
 A quote as returned by the Quotable API.

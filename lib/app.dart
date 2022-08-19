@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/app_controller.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/explore/random/random_cubit.dart';
-import 'package:flutter_sample/favorites/bloc/favorites_cubit.dart';
-import 'package:flutter_sample/favorites/filter/filter_bloc.dart';
-import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/search/search_cubit.dart';
-import 'package:flutter_sample/settings/settings_cubit.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/tips/bloc/bloc.dart';
+import 'package:flutter_quotes/app_controller.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/filter/filter_bloc.dart';
+import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/search/search_cubit.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/tips/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatefulWidget {

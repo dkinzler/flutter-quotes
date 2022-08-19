@@ -1,6 +1,6 @@
-import 'package:flutter_sample/quote/mock/apiclient.dart';
-import 'package:flutter_sample/quote/quotable/apiclient.dart';
-import 'package:flutter_sample/quote/quote.dart';
+import 'package:flutter_quotes/quote/mock/apiclient.dart';
+import 'package:flutter_quotes/quote/quotable/apiclient.dart';
+import 'package:flutter_quotes/quote/quote.dart';
 
 /*
 Interface for loading random quotes/searching for quotes.

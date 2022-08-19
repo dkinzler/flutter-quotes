@@ -1,7 +1,7 @@
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
-import 'package:flutter_sample/favorites/filter/filter_state.dart';
-import 'package:flutter_sample/quote/quote.dart';
-import 'package:flutter_sample/util/time.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/filter/filter_state.dart';
+import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 
 void main() {

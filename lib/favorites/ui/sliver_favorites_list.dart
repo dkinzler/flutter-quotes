@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/favorites/bloc/bloc.dart';
-import 'package:flutter_sample/favorites/filter/filter.dart';
-import 'package:flutter_sample/widgets/error.dart';
-import 'package:flutter_sample/widgets/quote.dart';
-import 'package:flutter_sample/widgets/quote_buttons.dart';
+import 'package:flutter_quotes/favorites/bloc/bloc.dart';
+import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/widgets/error.dart';
+import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/widgets/quote_buttons.dart';
 
 class SliverFavoritesList extends StatelessWidget {
   const SliverFavoritesList({Key? key}) : super(key: key);

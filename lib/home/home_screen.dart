@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/explore/explore_screen.dart';
-import 'package:flutter_sample/favorites/ui/actions.dart';
-import 'package:flutter_sample/home/actions.dart';
-import 'package:flutter_sample/home/appbar.dart';
-import 'package:flutter_sample/search/actions.dart';
-import 'package:flutter_sample/favorites/ui/favorites_screen.dart';
-import 'package:flutter_sample/home/nav.dart';
-import 'package:flutter_sample/routing/routing.dart';
-import 'package:flutter_sample/search/search_screen.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/explore/explore_screen.dart';
+import 'package:flutter_quotes/favorites/ui/actions.dart';
+import 'package:flutter_quotes/home/actions.dart';
+import 'package:flutter_quotes/home/appbar.dart';
+import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/favorites/ui/favorites_screen.dart';
+import 'package:flutter_quotes/home/nav.dart';
+import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/search/search_screen.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class HomeScreen extends StatefulWidget {
   final HomeTab tab;

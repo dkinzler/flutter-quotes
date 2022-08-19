@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/home/actions.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/home/actions.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class CustomAppBar extends AppBar {
   CustomAppBar({Key? key})

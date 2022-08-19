@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_sample/quote/provider.dart';
-import 'package:flutter_sample/quote/quote.dart';
-import 'package:flutter_sample/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

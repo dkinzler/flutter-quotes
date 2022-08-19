@@ -1,5 +1,5 @@
-name: flutter_sample
-description: A new Flutter project.
+name: flutter_quotes
+description: A sample app for browsing quotes, intended to showcase Flutter development features and best practices.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

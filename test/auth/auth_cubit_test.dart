@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_sample/auth/auth_cubit.dart';
-import 'package:flutter_sample/auth/user.dart';
-import 'package:flutter_sample/util/time.dart';
+import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/user.dart';
+import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 
 void main() {

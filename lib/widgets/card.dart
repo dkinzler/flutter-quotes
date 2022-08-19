@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget? header;

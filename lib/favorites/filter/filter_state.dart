@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_sample/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/bloc/favorite.dart';
 
 class FilteredFavoritesState extends Equatable {
   //the current list of favorites obtained from FavoritesCubit

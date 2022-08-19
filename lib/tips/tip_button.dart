@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/tips/bloc/bloc.dart';
-import 'package:flutter_sample/tips/bloc/events.dart';
-import 'package:flutter_sample/tips/bloc/state.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/tips/bloc/bloc.dart';
+import 'package:flutter_quotes/tips/bloc/events.dart';
+import 'package:flutter_quotes/tips/bloc/state.dart';
 
 /*
 A button that shows a tip dialog when pressed.

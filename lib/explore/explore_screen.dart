@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/explore/favorites/favorite_widget.dart';
-import 'package:flutter_sample/explore/random/random_widget.dart';
-import 'package:flutter_sample/theme/theme.dart';
+import 'package:flutter_quotes/explore/favorites/favorite_widget.dart';
+import 'package:flutter_quotes/explore/random/random_widget.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({Key? key}) : super(key: key);

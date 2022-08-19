@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample/quote/quote.dart';
-import 'package:flutter_sample/theme/theme.dart';
-import 'package:flutter_sample/widgets/card.dart';
-import 'package:flutter_sample/widgets/quote_tags.dart';
+import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/theme/theme.dart';
+import 'package:flutter_quotes/widgets/card.dart';
+import 'package:flutter_quotes/widgets/quote_tags.dart';
 
 class QuoteWidget extends StatelessWidget {
   final Quote quote;
