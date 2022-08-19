@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_quotes/favorites/bloc/favorite.dart';
 import 'package:flutter_quotes/favorites/filter/filter_events.dart';
 import 'package:flutter_quotes/favorites/filter/filter_state.dart';
@@ -36,6 +37,7 @@ The filtered results can be sorted:
 
 We use a bloc here instead of a cubit, because it allows for more control on how the state changes,
 e.g. see the comments below on debouncing events.
+Using a bloc, however, does introduce some additional boilerplate code, as can be seen below.
 */
 
 class FilteredFavoritesBloc
@@ -131,10 +133,10 @@ class FilteredFavoritesBloc
       var sortedFavorites = List<Favorite>.from(state.favorites);
       sort(sortedFavorites, state.sortOrder);
       emit(state.copyWith(filteredFavorites: sortedFavorites));
-    } else {
+    } else if (!kIsWeb) {
       final p = ReceivePort();
       await Isolate.spawn(
-          _recomputeFilteredFavorites,
+          _recomputeFilteredFavoritesIsolate,
           _FilterIsolateMessage(
             favorites: state.favorites,
             filters: state.filters,
@@ -142,6 +144,14 @@ class FilteredFavoritesBloc
             sendPort: p.sendPort,
           ));
       var filteredFavorites = await p.first as List<Favorite>;
+      emit(state.copyWith(filteredFavorites: filteredFavorites));
+    } else {
+      //dart isolates are not available on web
+      var filteredFavorites = _recomputeFilteredFavorites(
+        state.favorites,
+        state.filters,
+        state.sortOrder,
+      );
       emit(state.copyWith(filteredFavorites: filteredFavorites));
     }
   }
@@ -154,12 +164,16 @@ class FilteredFavoritesBloc
 }
 
 //this function is intended to be passed to Isolate.spawn to be run in a separate isolate
-void _recomputeFilteredFavorites(_FilterIsolateMessage message) {
-  var favorites = message.favorites;
-  var filters = message.filters;
-  var sortOrder = message.sortOrder;
+List<Favorite> _recomputeFilteredFavorites(
+    List<Favorite> favorites, Filters filters, SortOrder sortOrder) {
   var filteredFavorites = filters.filter(favorites);
   sort(filteredFavorites, sortOrder);
+  return filteredFavorites;
+}
+
+void _recomputeFilteredFavoritesIsolate(_FilterIsolateMessage message) {
+  var filteredFavorites = _recomputeFilteredFavorites(
+      message.favorites, message.filters, message.sortOrder);
   Isolate.exit(message.sendPort, filteredFavorites);
 }
 
