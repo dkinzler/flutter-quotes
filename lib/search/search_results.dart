@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
@@ -19,48 +18,15 @@ Different widgets will be shown based on the results and current status of the s
 - a button to load more results, if more results are available 
 - text indicating that there are no (more) results
 */
-class SearchResultsWidget extends StatefulWidget {
-  final bool useInfiniteScroll;
+class SearchResultsWidget extends StatelessWidget {
+  final ScrollController? scrollController;
   final EdgeInsetsGeometry? padding;
 
   const SearchResultsWidget({
     Key? key,
-    this.useInfiniteScroll = false,
+    this.scrollController,
     this.padding,
   }) : super(key: key);
-
-  @override
-  State<SearchResultsWidget> createState() => _SearchResultsWidgetState();
-}
-
-class _SearchResultsWidgetState extends State<SearchResultsWidget> {
-  final ScrollController _scrollController = ScrollController();
-
-  bool _loadInProgress = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.useInfiniteScroll) {
-      _scrollController.addListener(_autoLoadMore);
-    }
-  }
-
-  Future<void> _autoLoadMore() async {
-    var trigger = 0.9 * _scrollController.position.maxScrollExtent;
-    if (!_loadInProgress && _scrollController.position.pixels > trigger) {
-      _loadInProgress = true;
-      await context.read<SearchCubit>().loadMoreResults();
-      _loadInProgress = false;
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_autoLoadMore);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +47,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
 
       return Center(
         child: Padding(
-          padding: widget.padding ?? EdgeInsets.zero,
+          padding: padding ?? EdgeInsets.zero,
           child: child,
         ),
       );
@@ -93,7 +59,7 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
     if (quotes.isEmpty) {
       return Center(
         child: Padding(
-          padding: widget.padding ?? EdgeInsets.zero,
+          padding: padding ?? EdgeInsets.zero,
           child: const Text('No results found'),
         ),
       );
@@ -154,21 +120,21 @@ class _SearchResultsWidgetState extends State<SearchResultsWidget> {
     //if there is more than 1 column use a MasonryGridView, otherwise a ListView
     if (numColumns > 1) {
       return MasonryGridView.builder(
-        controller: _scrollController,
+        controller: scrollController,
         crossAxisSpacing: context.sizes.spaceS,
         mainAxisSpacing: context.sizes.spaceS,
         itemCount: itemCount,
         gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: numColumns,
         ),
-        padding: widget.padding,
+        padding: padding,
         itemBuilder: itemBuilder,
       );
     } else {
       return ListView.builder(
-        controller: _scrollController,
+        controller: scrollController,
         itemCount: itemCount,
-        padding: widget.padding,
+        padding: padding,
         itemBuilder: itemBuilder,
       );
     }
