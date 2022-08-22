@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
@@ -79,6 +80,7 @@ class _SearchBarState extends State<SearchBar> {
               TableRow(
                 children: [
                   TextField(
+                    key: const ValueKey(AppKey.searchBarTextField),
                     controller: _searchFieldController,
                     //onSubmitted is called when the user presses the enter key on desktop
                     //or the "done"/"search" button of the on-screen keyboard on mobile
@@ -103,6 +105,7 @@ class _SearchBarState extends State<SearchBar> {
                   TableCell(
                     verticalAlignment: TableCellVerticalAlignment.fill,
                     child: ElevatedButton(
+                      key: const ValueKey(AppKey.searchBarSearchButton),
                       onPressed: () {
                         var query = _searchFieldController.text;
                         if (query.isNotEmpty) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
-import 'package:flutter_quotes/widgets/quote_buttons.dart';
+import 'package:flutter_quotes/favorites/ui/buttons.dart';
 import 'package:flutter_quotes/widgets/quote.dart';
 
 class RandomQuoteWidget extends StatelessWidget {
@@ -29,7 +30,7 @@ class RandomQuoteWidget extends StatelessWidget {
             child = QuoteWidget(
               key: ValueKey(quote.id),
               quote: state.quote!,
-              button: QuoteFavoriteButton(
+              button: FavoriteButton(
                 quote: quote,
               ),
               onTagPressed: (String tag) {
@@ -50,6 +51,7 @@ class RandomQuoteWidget extends StatelessWidget {
             );
           } else {
             child = ErrorRetryWidget(
+              key: const ValueKey(AppKey.exploreRandomErrorRetryWidget),
               onPressed: () => randomCubit.next(),
             );
           }
@@ -77,6 +79,7 @@ class RandomQuoteWidget extends StatelessWidget {
         if (state.quote != null || status == LoadingStatus.loading) {
           var isEnabled = state.quote != null;
           return ElevatedButton(
+            key: const ValueKey(AppKey.exploreRandomNextButton),
             onPressed:
                 isEnabled ? () => context.read<RandomCubit>().next() : null,
             child: const Text('Next'),

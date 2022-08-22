@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/tips/bloc/bloc.dart';
 import 'package:flutter_quotes/tips/bloc/events.dart';
@@ -154,6 +155,7 @@ class _TipDialogState extends State<TipDialog> {
             if (widget.showDisableTipsCheckbox) ...[
               SizedBox(height: context.sizes.spaceM),
               CheckboxListTile(
+                key: const ValueKey(AppKey.tipDialogDisableTipsCheckbox),
                 value: disableTipsCheckboxValue,
                 onChanged: (value) {
                   if (value != null) {
@@ -172,6 +174,7 @@ class _TipDialogState extends State<TipDialog> {
       ),
       actions: [
         ElevatedButton(
+          key: const ValueKey(AppKey.tipDialogCloseButton),
           child: const Text('Got it'),
           onPressed: () => Navigator.of(context).pop<TipDialogResult>(
               TipDialogResult(dontShowAgain: disableTipsCheckboxValue)),

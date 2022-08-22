@@ -82,7 +82,10 @@ class _LoginFormState extends State<LoginForm> {
 
                   Widget? errorMessage;
                   if (state.loginResult == LoginResult.error) {
-                    errorMessage = const ErrorText(text: 'Login failed');
+                    errorMessage = const ErrorText(
+                      key: ValueKey(AppKey.loginErrorMessage),
+                      text: 'Login failed',
+                    );
                   }
 
                   Widget child;

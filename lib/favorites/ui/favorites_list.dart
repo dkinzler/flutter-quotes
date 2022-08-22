@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/bloc/bloc.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/widgets/quote.dart';
-import 'package:flutter_quotes/widgets/quote_buttons.dart';
+import 'package:flutter_quotes/favorites/ui/buttons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FavoritesList extends StatelessWidget {
@@ -30,6 +31,7 @@ class FavoritesList extends StatelessWidget {
       child = const CircularProgressIndicator();
     } else if (status == LoadingStatus.error) {
       child = ErrorRetryWidget(
+        key: const ValueKey(AppKey.favoritesErrorRetryWidget),
         onPressed: () => context.read<FavoritesCubit>().load(),
       );
     } else if (favorites.isEmpty) {

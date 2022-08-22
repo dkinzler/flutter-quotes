@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/home/actions.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 
 class CustomAppBar extends AppBar {
@@ -11,7 +12,9 @@ class CustomAppBar extends AppBar {
             actions: [
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: AppBarPopupMenu(),
+                child: AppBarPopupMenu(
+                  key: ValueKey(AppKey.appbarPopupMenu),
+                ),
               )
             ]);
 }
@@ -28,6 +31,7 @@ class AppBarPopupMenu extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
+            key: const ValueKey(AppKey.appbarSettingsButton),
             value: AppBarMenu.settings,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -39,6 +43,7 @@ class AppBarPopupMenu extends StatelessWidget {
             ),
           ),
           PopupMenuItem(
+            key: const ValueKey(AppKey.appbarLogoutButton),
             value: AppBarMenu.logout,
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/bloc/favorite.dart';
 import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/card.dart';
@@ -65,6 +66,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     Widget? trailing;
     if (status == LoadingStatus.loaded) {
       trailing = ElevatedButton(
+        key: const ValueKey(AppKey.exploreFavoritesNextButton),
         child: const Text('Another one'),
         onPressed: () {
           //Note: this is kind of a hack

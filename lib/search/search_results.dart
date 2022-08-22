@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/favorites/ui/buttons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'actions.dart';
 
@@ -41,6 +43,7 @@ class SearchResultsWidget extends StatelessWidget {
         child = const CircularProgressIndicator();
       } else {
         child = ErrorRetryWidget(
+          key: const ValueKey(AppKey.searchErrorRetryWidget),
           onPressed: () => context.read<SearchCubit>().search(),
         );
       }
@@ -76,8 +79,12 @@ class SearchResultsWidget extends StatelessWidget {
     //we can use the same builder function for ListView and MasonryGridView
     itemBuilder(BuildContext context, int index) {
       if (index < quotes.length) {
+        var quote = quotes[index];
         return QuoteCard(
-          quote: quotes[index],
+          quote: quote,
+          button: FavoriteButton(
+            quote: quote,
+          ),
           quoteTextStyle: const TextStyle(color: Colors.white),
           authorTextStyle: const TextStyle(color: Colors.white),
           showTags: true,
@@ -92,12 +99,14 @@ class SearchResultsWidget extends StatelessWidget {
         child = const CircularProgressIndicator();
       } else if (state.status == SearchStatus.error) {
         child = ErrorRetryWidget(
+          key: const ValueKey(AppKey.searchLoadMoreErrorRetryWidget),
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
         );
       } else if (!state.canLoadMore) {
         child = const Text('No more results');
       } else {
         child = ElevatedButton(
+          key: const ValueKey(AppKey.searchLoadMoreButton),
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
           child: const Text('More'),
         );

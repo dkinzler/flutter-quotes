@@ -26,7 +26,7 @@ class _QuoteTagListState extends State<QuoteTagList> {
   @override
   Widget build(BuildContext context) {
     if (widget.tags.isEmpty) {
-      return const Text('No tags');
+      return const SizedBox.shrink();
     }
 
     var maxTagsToShow = widget.maxTagsToShow;
@@ -34,19 +34,28 @@ class _QuoteTagListState extends State<QuoteTagList> {
       maxTagsToShow = widget.tags.length;
     }
 
-    var chips = <Widget>[const Chip(label: Text('Tags:'))];
+    var chips = <Widget>[
+      //const Chip(label: Text('Tags:')),
+    ];
     chips.addAll(widget.tags
         .take(maxTagsToShow)
-        .map<Widget>((t) => InputChip(
+        .map<Widget>((t) => ActionChip(
               label: Text(
                 t,
                 overflow: TextOverflow.ellipsis,
               ),
+              /*
               onPressed: widget.onTagPressed != null
                   ? () {
                       widget.onTagPressed?.call(t);
                     }
                   : null,
+                  */
+              onPressed: () => widget.onTagPressed?.call(t),
+              backgroundColor: context.theme.colorScheme.surface,
+              elevation: 4.0,
+              //this is kind of hacky, show tooltip only for longer tags that might actually overflow the text box
+              tooltip: t.length > 25 ? t : null,
             ))
         .toList());
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/home/actions.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 
@@ -32,6 +33,7 @@ class _NavRailState extends State<NavRail> {
       minExtendedWidth: minExtendedWidth,
       selectedIndex: _tabToIndex(widget.selectedTab),
       leading: IconButton(
+        key: const ValueKey(AppKey.drawerExtendButton),
         icon: extendIcon,
         onPressed: () {
           setState(() {
@@ -42,7 +44,8 @@ class _NavRailState extends State<NavRail> {
       destinations: const [
         NavigationRailDestination(
           icon: Icon(
-            Icons.home,
+            key: ValueKey(AppKey.drawerExploreButton),
+            Icons.explore,
           ),
           label: Text(
             'Explore',
@@ -50,6 +53,7 @@ class _NavRailState extends State<NavRail> {
         ),
         NavigationRailDestination(
           icon: Icon(
+            key: ValueKey(AppKey.drawerSearchButton),
             Icons.search,
           ),
           label: Text(
@@ -58,6 +62,7 @@ class _NavRailState extends State<NavRail> {
         ),
         NavigationRailDestination(
           icon: Icon(
+            key: ValueKey(AppKey.drawerFavoritesButton),
             Icons.favorite,
           ),
           label: Text(
@@ -83,6 +88,7 @@ class _NavRailState extends State<NavRail> {
           destinations: const [
             NavigationRailDestination(
               icon: Icon(
+                key: ValueKey(AppKey.drawerSettingsButton),
                 Icons.settings,
               ),
               label: Text(
@@ -91,6 +97,7 @@ class _NavRailState extends State<NavRail> {
             ),
             NavigationRailDestination(
               icon: Icon(
+                key: ValueKey(AppKey.drawerLogoutButton),
                 Icons.logout,
               ),
               label: Text(
@@ -130,15 +137,24 @@ class BottomNavBar extends StatelessWidget {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              key: ValueKey(AppKey.navbarExploreButton),
+              Icons.explore,
+            ),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(
+              key: ValueKey(AppKey.navbarSearchButton),
+              Icons.search,
+            ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(
+              key: ValueKey(AppKey.navbarFavoritesButton),
+              Icons.favorite,
+            ),
             label: 'Favorites',
           ),
         ]);

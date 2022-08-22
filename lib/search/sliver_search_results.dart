@@ -5,6 +5,7 @@ import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/favorites/ui/buttons.dart';
 
 class SliverSearchResultsWidget extends StatelessWidget {
   const SliverSearchResultsWidget({Key? key}) : super(key: key);
@@ -48,10 +49,14 @@ class SliverSearchResultsWidget extends StatelessWidget {
     //we can use the same builder function for ListView and MasonryGridView
     itemBuilder(BuildContext context, int index) {
       if (index < quotes.length) {
+        var quote = quotes[index];
         return QuoteCard(
-          quote: quotes[index],
+          quote: quote,
           quoteTextStyle: const TextStyle(color: Colors.white),
           authorTextStyle: const TextStyle(color: Colors.white),
+          button: FavoriteButton(
+            quote: quote,
+          ),
           showTags: true,
           onTagPressed: (String tag) {
             Actions.invoke<SearchIntent>(context, SearchIntent(query: tag));

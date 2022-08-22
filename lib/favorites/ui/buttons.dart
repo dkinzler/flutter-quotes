@@ -5,11 +5,11 @@ import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_quotes/favorites/ui/actions.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 
-class QuoteFavoriteButton extends StatelessWidget {
+class FavoriteButton extends StatelessWidget {
   final Quote quote;
   final double? iconSize;
 
-  const QuoteFavoriteButton({
+  const FavoriteButton({
     Key? key,
     required this.quote,
     this.iconSize,
@@ -27,7 +27,8 @@ class QuoteFavoriteButton extends StatelessWidget {
         size: iconSize,
       ),
       onPressed: () {
-        context.read<FavoritesCubit>().toggle(quote);
+        Actions.invoke<ToggleFavoriteIntent>(
+            context, ToggleFavoriteIntent(quote: quote));
       },
     );
   }

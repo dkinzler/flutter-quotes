@@ -8,4 +8,42 @@ enum AppKey {
   loginEmailTextField,
   loginPasswordTextField,
   loginButton,
+  loginErrorMessage,
+  loginTipButton,
+
+  //home screen navigation widgets
+  drawerExtendButton,
+  drawerExploreButton,
+  drawerSearchButton,
+  drawerFavoritesButton,
+  drawerSettingsButton,
+  drawerLogoutButton,
+
+  navbarExploreButton,
+  navbarSearchButton,
+  navbarFavoritesButton,
+  appbarPopupMenu,
+  appbarSettingsButton,
+  appbarLogoutButton,
+
+  exploreFavoritesNextButton,
+  exploreRandomNextButton,
+  exploreRandomErrorRetryWidget,
+
+  favoritesErrorRetryWidget,
+  favoritesFilterTextField,
+  favoritesSortButton,
+  favoritesSortPopupNewestButton,
+  favoritesSortPopupOldestButton,
+  favoritesFilterAddTagsButton,
+  favoritesFilterAddTagsDialog,
+
+  searchBarTextField,
+  searchBarSearchButton,
+  searchErrorRetryWidget,
+  searchLoadMoreButton,
+  searchLoadMoreErrorRetryWidget,
+
+  tipDialogDisableTipsCheckbox,
+  tipDialogCloseButton,
 }

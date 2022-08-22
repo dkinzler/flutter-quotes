@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 
 class FilterBar extends StatelessWidget {
@@ -31,7 +32,9 @@ class FilterBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const FilterSearchTextField(),
+          const FilterSearchTextField(
+            key: ValueKey(AppKey.favoritesFilterTextField),
+          ),
           Padding(
             padding: context.insets.symmetricScaled(vertical: 12.0),
             child: Row(
@@ -39,7 +42,9 @@ class FilterBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Expanded(child: FilterTagsWidget()),
-                FilterSortButton(),
+                FilterSortButton(
+                  key: ValueKey(AppKey.favoritesSortButton),
+                ),
               ],
             ),
           ),
@@ -118,10 +123,12 @@ class FilterSortButton extends StatelessWidget {
       }),
       itemBuilder: (context) => <PopupMenuEntry<SortOrder>>[
         const PopupMenuItem<SortOrder>(
+          key: ValueKey(AppKey.favoritesSortPopupNewestButton),
           value: SortOrder.newest,
           child: Text('Newest'),
         ),
         const PopupMenuItem<SortOrder>(
+          key: ValueKey(AppKey.favoritesSortPopupOldestButton),
           value: SortOrder.oldest,
           child: Text('Oldest'),
         ),
@@ -156,8 +163,9 @@ class FilterTagsWidget extends StatelessWidget {
         (b) => b.state.filters.tags);
 
     var addTagChip = ActionChip(
+      key: const ValueKey(AppKey.favoritesFilterAddTagsButton),
       avatar: const Icon(Icons.add),
-      label: const Text('Add tag'),
+      label: const Text('Add tags'),
       onPressed: () => _showFilterDialog(context),
     );
 
@@ -195,6 +203,7 @@ class FilterTagsWidget extends StatelessWidget {
             (b) => b.state.filters.tags);
 
         return AlertDialog(
+          key: const ValueKey(AppKey.favoritesFilterAddTagsDialog),
           title: const Text('Select tags to filter by:'),
           actions: [
             ElevatedButton(
