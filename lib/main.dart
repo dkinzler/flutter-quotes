@@ -16,17 +16,30 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       initLogging(logger);
-      await Hive.initFlutter('flutter-quotes');
+      await Hive.initFlutter(storageSubDir);
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorage.webStorageDirectory
-            : Directory(p.join((await getApplicationDocumentsDirectory()).path,
-                'flutter-quotes')),
+            : await getStorageDirectory(),
       );
       runApp(const App());
     },
     (error, stack) => logger.logError(error, stackTrace: stack),
   );
+}
+
+const String storageSubDir = 'flutter-quotes';
+
+Future<Directory> getStorageDirectory() async {
+  var appDir = await getApplicationDocumentsDirectory();
+  var path = p.join(appDir.path, storageSubDir);
+  return Directory(path);
+}
+
+Future<Directory> getTemporaryStorageDirectory() async {
+  var appDir = await getTemporaryDirectory();
+  var path = p.join(appDir.path, storageSubDir);
+  return Directory(path);
 }
 
 /*
@@ -37,14 +50,14 @@ Future<void> mainIntegrationTest() async {
   var logger = ConsoleLogger();
   WidgetsFlutterBinding.ensureInitialized();
   initLogging(logger, setOnError: false);
+  Directory? storageDirectory;
   if (!kIsWeb) {
-    Hive.init(p.join((await getTemporaryDirectory()).path, 'flutter-quotes'));
+    storageDirectory = await getTemporaryStorageDirectory();
+    Hive.init(storageDirectory.path);
   }
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: kIsWeb
-        ? HydratedStorage.webStorageDirectory
-        : Directory(
-            p.join((await getTemporaryDirectory()).path, 'flutter-quotes')),
+    storageDirectory:
+        kIsWeb ? HydratedStorage.webStorageDirectory : storageDirectory!,
   );
   runApp(const App());
 }

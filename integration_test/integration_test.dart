@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart' as p;
 import 'package:integration_test/integration_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'robots/favorites.dart';
 import 'robots/home.dart';
 import 'robots/login.dart';
@@ -157,7 +154,7 @@ Future<void> main() async {
 //delete any files created with Hive (this includes files from HydratedCubits/Blocs)
 Future<void> cleanUp() async {
   if (!kIsWeb) {
-    var path = p.join((await getTemporaryDirectory()).path, 'flutter-quotes');
-    await Directory(path).delete(recursive: true);
+    var dir = await app.getTemporaryStorageDirectory();
+    await dir.delete(recursive: true);
   }
 }

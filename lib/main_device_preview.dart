@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_quotes/app.dart';
+import 'package:flutter_quotes/logging.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
-import 'logging.dart';
-import 'app.dart';
+import 'main.dart' as m;
 
 Future<void> main() async {
   var logger = ConsoleLogger();
@@ -14,11 +14,11 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       initLogging(logger);
-      await Hive.initFlutter();
+      await Hive.initFlutter(m.storageSubDir);
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorage.webStorageDirectory
-            : await getApplicationDocumentsDirectory(),
+            : await m.getStorageDirectory(),
       );
       runApp(DevicePreview(
         enabled: !kReleaseMode,
