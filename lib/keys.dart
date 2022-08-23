@@ -26,6 +26,9 @@ enum AppKey {
   appbarSettingsButton,
   appbarLogoutButton,
 
+  logoutConfirmDialogConfirmButton,
+  logoutConfirmDialogCancelButton,
+
   exploreFavoritesNextButton,
   exploreRandomNextButton,
   exploreRandomErrorRetryWidget,
@@ -37,6 +40,7 @@ enum AppKey {
   favoritesSortPopupOldestButton,
   favoritesFilterAddTagsButton,
   favoritesFilterAddTagsDialog,
+  favoritesFilterCloseAddTagsDialogButton,
 
   searchBarTextField,
   searchBarSearchButton,

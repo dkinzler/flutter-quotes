@@ -1,9 +1,16 @@
-import 'package:flutter_quotes/home/home_screen.dart';
-import 'package:flutter_quotes/search/search_screen.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 import 'package:integration_test/integration_test.dart';
+import 'package:path_provider/path_provider.dart';
+import 'robots/favorites.dart';
+import 'robots/home.dart';
 import 'robots/login.dart';
 import 'package:flutter_quotes/main.dart' as app;
+
+import 'robots/robot.dart';
+import 'robots/search.dart';
 
 /*
 How integration testing is implemented in this app
@@ -50,44 +57,107 @@ but for the pruposes of this example we just need that one method.
 */
 
 /*
-//TODO write a little todo text here
-maybe set bool here to take screenshots or not
-and then explain that we could make this more elaborate by e.g. writing a little test script 
-that runs the flutter test command and takes a prameter to take screenshots or not
-this parameter could then be passed in here
-*/
-
-/*
 We just implement a single integration test here
 that moves through the different features and screens of the app.
+For an actual production app we could easily add tests for many more scenarios.
 */
-void main() {
+Future<void> main() async {
   var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Login', () {
-    late LoginRobot robot;
+  /*
+  TODO
+  We can also use integration tests to automatically collect screenshots of the app
+  on different devices and screen sizes.
+  Right now we manually enable screenshot taking here in the test code.
+  However it would not be hard to write a custom test script that takes a parameter to enable/disable
+  screenshot taking. The script can pass the arguments to the flutter drive/flutter test command using the --dart-define option and
+  the value can then be read in the code here using e.g. bool.fromEnvironment('paramName').
+  */
+  Robot.disableScreenshots();
 
-    void setUp(WidgetTester tester, String testName) {
-      robot = LoginRobot(
-        tester: tester,
-        testName: testName,
-        actionDelay: const Duration(seconds: 1),
-        binding: binding,
-      );
-    }
-
-    testWidgets('login works', (WidgetTester tester) async {
-      setUp(tester, 'login works');
-
-      await app.main();
-      await tester.pumpAndSettle();
-
-      await robot.enterEmail('test@test.org');
-      await robot.enterPassword('test123');
-      await robot.tapLoginButton();
-
-      await robot.verifyWidgetIsShown(HomeScreen);
-      await robot.verifyWidgetIsShown(SearchScreen);
-    });
+  tearDown(() {
+    //delete any files created, e.g. by hive, we don't want any login or favorite information stored
+    return cleanUp();
   });
+
+  testWidgets('happy path', (WidgetTester tester) async {
+    var loginRobot = LoginRobot(
+      tester: tester,
+      binding: binding,
+      testName: 'happypath',
+    );
+
+    var homeRobot = HomeRobot(
+      tester: tester,
+      binding: binding,
+      testName: 'happypath',
+    );
+
+    var searchRobot = SearchRobot(
+      tester: tester,
+      binding: binding,
+      testName: 'happypath',
+    );
+
+    var favoritesRobot = FavoritesRobot(
+      tester: tester,
+      binding: binding,
+      testName: 'happypath',
+      actionDelay: const Duration(seconds: 1),
+    );
+
+    await app.mainIntegrationTest();
+    await tester.pumpAndSettle();
+    await Future.delayed(const Duration(seconds: 1));
+
+    await loginRobot.closeTipDialog();
+    await loginRobot.verifyLoginScreenIsShown();
+    await loginRobot.enterEmail('test@test.org');
+    await loginRobot.enterPassword('test123');
+    await loginRobot.tapLoginButton();
+
+    await homeRobot.verifyHomeScreenIsShown();
+    await homeRobot.verifyExploreScreenIsShown();
+
+    await homeRobot.gotoSearchScreen();
+    await homeRobot.verifySearchScreenIsShown();
+    await searchRobot.enterSearchTerm('test search');
+    await searchRobot.tapSearchButton();
+    await searchRobot.tapFavoriteQuoteButton(0);
+    await searchRobot.tapFavoriteQuoteButton(3);
+    await searchRobot.tapFavoriteQuoteButton(5);
+    await searchRobot.scrollDown();
+    await searchRobot.tapLoadMoreButton();
+    await searchRobot.scrollDown();
+
+    await homeRobot.gotoFavoritesScreen();
+    await homeRobot.verifyFavoritesScreenIsShown();
+    await favoritesRobot.verifyFavoritesAreShown(count: 3);
+    await favoritesRobot.changeSortOrderToOldest();
+    //nothing should be found here
+    await favoritesRobot.enterFilterTerm('%&/(');
+    await favoritesRobot.verifyNoFavoritesAreShown();
+    await favoritesRobot.clearFilterTerm();
+    await favoritesRobot.verifyFavoritesAreShown(count: 3);
+    await favoritesRobot.openAddFilterTagsDialog();
+    await favoritesRobot.verifyAddFilterTagsDialogIsShown();
+    await favoritesRobot.addFilterTag();
+    await favoritesRobot.closeAddFilterTagsDialog();
+
+    await homeRobot.gotoSearchScreen();
+    await homeRobot.verifySearchScreenIsShown();
+    await homeRobot.gotoSettingsScreen();
+    await homeRobot.verifiySettingsScreenIsShown();
+    await homeRobot.goBack();
+    await homeRobot.logout();
+    await loginRobot.verifyLoginScreenIsShown();
+  });
+}
+
+//delete any files created with Hive (this includes files from HydratedCubits/Blocs)
+Future<void> cleanUp() async {
+  if (!kIsWeb) {
+    var path = p.join((await getTemporaryDirectory()).path, 'flutter-quotes');
+    await Directory(path).delete(recursive: true);
+  }
 }

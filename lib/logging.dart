@@ -29,9 +29,11 @@ Depending on the implementation, the logs and errors could e.g. just be printed 
 or sent to a cloud service like Sentry.
 */
 
-void initLogging(Logger logger) {
+void initLogging(Logger logger, {bool setOnError = true}) {
   logging.Logger.root.onRecord.listen((record) => logger.log(record));
-  FlutterError.onError = logger.logFlutterError;
+  if (setOnError) {
+    FlutterError.onError = logger.logFlutterError;
+  }
 }
 
 /*

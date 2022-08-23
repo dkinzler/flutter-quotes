@@ -51,11 +51,24 @@ class Robot {
     }
   }
 
-  Future<void> tap(dynamic finder, {bool addDelay = true}) async {
+  Future<void> tap(
+    dynamic finder, {
+    bool addDelay = true,
+    bool ensureVisible = true,
+    //if multiple elements are found for the given finder, match the one at the given index
+    int? matchAtIndex,
+  }) async {
     //make sure the widget is visible
-    await tester.ensureVisible(_find(finder, skipOffstage: false));
+    if (ensureVisible) {
+      var f = _find(finder, skipOffstage: false);
+      if (matchAtIndex != null) {
+        f = f.at(matchAtIndex);
+      }
+      await tester.ensureVisible(f);
+    }
     await tester.pumpAndSettle();
-    await tester.tap(_find(finder));
+    await tester.tap(
+        matchAtIndex != null ? _find(finder).at(matchAtIndex) : _find(finder));
     await tester.pumpAndSettle();
     if (addDelay) {
       await _applyActionDelay();
@@ -80,8 +93,18 @@ class Robot {
     expect(finder, findsOneWidget);
   }
 
-  Future<void> scrollUntilVisible(dynamic finder) async {
-    await tester.scrollUntilVisible(finder, 200);
+  Future<void> scrollUntilVisible(
+    dynamic finder, {
+    double delta = 200,
+    Duration duration = const Duration(milliseconds: 50),
+    dynamic scrollableFinder,
+  }) async {
+    await tester.scrollUntilVisible(
+      _find(finder),
+      delta,
+      scrollable: scrollableFinder != null ? _find(scrollableFinder) : null,
+      duration: duration,
+    );
     await tester.pumpAndSettle();
     await _applyActionDelay();
   }
@@ -104,16 +127,17 @@ class Robot {
   //if no name is given for a screenshot, this number will be used and incremented afterwards
   int _screenshotCount = 0;
   bool _surfaceConverted = false;
-  //can be used to turn off screenshot taking
+
+  //can be used to globally turn on/off screenshot taking
   //code can still contain the calls to takeScreenshot, but nothing will happen
-  bool screenshotsEnabled = true;
+  static bool _screenshotsEnabled = true;
 
-  void enableScreenshots() => screenshotsEnabled = true;
+  static void enableScreenshots() => _screenshotsEnabled = true;
 
-  void disableScreenshots() => screenshotsEnabled = false;
+  static void disableScreenshots() => _screenshotsEnabled = false;
 
   Future<void> takeScreenshot({String? name}) async {
-    if (binding == null || !screenshotsEnabled) {
+    if (binding == null || !_screenshotsEnabled) {
       return;
     }
     if (name == null) {

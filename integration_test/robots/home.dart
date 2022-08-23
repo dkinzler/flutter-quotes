@@ -50,6 +50,7 @@ class HomeRobot extends Robot {
     } else {
       await tap(AppKey.drawerLogoutButton);
     }
+    await tap(AppKey.logoutConfirmDialogConfirmButton);
   }
 
   Future<void> tapDrawerExtendButton() => tap(AppKey.drawerExploreButton);

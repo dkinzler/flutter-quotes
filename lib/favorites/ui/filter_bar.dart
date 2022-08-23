@@ -191,56 +191,63 @@ class FilterTagsWidget extends StatelessWidget {
   void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
-        //TODO could create a separate stateful widget for this that in initstate async loads the list of tags, so that this doesn't take too long
+      builder: (context) => const FilterAddTagsDialog(
+          key: ValueKey(AppKey.favoritesFilterAddTagsDialog)),
+    );
+  }
+}
 
-        //TODO dont listen for changes here? write a little comment about it, probably dont need to since favorites shouldnt really change while in this menu
-        var favorites = context.read<FavoritesCubit>().state.favorites;
-        Set<String> tags = Set<String>.from(
-            favorites.expand<String>((favorite) => favorite.quote.tags));
+class FilterAddTagsDialog extends StatelessWidget {
+  const FilterAddTagsDialog({Key? key}) : super(key: key);
 
-        var selectedTags = context.select<FilteredFavoritesBloc, List<String>>(
-            (b) => b.state.filters.tags);
+  @override
+  Widget build(BuildContext context) {
+    //we don't rebuild here on changes to the list of favorites
+    //since the favorites shouldn't change anyway while we are in this dialog
+    var favorites = context.read<FavoritesCubit>().state.favorites;
+    Set<String> tags = Set<String>.from(
+        favorites.expand<String>((favorite) => favorite.quote.tags));
 
-        return AlertDialog(
-          key: const ValueKey(AppKey.favoritesFilterAddTagsDialog),
-          title: const Text('Select tags to filter by:'),
-          actions: [
-            ElevatedButton(
-              child: const Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-          actionsPadding: EdgeInsets.fromLTRB(
-            context.sizes.spaceM,
-            context.sizes.spaceS,
-            context.sizes.spaceM,
-            context.sizes.spaceM,
-          ),
-          content: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: context.sizes.scaled(700),
-            ),
-            child: Wrap(
-              spacing: context.sizes.spaceS,
-              runSpacing: context.sizes.spaceS,
-              children: tags
-                  .map<Widget>((t) => FilterChip(
-                        label: Text(t),
-                        selected: selectedTags.contains(t),
-                        onSelected: (selected) {
-                          context.read<FilteredFavoritesBloc>().add(selected
-                              ? FilterTagAdded(tag: t)
-                              : FilterTagRemoved(tag: t));
-                        },
-                        showCheckmark: true,
-                      ))
-                  .toList(),
-            ),
-          ),
-          scrollable: true,
-        );
-      },
+    var selectedTags = context.select<FilteredFavoritesBloc, List<String>>(
+        (b) => b.state.filters.tags);
+
+    return AlertDialog(
+      title: const Text('Select tags to filter by:'),
+      actions: [
+        ElevatedButton(
+          key: const ValueKey(AppKey.favoritesFilterCloseAddTagsDialogButton),
+          child: const Text('Close'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+      actionsPadding: EdgeInsets.fromLTRB(
+        context.sizes.spaceM,
+        context.sizes.spaceS,
+        context.sizes.spaceM,
+        context.sizes.spaceM,
+      ),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: context.sizes.scaled(700),
+        ),
+        child: Wrap(
+          spacing: context.sizes.spaceS,
+          runSpacing: context.sizes.spaceS,
+          children: tags
+              .map<Widget>((t) => FilterChip(
+                    label: Text(t),
+                    selected: selectedTags.contains(t),
+                    onSelected: (selected) {
+                      context.read<FilteredFavoritesBloc>().add(selected
+                          ? FilterTagAdded(tag: t)
+                          : FilterTagRemoved(tag: t));
+                    },
+                    showCheckmark: true,
+                  ))
+              .toList(),
+        ),
+      ),
+      scrollable: true,
     );
   }
 }

@@ -15,22 +15,19 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       initLogging(logger);
       await Hive.initFlutter();
-      final storage = await HydratedStorage.build(
+      HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorage.webStorageDirectory
             : await getApplicationDocumentsDirectory(),
       );
-      HydratedBlocOverrides.runZoned(
-        () => runApp(DevicePreview(
-          enabled: !kReleaseMode,
-          builder: (context) => App(
-            useInheritedMediaQuery: true,
-            locale: DevicePreview.locale(context),
-            builder: DevicePreview.appBuilder,
-          ),
-        )),
-        storage: storage,
-      );
+      runApp(DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => App(
+          useInheritedMediaQuery: true,
+          locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
+        ),
+      ));
     },
     (error, stack) => logger.logError(error, stackTrace: stack),
   );

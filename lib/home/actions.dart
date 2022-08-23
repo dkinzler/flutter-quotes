@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:provider/provider.dart';
 
@@ -30,12 +31,14 @@ class LogoutAction extends ContextAction<LogoutIntent> {
             actionsPadding: const EdgeInsets.all(8.0),
             actions: [
               ElevatedButton(
+                key: const ValueKey(AppKey.logoutConfirmDialogCancelButton),
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               ElevatedButton(
+                key: const ValueKey(AppKey.logoutConfirmDialogConfirmButton),
                 child: const Text('Logout'),
                 onPressed: () {
                   authCubit.logout();

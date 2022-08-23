@@ -106,9 +106,11 @@ class SearchResultsWidget extends StatelessWidget {
         child = const Text('No more results');
       } else {
         child = ElevatedButton(
-          key: const ValueKey(AppKey.searchLoadMoreButton),
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
-          child: const Text('More'),
+          child: const Text(
+            'More',
+            key: const ValueKey(AppKey.searchLoadMoreButton),
+          ),
         );
       }
 
