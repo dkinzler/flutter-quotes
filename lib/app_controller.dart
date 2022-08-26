@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
 import 'package:flutter_quotes/favorites/bloc/bloc.dart';
-import 'package:flutter_quotes/favorites/filter/filter.dart';
-import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:flutter_quotes/quote/provider.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
@@ -10,16 +8,20 @@ import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/tips/bloc/bloc.dart';
 
 class AppController {
-  final AuthCubit authCubit = AuthCubit();
+  final bool useMockStorage;
+
+  late final AuthCubit authCubit = AuthCubit(
+    loginStore: useMockStorage ? null : HiveLoginStore(),
+  );
   late final AppRouter router = AppRouter(authCubit: authCubit);
   final SearchCubit searchCubit = SearchCubit();
 
-  //TODO do we even need to create this here?
-  final RandomCubit randomCubit = RandomCubit();
-  final FavoritesCubit favoritesCubit = FavoritesCubit();
-  late final FilteredFavoritesBloc filterBloc = FilteredFavoritesBloc(
-    favoritesCubit: favoritesCubit,
+  late final FavoritesCubit favoritesCubit = FavoritesCubit(
+    storageBuilder: useMockStorage
+        ? FavoritesCubit.mockStorageBuilder
+        : FavoritesCubit.defaultStorageBuilder,
   );
+
   final SettingsCubit settingsCubit = SettingsCubit();
   final TipsBloc tipsBloc = TipsBloc();
 
@@ -28,7 +30,10 @@ class AppController {
   late StreamSubscription _settingsCubitSubscription;
   Settings? _currentSettings;
 
-  AppController() {
+  AppController({
+    //set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
+    this.useMockStorage = false,
+  }) {
     _handleAuthStateChange(authCubit.state);
     _authCubitSubscription = authCubit.stream.listen(_handleAuthStateChange);
     _handleSettingsChanged(settingsCubit.state);
@@ -39,7 +44,6 @@ class AppController {
   void _handleAuthStateChange(AuthState authState) {
     if (authState.isAuthenticated) {
       favoritesCubit.init(authState.user.email);
-      randomCubit.init();
       router.go(const HomeRoute(tab: HomeTab.explore));
     } else {
       //TODO there might be some subtle async issues here
@@ -48,7 +52,6 @@ class AppController {
       //it might be easier to create a new cubit instance
       //after every login
       searchCubit.reset();
-      randomCubit.reset();
       favoritesCubit.reset();
       router.go(const LoginRoute());
     }
@@ -68,7 +71,6 @@ class AppController {
   void _updateQuoteProvider(QuoteProviderType qp) {
     var quoteProvider = QuoteProviderFactory.buildQuoteProvider(qp);
     searchCubit.init(quoteProvider);
-    randomCubit.init(quoteProvider: quoteProvider);
   }
 
   //TODO do we really need this?
@@ -78,6 +80,5 @@ class AppController {
     router.close();
     await authCubit.close();
     await searchCubit.close();
-    await randomCubit.close();
   }
 }

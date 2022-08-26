@@ -5,26 +5,29 @@ import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 
 void main() {
+  //fix time, because AuthState contains a DateTime lastLoginTime property
   var timeNow = DateTime(2022);
   currentTime = () => timeNow;
 
   group('AuthCubit', () {
-    blocTest<AuthCubit, AuthState>(
-      'correct initial state',
-      build: () => AuthCubit(storeLogin: false),
-      verify: (c) => expect(c.state, const AuthState.unknown()),
-    );
+    late AuthCubit authCubit;
 
-    test('login fails if username or password empty', () async {
-      var authCubit = AuthCubit(storeLogin: false);
+    setUp(() {
+      authCubit = AuthCubit();
+    });
+
+    test('login fails if email or password empty or email starts with "fail"',
+        () async {
       var result = await authCubit.login(email: '', password: 'somepw');
       expect(result, LoginResult.wrongCredentials);
       result = await authCubit.login(email: 'xyz@abc.de', password: '');
       expect(result, LoginResult.wrongCredentials);
+      result = await authCubit.login(email: 'fail@abc.de', password: '');
+      expect(result, LoginResult.wrongCredentials);
     });
 
     blocTest<AuthCubit, AuthState>('login and logout works',
-        build: () => AuthCubit(storeLogin: false),
+        build: () => authCubit,
         wait: const Duration(milliseconds: 10),
         act: (c) async {
           await c.login(email: 'test@test.org', password: 'somepw');
@@ -42,10 +45,10 @@ void main() {
 
     blocTest<AuthCubit, AuthState>(
       'no state change when login fails',
-      build: () => AuthCubit(storeLogin: false),
+      build: () => authCubit,
       wait: const Duration(milliseconds: 10),
       act: (c) async {
-        await c.login(email: 'admin@admin.com', password: 'somepw');
+        await c.login(email: 'fail@admin.com', password: 'somepw');
       },
       expect: () => [],
     );

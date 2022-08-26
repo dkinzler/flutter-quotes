@@ -94,8 +94,15 @@ To work around this, AppTheme inserts another Theme widget, which has font scali
 */
 class AppTheme extends StatelessWidget {
   final Widget child;
+  final bool listenToSettings;
 
-  const AppTheme({Key? key, required this.child}) : super(key: key);
+  const AppTheme({
+    Key? key,
+    required this.child,
+    //can be set to false for tests
+    //so that the test doesn't have to create a SettingsCubit
+    this.listenToSettings = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +115,11 @@ class AppTheme extends StatelessWidget {
     //instead of the one defined in the app settings
     //textScaleFactor might not be 1.0 e.g. if the user changes OS wide scaling settings
     var textScaleFactor = mediaQueryData.textScaleFactor;
-    var settingsScale =
-        context.select<SettingsCubit, double>((c) => c.state.uiScale);
+    double settingsScale = 1.0;
+    if (listenToSettings) {
+      settingsScale =
+          context.select<SettingsCubit, double>((c) => c.state.uiScale);
+    }
     var scale = textScaleFactor == 1.0 ? settingsScale : textScaleFactor;
 
     var theme = Theme.of(context);
@@ -141,6 +151,20 @@ class AppTheme extends StatelessWidget {
           'AppTheme: no child widget provided to appBuilder method');
     }
     return AppTheme(
+      child: child,
+    );
+  }
+
+  /*
+  Eliminates the dependency on SettingsCubit, use for widget tests.
+  */
+  static Widget appBuilderTest(BuildContext context, Widget? child) {
+    if (child == null) {
+      throw Exception(
+          'AppTheme: no child widget provided to appBuilder method');
+    }
+    return AppTheme(
+      listenToSettings: false,
       child: child,
     );
   }

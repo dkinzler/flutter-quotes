@@ -52,7 +52,11 @@ class RandomCubit extends Cubit<RandomState> {
   }) : super(const RandomState(
           status: LoadingStatus.idle,
           quote: null,
-        ));
+        )) {
+    if (quoteProvider != null) {
+      init();
+    }
+  }
 
   void init({QuoteProvider? quoteProvider}) {
     if (quoteProvider != null) {

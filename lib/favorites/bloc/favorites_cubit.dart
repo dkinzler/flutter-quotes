@@ -49,12 +49,16 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   //for the user with the given userId.
   final StorageBuilder _storageBuilder;
 
-  static FavoritesStorage _defaultStorageBuilder(String userId) {
+  static FavoritesStorage defaultStorageBuilder(String userId) {
     return HiveFavoritesStorage(userId: userId);
   }
 
+  static FavoritesStorage mockStorageBuilder(String userId) {
+    return MockFavoriteStorage();
+  }
+
   FavoritesCubit({
-    StorageBuilder storageBuilder = _defaultStorageBuilder,
+    StorageBuilder storageBuilder = defaultStorageBuilder,
   })  : _storageBuilder = storageBuilder,
         super(const FavoritesState(
           status: LoadingStatus.loading,

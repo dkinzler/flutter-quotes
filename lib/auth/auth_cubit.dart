@@ -59,13 +59,10 @@ class AuthCubit extends Cubit<AuthState> {
   LoginStore? _loginStore;
 
   AuthCubit({
-    //whether or not store logins, can be turned off e.g. to make testing easier
-    bool storeLogin = true,
-    //the login store to tuse if storeLogin=true, if null a new instance of the LoginStore class is used
     LoginStore? loginStore,
-  }) : super(const AuthState.unknown()) {
-    if (storeLogin) {
-      _loginStore = loginStore ?? LoginStore();
+  })  : _loginStore = loginStore,
+        super(const AuthState.unknown()) {
+    if (_loginStore != null) {
       _loginSilent();
     }
   }
@@ -78,13 +75,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //any email/password combination will be accepted
-  //except "admin@admin.com" which can be used to trigger an error (e.g. to test the UI)
+  //except any email that starts with 'fail', which can be used to trigger an error (e.g. to test the UI)
   Future<LoginResult> login(
       {required String email, required String password}) async {
     if (email.isEmpty || password.isEmpty) {
       _log.info('login attempt with empty email or password');
       return LoginResult.wrongCredentials;
-    } else if (email == 'admin@admin.com') {
+    } else if (email.startsWith('fail')) {
       _log.info('login failed');
       return LoginResult.error;
     } else {
@@ -114,7 +111,13 @@ The user can later (e.g. after an app restart) be retrieved to automatically log
 
 In an actual application we would probably also store some kind of token (e.g. JWT) instead of just the user object containing the user's email and name.
 */
-class LoginStore {
+abstract class LoginStore {
+  Future<bool> storeLogin(User user);
+  Future<bool> deleteLogin();
+  Future<User?> getLogin();
+}
+
+class HiveLoginStore implements LoginStore {
   final _log = Logger('LoginStore');
 
   Box<String>? _box;
@@ -130,6 +133,7 @@ class LoginStore {
     }
   }
 
+  @override
   Future<bool> storeLogin(User user) async {
     if (!isInitialized) {
       var initSuccess = await _init();
@@ -147,6 +151,7 @@ class LoginStore {
     }
   }
 
+  @override
   Future<bool> deleteLogin() async {
     if (!isInitialized) {
       var initSuccess = await _init();
@@ -163,6 +168,7 @@ class LoginStore {
     }
   }
 
+  @override
   Future<User?> getLogin() async {
     if (!isInitialized) {
       var initSuccess = await _init();

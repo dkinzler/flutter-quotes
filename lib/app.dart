@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/app_controller.dart';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
-import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
-import 'package:flutter_quotes/favorites/filter/filter_bloc.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
@@ -64,11 +62,8 @@ class _AppState extends State<App> {
           Provider<AppRouter>.value(value: _appController.router),
           BlocProvider<AuthCubit>.value(value: _appController.authCubit),
           BlocProvider<SearchCubit>.value(value: _appController.searchCubit),
-          BlocProvider<RandomCubit>.value(value: _appController.randomCubit),
           BlocProvider<FavoritesCubit>.value(
               value: _appController.favoritesCubit),
-          BlocProvider<FilteredFavoritesBloc>.value(
-              value: _appController.filterBloc),
           BlocProvider<SettingsCubit>.value(
               value: _appController.settingsCubit),
           //TODO move this into appController too

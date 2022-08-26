@@ -41,23 +41,3 @@ Future<Directory> getTemporaryStorageDirectory() async {
   var path = p.join(appDir.path, storageSubDir);
   return Directory(path);
 }
-
-/*
-Separate main function for integration test, since e.g. setting a custom
-Flutter.onError function will cause issues.
-*/
-Future<void> mainIntegrationTest() async {
-  var logger = ConsoleLogger();
-  WidgetsFlutterBinding.ensureInitialized();
-  initLogging(logger, setOnError: false);
-  Directory? storageDirectory;
-  if (!kIsWeb) {
-    storageDirectory = await getTemporaryStorageDirectory();
-    Hive.init(storageDirectory.path);
-  }
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory:
-        kIsWeb ? HydratedStorage.webStorageDirectory : storageDirectory!,
-  );
-  runApp(const App());
-}

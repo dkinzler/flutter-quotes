@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:flutter_quotes/keys.dart';
+import 'package:flutter_quotes/quote/provider.dart';
 import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
@@ -11,6 +13,22 @@ import 'package:flutter_quotes/widgets/quote.dart';
 
 class RandomQuoteWidget extends StatelessWidget {
   const RandomQuoteWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //rebuild whenever the quote provider of the app changes
+    var qp = context
+        .select<SettingsCubit, QuoteProviderType>((c) => c.state.quoteProvider);
+    return BlocProvider<RandomCubit>(
+      create: (context) => RandomCubit(
+          quoteProvider: QuoteProviderFactory.buildQuoteProvider(qp)),
+      child: const RandomQuoteCard(),
+    );
+  }
+}
+
+class RandomQuoteCard extends StatelessWidget {
+  const RandomQuoteCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +75,16 @@ class RandomQuoteWidget extends StatelessWidget {
           }
 
           /*
-          return PageTransitionSwitcher(
-            transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
-                FadeThroughTransition(
-              animation: primaryAnimation,
-              secondaryAnimation: secondaryAnimation,
-              child: child,
-            ),
-            child: child,
-          );
-          */
+              return PageTransitionSwitcher(
+                transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                  animation: primaryAnimation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                ),
+                child: child,
+              );
+              */
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: child,

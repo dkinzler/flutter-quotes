@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/favorites/bloc/bloc.dart';
+import 'package:flutter_quotes/favorites/filter/filter_bloc.dart';
 import 'package:flutter_quotes/favorites/ui/favorites_list.dart';
 import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
 import 'package:flutter_quotes/favorites/ui/sliver_favorites_list.dart';
@@ -11,12 +14,13 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var isMobile = context.layout == Layout.mobile;
 
+    Widget child;
     if (isMobile) {
       var padding = context.insets.paddingM;
       //to have more space on mobile for actual quotes
       //the filter bar will be scrolled out of view
       //on non-mobile the filter bar will always stay at the top of the screen
-      return Padding(
+      child = Padding(
         padding: padding,
         child: CustomScrollView(
           slivers: [
@@ -32,7 +36,7 @@ class FavoritesScreen extends StatelessWidget {
       );
     } else {
       var spaceL = context.sizes.spaceL;
-      return Column(
+      child = Column(
         children: [
           Padding(
             padding: context.insets.paddingL,
@@ -51,5 +55,11 @@ class FavoritesScreen extends StatelessWidget {
         ],
       );
     }
+
+    return BlocProvider<FilteredFavoritesBloc>(
+      create: (context) =>
+          FilteredFavoritesBloc(favoritesCubit: context.read<FavoritesCubit>()),
+      child: child,
+    );
   }
 }

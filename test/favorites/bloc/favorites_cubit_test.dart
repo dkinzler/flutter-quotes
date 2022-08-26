@@ -9,6 +9,10 @@ import 'package:mocktail/mocktail.dart';
 class MockFavoritesStorage extends Mock implements FavoritesStorage {}
 
 void main() {
+  //the Favorite class contains a DateTime property that holds the time the quote was favorited
+  //to make the tests predictable we need to fix the time
+  //otherwise it is hard to create expected instances of Favorite that can be compared
+  //with the result of some operation/method under test
   currentTime = () {
     return DateTime(2022);
   };

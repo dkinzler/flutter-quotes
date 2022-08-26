@@ -8,6 +8,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'main.dart' as m;
 
+/*
+Use the device_preview package to easily check how the app would look on different devices and screen sizes.
+Run with "flutter run -t lib/main_device_preview.dart"
+*/
 Future<void> main() async {
   var logger = ConsoleLogger();
   return runZonedGuarded<Future<void>>(

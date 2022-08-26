@@ -4,8 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'robots/favorites.dart';
 import 'robots/home.dart';
 import 'robots/login.dart';
-import 'package:flutter_quotes/main.dart' as app;
-
+import 'main_integration.dart' as app;
 import 'robots/robot.dart';
 import 'robots/search.dart';
 
@@ -71,11 +70,6 @@ Future<void> main() async {
   the value can then be read in the code here using e.g. bool.fromEnvironment('paramName').
   */
   Robot.disableScreenshots();
-
-  tearDown(() {
-    //delete any files created, e.g. by hive, we don't want any login or favorite information stored
-    return cleanUp();
-  });
 
   testWidgets('happy path', (WidgetTester tester) async {
     var loginRobot = LoginRobot(
@@ -149,12 +143,4 @@ Future<void> main() async {
     await homeRobot.logout();
     await loginRobot.verifyLoginScreenIsShown();
   });
-}
-
-//delete any files created with Hive (this includes files from HydratedCubits/Blocs)
-Future<void> cleanUp() async {
-  if (!kIsWeb) {
-    var dir = await app.getTemporaryStorageDirectory();
-    await dir.delete(recursive: true);
-  }
 }
