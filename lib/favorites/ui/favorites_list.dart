@@ -35,7 +35,10 @@ class FavoritesList extends StatelessWidget {
         onPressed: () => context.read<FavoritesCubit>().load(),
       );
     } else if (favorites.isEmpty) {
-      child = const Text('You have not favorited any quotes.');
+      child = const Text(
+        'You have not favorited any quotes.',
+        key: ValueKey(AppKey.favoritesNoFavoritesText),
+      );
     }
 
     if (child != null) {

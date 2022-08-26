@@ -44,9 +44,12 @@ class FilteredFavoritesBloc
     extends Bloc<FilteredFavoritesEvent, FilteredFavoritesState> {
   final FavoritesCubit favoritesCubit;
   StreamSubscription? _favoritesCubitSubscription;
+  final Duration? debounceTime;
 
   FilteredFavoritesBloc({
     required this.favoritesCubit,
+    //debouncing can be turned off e.g. for tests
+    this.debounceTime = const Duration(milliseconds: 300),
   }) : super(const FilteredFavoritesState(
           favorites: [],
           filteredFavorites: [],
@@ -65,9 +68,10 @@ class FilteredFavoritesBloc
       However when the letters are typed in quick succession, we do not want to recompute the list of favorites matching the search term
       for every additional letter that changes.
       */
-      transformer: (events, mapper) => events
-          .debounceTime(const Duration(milliseconds: 300))
-          .asyncExpand(mapper),
+      transformer: debounceTime != null
+          ? (events, mapper) =>
+              events.debounceTime(debounceTime!).asyncExpand(mapper)
+          : restartable(),
     );
 
     //listen to state changes in FavoritesCubit

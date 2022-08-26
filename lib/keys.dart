@@ -33,6 +33,7 @@ enum AppKey {
   exploreRandomNextButton,
   exploreRandomErrorRetryWidget,
 
+  favoritesNoFavoritesText,
   favoritesErrorRetryWidget,
   favoritesFilterTextField,
   favoritesSortButton,

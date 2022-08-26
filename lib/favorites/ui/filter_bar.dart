@@ -176,6 +176,7 @@ class FilterTagsWidget extends StatelessWidget {
         ...tags
             .map<Widget>((t) => InputChip(
                   label: Text(t),
+                  deleteIcon: const Icon(Icons.cancel),
                   onDeleted: () {
                     context
                         .read<FilteredFavoritesBloc>()
@@ -191,8 +192,11 @@ class FilterTagsWidget extends StatelessWidget {
   void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => const FilterAddTagsDialog(
-          key: ValueKey(AppKey.favoritesFilterAddTagsDialog)),
+      builder: (ctx) => BlocProvider<FilteredFavoritesBloc>.value(
+        value: context.read<FilteredFavoritesBloc>(),
+        child: const FilterAddTagsDialog(
+            key: ValueKey(AppKey.favoritesFilterAddTagsDialog)),
+      ),
     );
   }
 }
