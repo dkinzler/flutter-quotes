@@ -10,17 +10,6 @@ import '../../widget_test_helpers.dart';
 
 class MockAuthCubit extends Mock implements AuthCubit {}
 
-/*
-This is a typical widget test.
-We check that based on the state of the app/widget the correct ui is shown.
-
-Here we test the LoginForm widget which shows different ui elements based 
-on the state of LoginCubit:
-* if the user presses the login button, the app sends the login credentials to some backend
-  service to authenticate, while this is in progress a CircularProgressIndicator
-  is shown instead of the login button
-* if the login fails, show an error message
-*/
 void main() {
   group('LoginForm', () {
     late LoginCubit loginCubit;

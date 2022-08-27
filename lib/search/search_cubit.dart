@@ -9,9 +9,9 @@ SearchCubit can be used to search for quotes using a quote provider.
 The state of the cubit consists of the following:
 - the current search status
     * inProgress: if a search operation is currently running, can be an initial search or loading more results for a previous search
-    * error: the latest search opeartion failed
+    * error: the latest search operation failed
     * idle: the latest search operation succeeded or no search has been run yet
-- the current search query string, empty string if no search has been performed yet
+- the current search query string, the empty string if no search has been performed yet
 - the search result for the current query, i.e. a list of quotes, or null if no search has been performed
 - a query cursor that can be handed to the quote provider to load more results for the given query
   is null if no query has been performed yet or there are no more results
@@ -67,6 +67,10 @@ class SearchCubit extends Cubit<SearchState> {
 
   SearchCubit({this.quoteProvider}) : super(const SearchState());
 
+  /*
+  The user can select a quote provider in the settings of the app.
+  Whenever the quote provider changes, the app needs to make sure to call init().
+  */
   void init(QuoteProvider quoteProvider) {
     this.quoteProvider = quoteProvider;
     emit(const SearchState());
@@ -87,12 +91,14 @@ class SearchCubit extends Cubit<SearchState> {
   //if no query is provided, search for state.query again (if non-null)
   Future<bool> search({String? query}) async {
     query ??= state.query;
+    //if a search operation is already running, return
     if (query.isEmpty || state.status == SearchStatus.inProgress) {
       return false;
     }
     if (!isInitialized) {
       return false;
     }
+    //before performing the search, update the state to indicate that a search operation is currently in progress
     emit(SearchState(
       status: SearchStatus.inProgress,
       query: query,

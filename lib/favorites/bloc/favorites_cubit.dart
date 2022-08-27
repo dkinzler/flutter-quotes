@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 
 /*
 FavoritesCubit maintains the list of quotes a user has favorited.
-Whenever a user logs in, the cubit needs to be initialized by called the init() method, which
+Whenever a user logs in, the cubit needs to be initialized by calling the init() method, which
 will try to load the favorites (if any) of the user from storage.
 While the init operation is in progress, the "status" field of the cubit state
 will be set to LoadingStatus.loading.
