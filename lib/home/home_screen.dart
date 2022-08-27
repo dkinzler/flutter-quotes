@@ -31,10 +31,20 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       vsync: this,
     );
+    //This is mostly for mobile, where we can change the tab by swiping left/right on the screen.
+    //When that happens we need to update the route, so that the BottomNavigationBar can mark the correct tab as selected.
+    _tabController.addListener(_onTabIndexChanged);
+  }
+
+  void _onTabIndexChanged() {
+    if (_tabController.index != _tabToIndex(widget.tab)) {
+      context.go(HomeRoute(tab: _indexToTab(_tabController.index)));
+    }
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabIndexChanged);
     _tabController.dispose();
     super.dispose();
   }
@@ -47,6 +57,17 @@ class _HomeScreenState extends State<HomeScreen>
         return 2;
       default:
         return 0;
+    }
+  }
+
+  HomeTab _indexToTab(int index) {
+    switch (index) {
+      case 1:
+        return HomeTab.search;
+      case 2:
+        return HomeTab.favorites;
+      default:
+        return HomeTab.explore;
     }
   }
 

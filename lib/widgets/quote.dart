@@ -38,7 +38,7 @@ class QuoteWidget extends StatelessWidget {
       ),
       SizedBox(height: context.sizes.spaceM),
       Text(
-        '-${quote.author}',
+        '- ${quote.author}',
         style: authorTextStyle,
       ),
       /*
