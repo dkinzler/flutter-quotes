@@ -22,8 +22,8 @@ ElevatedButton(
 We would use a similar callback function, that calls the search method of the search cubit, for every place in the app, where the user can start a seach.
 The code to start the search will be duplicated multiple times and the UI/widget code is coupled to the particular way the "backend" part of the search is implemented (in the example with a cubit).
 
-A better and more general approach is to split the intent of the user (the thing/actions they want to perform) from the actual code/implementation that performes that intent.
-I.e. we define an intent class that captures what the user wants to do and an action class that contains the code that will perform the action given an intent instance. 
+A better and more general approach is to split the intent of the user (the thing/action they want to perform) from the actual code/implementation that performes that intent.
+I.e. we define an intent class that captures what the user wants to do and an action class that contains the code that will actually perform the action given an intent instance. 
 In the example the user wants to perform a search for a particular query, so the intent class would consist of just that query string. 
 The action class will take an instance of the intent and pass the query along to the search cubit.
 
