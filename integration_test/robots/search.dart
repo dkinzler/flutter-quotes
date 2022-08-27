@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_quotes/favorites/ui/buttons.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/search_results.dart';
+import 'package:flutter_quotes/search/search_screen.dart';
 import 'package:flutter_quotes/search/sliver_search_results.dart';
 import 'package:flutter_quotes/widgets/quote.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,7 +44,7 @@ class SearchRobot extends Robot {
       );
     } else {
       scrollableFinder = find.descendant(
-        of: find.byType(SliverSearchResultsWidget),
+        of: find.byType(SearchScreen),
         matching: find.byType(Scrollable),
       );
     }

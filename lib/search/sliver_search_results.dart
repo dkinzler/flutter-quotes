@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
@@ -23,6 +24,7 @@ class SliverSearchResultsWidget extends StatelessWidget {
         child = const CircularProgressIndicator();
       } else {
         child = ErrorRetryWidget(
+          key: const ValueKey(AppKey.searchErrorRetryWidget),
           onPressed: () => context.read<SearchCubit>().search(),
         );
       }
@@ -69,12 +71,14 @@ class SliverSearchResultsWidget extends StatelessWidget {
         child = const CircularProgressIndicator();
       } else if (state.status == SearchStatus.error) {
         child = ErrorRetryWidget(
+          key: const ValueKey(AppKey.searchLoadMoreErrorRetryWidget),
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
         );
       } else if (!state.canLoadMore) {
         child = const Text('No more results');
       } else {
         child = ElevatedButton(
+          key: const ValueKey(AppKey.searchLoadMoreButton),
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
           child: const Text('More'),
         );

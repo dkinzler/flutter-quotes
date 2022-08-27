@@ -56,8 +56,8 @@ Future<void> main() async {
       await searchRobot.enterSearchTerm('test search');
       await searchRobot.tapSearchButton();
       await searchRobot.tapFavoriteQuoteButton(0);
-      await searchRobot.tapFavoriteQuoteButton(3);
-      await searchRobot.tapFavoriteQuoteButton(5);
+      await searchRobot.tapFavoriteQuoteButton(1);
+      await searchRobot.tapFavoriteQuoteButton(2);
       await searchRobot.scrollDown();
       await searchRobot.tapLoadMoreButton();
       await searchRobot.scrollDown();
