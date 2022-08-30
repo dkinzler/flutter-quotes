@@ -18,24 +18,23 @@ class AppController {
   late final AuthRepository authRepository = AuthRepository(
     loginStore: useMockStorage ? null : HiveLoginStore(),
   );
-  late final AppRouter router = AppRouter(authRepository: authRepository);
   late final QuoteRepository quoteRepository = QuoteRepository();
-  late final SearchCubit searchCubit =
-      SearchCubit(quoteRepository: quoteRepository);
-
   late final favoritesRepository = FavoritesRepository(
     storageType:
         useMockStorage ? FavoritesStorageType.mock : FavoritesStorageType.hive,
   );
+
+  late final AppRouter router = AppRouter(authRepository: authRepository);
+
+  late final SearchCubit searchCubit =
+      SearchCubit(quoteRepository: quoteRepository);
   late final FavoritesCubit favoritesCubit = FavoritesCubit(
     favoritesRepository: favoritesRepository,
   );
-
   final SettingsCubit settingsCubit = SettingsCubit();
   final TipsBloc tipsBloc = TipsBloc();
 
   late StreamSubscription _authRepositorySubscription;
-
   late StreamSubscription _settingsCubitSubscription;
   Settings? _currentSettings;
 

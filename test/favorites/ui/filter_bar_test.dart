@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/bloc.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
 import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/quote/quote.dart';
@@ -9,21 +11,41 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../widget_test_helpers.dart';
 
 void main() {
+  var exampleFavorites = [
+    Favorite(
+      quote: const Quote(
+        text: 'quote1',
+        author: 'abc',
+        source: 'test',
+        tags: ['tag1', 'tag2'],
+      ),
+      timeAdded: DateTime(2022),
+    ),
+    Favorite(
+      quote: const Quote(
+        text: 'quote2',
+        author: 'abc',
+        source: 'test',
+        tags: ['tag3', 'tag4'],
+      ),
+      timeAdded: DateTime(2022),
+    ),
+  ];
+
   group('FilterBar', () {
     late Widget widget;
-    late FavoritesCubit favoritesCubit;
+    late FavoritesRepository favoritesRepository;
     late FilteredFavoritesBloc filteredFavoritesBloc;
 
     setUp(() async {
-      favoritesCubit =
-          FavoritesCubit(storageBuilder: FavoritesCubit.mockStorageBuilder);
-      favoritesCubit.init('testUser');
+      favoritesRepository =
+          FavoritesRepository(storageType: FavoritesStorageType.mock);
+      await favoritesRepository.init('testUserId');
       filteredFavoritesBloc = FilteredFavoritesBloc(
-          favoritesRepository: favoritesCubit, debounceTime: null);
+          favoritesRepository: favoritesRepository, debounceTime: null);
       //we insert the providers above MaterialApp so that they can also be found from any dialogs
       widget = MultiBlocProvider(
         providers: [
-          BlocProvider.value(value: favoritesCubit),
           BlocProvider.value(value: filteredFavoritesBloc),
         ],
         child: buildWidget(const FilterBar()),
@@ -34,6 +56,8 @@ void main() {
       'FilterBar updates FilterBloc when search text changes',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
+        //wait for bloc to process initial events
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         expect(find.byType(FilterBar), findsOneWidget);
 
@@ -53,6 +77,8 @@ void main() {
       'FilterBar updates FilterBloc when sort order changes',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
+        //wait for bloc to process initial events
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         //sort order should initially be by newest
         expect(filteredFavoritesBloc.state.sortOrder, SortOrder.newest);
@@ -76,6 +102,8 @@ void main() {
       'FilterBar shows chips for filter tags',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
+        //wait for bloc to process initial events
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         //button to add a tag should be shown
         expect(find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsButton)),
@@ -98,29 +126,14 @@ void main() {
       'Adding and removing tags works',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
+        //wait for bloc to process initial events
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         //set favorites to have some tags to select
-        favoritesCubit.emit(FavoritesState(
-          status: LoadingStatus.loaded,
-          favorites: [
-            Favorite(
-                quote: const Quote(
-                  text: 'xyz',
-                  author: 'abc',
-                  source: 'test',
-                  tags: ['tag1', 'tag2'],
-                ),
-                timeAdded: DateTime(2022)),
-            Favorite(
-                quote: const Quote(
-                  text: 'xyz',
-                  author: 'abc',
-                  source: 'test',
-                  tags: ['tag3', 'tag4'],
-                ),
-                timeAdded: DateTime(2022)),
-          ],
-        ));
+        for (final favorite in exampleFavorites) {
+          await favoritesRepository.add(favorite);
+        }
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         //tap button to add tag to open the dialog
         await tester.tap(

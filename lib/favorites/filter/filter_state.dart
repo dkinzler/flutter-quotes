@@ -1,6 +1,29 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
+    as fr show Status;
+
+//Separate status enum, since we don't need the "initial" status from FavoritesRepository.
+enum Status {
+  loading,
+  loaded,
+  error;
+
+  bool get isLoading => this == loading;
+  bool get isLoaded => this == loaded;
+  bool get isError => this == error;
+
+  factory Status.fromRepositoryStatus(fr.Status s) {
+    switch (s) {
+      case fr.Status.loaded:
+        return loaded;
+      case fr.Status.error:
+        return error;
+      default:
+        return loading;
+    }
+  }
+}
 
 class FilteredFavoritesState extends Equatable {
   final Status status;

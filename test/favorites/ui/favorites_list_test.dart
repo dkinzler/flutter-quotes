@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/bloc.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart' hide Status;
 import 'package:flutter_quotes/favorites/filter/filter.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
+    hide Status;
+import 'package:flutter_quotes/favorites/repository/storage/storage.dart';
 import 'package:flutter_quotes/favorites/ui/actions.dart';
 import 'package:flutter_quotes/favorites/ui/buttons.dart';
 import 'package:flutter_quotes/favorites/ui/favorites_list.dart';
@@ -36,18 +40,44 @@ There are two different things we test here:
     * check that the state of the cubit/bloc updates correctly
   More examples of this type of test can be found in 'filter_bar_test.dart'.
 */
+
 void main() {
+  var exampleFavorites = [
+    Favorite(
+      quote: const Quote(
+        text: 'xyz',
+        author: 'author1',
+        source: 'test',
+        tags: ['tag1', 'tag2'],
+      ),
+      timeAdded: DateTime(2022),
+    ),
+    Favorite(
+      quote: const Quote(
+        text: 'abc',
+        author: 'author2',
+        source: 'test',
+        tags: ['tag3', 'tag4'],
+      ),
+      timeAdded: DateTime(2022),
+    ),
+  ];
+
   group('FavoritesList', () {
     late Widget widget;
+    late FavoritesRepository favoritesRepository;
     late FavoritesCubit favoritesCubit;
     late FilteredFavoritesBloc filteredFavoritesBloc;
 
     setUp(() async {
-      favoritesCubit =
-          FavoritesCubit(storageBuilder: FavoritesCubit.mockStorageBuilder);
-      await favoritesCubit.init('testUser');
+      favoritesRepository =
+          FavoritesRepository(storageType: FavoritesStorageType.mock);
+      await favoritesRepository.init('test');
+      favoritesCubit = FavoritesCubit(favoritesRepository: favoritesRepository);
       filteredFavoritesBloc = FilteredFavoritesBloc(
-          favoritesRepository: favoritesCubit, debounceTime: null);
+        favoritesRepository: favoritesRepository,
+        debounceTime: null,
+      );
       //we insert the providers above MaterialApp so that they can also be found from any dialogs
       widget = MultiBlocProvider(
         providers: [
@@ -69,20 +99,24 @@ void main() {
       'correct content shown based on favorites status',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
+        //wait for bloc to process initial events
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //while favorites are loading from storage, a progress indicator should be shown
-        favoritesCubit.emit(const FavoritesState(
-          status: LoadingStatus.loading,
+        //while favorites are loading, a progress indicator should be shown
+        filteredFavoritesBloc.emit(const FilteredFavoritesState(
+          status: Status.loading,
           favorites: [],
+          filteredFavorites: [],
         ));
         await tester.pump(const Duration(milliseconds: 100));
 
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
         //if loading fails show error retry widget
-        favoritesCubit.emit(const FavoritesState(
-          status: LoadingStatus.error,
+        filteredFavoritesBloc.emit(const FilteredFavoritesState(
+          status: Status.error,
           favorites: [],
+          filteredFavorites: [],
         ));
         await tester.pumpAndSettle();
 
@@ -90,9 +124,10 @@ void main() {
             findsOneWidget);
 
         //if there are not favorites, a text should be shown
-        favoritesCubit.emit(const FavoritesState(
-          status: LoadingStatus.loaded,
+        filteredFavoritesBloc.emit(const FilteredFavoritesState(
+          status: Status.loaded,
           favorites: [],
+          filteredFavorites: [],
         ));
         await tester.pumpAndSettle();
 
@@ -100,26 +135,10 @@ void main() {
             findsOneWidget);
 
         //if there are some favorites, the quote widgets should be shown
-        favoritesCubit.emit(FavoritesState(
-          status: LoadingStatus.loaded,
-          favorites: [
-            Favorite(
-                quote: const Quote(
-                  text: 'xyz',
-                  author: 'author1',
-                  source: 'test',
-                  tags: ['tag1', 'tag2'],
-                ),
-                timeAdded: DateTime(2022)),
-            Favorite(
-                quote: const Quote(
-                  text: 'abc',
-                  author: 'author2',
-                  source: 'test',
-                  tags: ['tag3', 'tag4'],
-                ),
-                timeAdded: DateTime(2022)),
-          ],
+        filteredFavoritesBloc.emit(FilteredFavoritesState(
+          status: Status.loaded,
+          favorites: exampleFavorites,
+          filteredFavorites: exampleFavorites,
         ));
         await waitForBloc(tester);
         await tester.pumpAndSettle();
@@ -145,28 +164,9 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
 
-        //if there are some favorites, the quote widgets should be shown
-        favoritesCubit.emit(FavoritesState(
-          status: LoadingStatus.loaded,
-          favorites: [
-            Favorite(
-                quote: const Quote(
-                  text: 'xyz',
-                  author: 'author1',
-                  source: 'test',
-                  tags: ['tag1', 'tag2'],
-                ),
-                timeAdded: DateTime(2022)),
-            Favorite(
-                quote: const Quote(
-                  text: 'abc',
-                  author: 'author2',
-                  source: 'test',
-                  tags: ['tag3', 'tag4'],
-                ),
-                timeAdded: DateTime(2022)),
-          ],
-        ));
+        for (final favorite in exampleFavorites) {
+          await favoritesCubit.add(favorite.quote);
+        }
         await waitForBloc(tester);
         await tester.pumpAndSettle();
 
@@ -182,7 +182,7 @@ void main() {
               matching: find.byType(DeleteFavoriteButton)),
         );
         await tester.pumpAndSettle();
-        await waitForBloc(tester, duration: const Duration(milliseconds: 500));
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
 
         expect(find.byType(QuoteCard), findsNWidgets(1));
@@ -196,7 +196,7 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-        await waitForBloc(tester, duration: const Duration(milliseconds: 500));
+        await waitForBloc(tester, duration: const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
 
         expect(find.byType(QuoteCard), findsNWidgets(2));

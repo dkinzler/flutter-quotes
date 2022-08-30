@@ -1,4 +1,4 @@
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 import 'package:flutter_quotes/util/time.dart';

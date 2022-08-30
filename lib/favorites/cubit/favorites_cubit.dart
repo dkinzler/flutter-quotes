@@ -3,6 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
+    as fr show Status;
 import 'package:flutter_quotes/quote/quote.dart';
 
 /*
@@ -16,6 +18,28 @@ The separation keeps FavoritesRepsitory clean and simple, no requirements and de
 
 FavoritesCubit is not concerned with sorting, searching and filtering the favorites, see FilteredFavoritesBloc for this.
 */
+
+//We create a new Status enum here, since we don't need the "initial" status from FavoritesRepository.
+enum Status {
+  loading,
+  loaded,
+  error;
+
+  bool get isLoading => this == loading;
+  bool get isLoaded => this == loaded;
+  bool get isError => this == error;
+
+  factory Status.fromRepositoryStatus(fr.Status s) {
+    switch (s) {
+      case fr.Status.loaded:
+        return loaded;
+      case fr.Status.error:
+        return error;
+      default:
+        return loading;
+    }
+  }
+}
 
 class FavoritesState extends Equatable {
   final Status status;
@@ -54,7 +78,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     _favoritesRepositorySubscription?.cancel();
     _favoritesRepositorySubscription =
         favoritesRepository.getFavorites().listen((f) {
-      emit(FavoritesState(status: f.status, favorites: f.favorites));
+      emit(FavoritesState(
+          status: Status.fromRepositoryStatus(f.status),
+          favorites: f.favorites));
     });
   }
 

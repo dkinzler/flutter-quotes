@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
 import 'package:flutter_quotes/auth/login/login_cubit.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /*
@@ -11,8 +11,8 @@ These are typical Cubit tests, they have the following steps:
 
 One challenge that often comes up in these tests is setting up the dependencies
 of the cubit/bloc to be tested.
-Here LoginCubit just has a single dependency AuthCubit which in turn doesn't have
-any dependencies, so we can just create an instance of AuthCubit.
+Here LoginCubit just has a single dependency AuthRepository which in turn doesn't have
+any dependencies, so we can just create an instance of AuthRepository.
 However for more complex cubits it might be easier to mock/fake the dependencies instead of creating
 the whole dependency graph needed to create an instance of the cubit/bloc under test.
 E.g. see 'test/favorites/bloc/favorites_cubit_test.dart', which uses the 'mocktail' package to
@@ -20,14 +20,14 @@ create mock dependencies to test the FavoritesCubit class.
 */
 void main() {
   group('LoginCubit', () {
-    late AuthCubit authCubit;
+    late AuthRepository authCubit;
     late LoginCubit loginCubit;
 
     //since the setup is the same for all tests we perform it there instead of
     //repeating the same code in each build function of blocTest
     setUp(() {
-      authCubit = AuthCubit();
-      loginCubit = LoginCubit(authCubit: authCubit);
+      authCubit = AuthRepository();
+      loginCubit = LoginCubit(authRepository: authCubit);
     });
 
     blocTest<LoginCubit, LoginState>(

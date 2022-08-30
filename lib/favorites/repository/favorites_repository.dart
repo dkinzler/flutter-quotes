@@ -29,11 +29,13 @@ We believe it makes it easier to understand and use FavoritesRepository in upstr
 */
 
 enum Status {
+  initial,
   loading,
   loaded,
   error;
 
   //helpers to check the current status, this is more convenient than having to write e.g. "status == Status.loading"
+  bool get isInitial => this == initial;
   bool get isLoaded => this == loaded;
   bool get isLoading => this == loading;
   bool get isError => this == error;
@@ -48,15 +50,20 @@ class Favorites extends Equatable {
     required this.favorites,
   });
 
-  //This will be the state while no user is logged in.
-  //Whenever a user logs in, init() will be called on FavoritesRepository and the status will be updated
-  //to "loading".
-  //To make it completely explicit, we could add another element "unitialized" to Status.
+  //this will be the state while no user is logged in.
   const Favorites.initial()
-      : status = Status.loaded,
+      : status = Status.initial,
         favorites = const [];
 
-  const Favorites.loaded({required this.favorites}) : status = Status.loading;
+  const Favorites.loaded({required this.favorites}) : status = Status.loaded;
+
+  const Favorites.loading()
+      : status = Status.loading,
+        favorites = const [];
+
+  const Favorites.error()
+      : status = Status.error,
+        favorites = const [];
 
   @override
   List<Object?> get props => [status, favorites];
@@ -72,25 +79,37 @@ class Favorites extends Equatable {
   }
 }
 
+typedef FavoritesStorageBuilder = FavoritesStorage Function(
+    FavoritesStorageType, String);
+
 class FavoritesRepository {
   final FavoritesStorageType _storageType;
   FavoritesStorage? _storage;
 
-  FavoritesRepository(
-      {FavoritesStorageType storageType = FavoritesStorageType.hive})
-      : _storageType = storageType;
+  final FavoritesStorageBuilder _storageBuilder;
+
+  static FavoritesStorage _defaultStorageBuilder(
+      FavoritesStorageType type, String userId) {
+    return FavoritesStorageFactory.buildFavoritesStorage(type, userId);
+  }
+
+  FavoritesRepository({
+    FavoritesStorageType storageType = FavoritesStorageType.hive,
+    //can be used e.g. in testing to inject a mock storage instance
+    FavoritesStorageBuilder storageBuilder = _defaultStorageBuilder,
+  })  : _storageType = storageType,
+        _storageBuilder = storageBuilder;
 
   //need to call init() every time the logged in user changes.
-  void init(String userId) {
-    _storage =
-        FavoritesStorageFactory.buildFavoritesStorage(_storageType, userId);
-    _streamController.add(const Favorites.initial());
-    load();
+  Future<void> init(String userId) async {
+    _storage = _storageBuilder(_storageType, userId);
+    _add(const Favorites.initial());
+    await load();
   }
 
   void reset() {
     _storage = null;
-    _streamController.add(const Favorites.initial());
+    _add(const Favorites.initial());
   }
 
   /*
@@ -106,20 +125,21 @@ class FavoritesRepository {
   Favorites get _favorites => _streamController.value;
 
   void _add(Favorites favorites) {
-    _streamController.add(favorites);
+    if (_favorites != favorites) {
+      _streamController.add(favorites);
+    }
   }
 
   Future<void> load() async {
     if (_favorites.status.isLoading) {
       return;
     }
-    //this will keep the old list of favorites
-    _add(_favorites.copyWith(status: Status.loading));
+    _add(const Favorites.loading());
     try {
       var favorites = await _storage!.load();
-      _add(Favorites(status: Status.loaded, favorites: favorites));
+      _add(Favorites.loaded(favorites: favorites));
     } catch (e) {
-      _add(_favorites.copyWith(status: Status.error));
+      _add(const Favorites.error());
     }
   }
 
@@ -139,7 +159,7 @@ class FavoritesRepository {
         } else {
           newFavorites.add(favorite);
         }
-        _add(Favorites(status: Status.loaded, favorites: newFavorites));
+        _add(Favorites.loaded(favorites: newFavorites));
         return true;
       } else {
         return false;
@@ -162,7 +182,7 @@ class FavoritesRepository {
       if (success) {
         var newFavorites =
             _favorites.favorites.where((f) => f.id != id).toList();
-        _add(Favorites(status: Status.loaded, favorites: newFavorites));
+        _add(Favorites.loaded(favorites: newFavorites));
         return true;
       } else {
         return false;

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
 import 'package:flutter_quotes/auth/login/login_cubit.dart';
 import 'package:flutter_quotes/auth/login/login_screen.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../widget_test_helpers.dart';
 
-class MockAuthCubit extends Mock implements AuthCubit {}
+class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   group('LoginForm', () {
@@ -16,7 +16,7 @@ void main() {
     late Widget widget;
 
     setUp(() {
-      loginCubit = LoginCubit(authCubit: MockAuthCubit());
+      loginCubit = LoginCubit(authRepository: MockAuthRepository());
       widget = buildWidget(BlocProvider.value(
         value: loginCubit,
         child: const LoginForm(),

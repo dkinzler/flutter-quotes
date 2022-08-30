@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:isolate';
-
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/filter/filter_events.dart';
-import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 import 'package:rxdart/rxdart.dart';
-
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
+    hide Status;
 
 /*
 TODO
@@ -93,7 +92,8 @@ class FilteredFavoritesBloc
         //make sure to change the state first before adding the event to request a recompute
         //otherwise we might run into some weird asynchrouns issues, i.e. the recompute event being processed before the state is changed
         emit(state.copyWith(
-            status: favorites.status, favorites: favorites.favorites));
+            status: Status.fromRepositoryStatus(favorites.status),
+            favorites: favorites.favorites));
         if (favorites.status.isLoaded) {
           _requestRecompute();
         }

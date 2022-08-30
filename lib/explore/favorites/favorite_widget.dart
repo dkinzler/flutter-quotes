@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
