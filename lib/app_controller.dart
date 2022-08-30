@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/model/user.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/storage.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
@@ -13,10 +15,10 @@ import 'package:flutter_quotes/tips/bloc/bloc.dart';
 class AppController {
   final bool useMockStorage;
 
-  late final AuthCubit authCubit = AuthCubit(
+  late final AuthRepository authRepository = AuthRepository(
     loginStore: useMockStorage ? null : HiveLoginStore(),
   );
-  late final AppRouter router = AppRouter(authCubit: authCubit);
+  late final AppRouter router = AppRouter(authRepository: authRepository);
   late final QuoteRepository quoteRepository = QuoteRepository();
   late final SearchCubit searchCubit =
       SearchCubit(quoteRepository: quoteRepository);
@@ -32,7 +34,7 @@ class AppController {
   final SettingsCubit settingsCubit = SettingsCubit();
   final TipsBloc tipsBloc = TipsBloc();
 
-  late StreamSubscription _authCubitSubscription;
+  late StreamSubscription _authRepositorySubscription;
 
   late StreamSubscription _settingsCubitSubscription;
   Settings? _currentSettings;
@@ -41,16 +43,16 @@ class AppController {
     //set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
     this.useMockStorage = false,
   }) {
-    _handleAuthStateChange(authCubit.state);
-    _authCubitSubscription = authCubit.stream.listen(_handleAuthStateChange);
+    _authRepositorySubscription =
+        authRepository.currentUser.listen(_handleAuthUserChanged);
     _handleSettingsChanged(settingsCubit.state);
     _settingsCubitSubscription =
         settingsCubit.stream.listen(_handleSettingsChanged);
   }
 
-  void _handleAuthStateChange(AuthState authState) {
-    if (authState.isAuthenticated) {
-      favoritesRepository.init(authState.user.email);
+  void _handleAuthUserChanged(User user) {
+    if (!user.isEmpty) {
+      favoritesRepository.init(user.email);
       router.go(const HomeRoute(tab: HomeTab.explore));
     } else {
       //TODO there might be some subtle async issues here
@@ -82,10 +84,10 @@ class AppController {
 
   //TODO do we really need this?
   Future<void> close() async {
-    await _authCubitSubscription.cancel();
+    await _authRepositorySubscription.cancel();
     await _settingsCubitSubscription.cancel();
     router.close();
-    await authCubit.close();
+    await authRepository.close();
     await searchCubit.close();
   }
 }

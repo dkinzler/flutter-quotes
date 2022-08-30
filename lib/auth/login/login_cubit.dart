@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
 
 /*
 LoginCubit manages the login form state, which consists of the following:
@@ -54,10 +54,10 @@ class LoginState extends Equatable {
 }
 
 class LoginCubit extends Cubit<LoginState> {
-  final AuthCubit authCubit;
+  final AuthRepository authRepository;
 
   LoginCubit({
-    required this.authCubit,
+    required this.authRepository,
   }) : super(const LoginState());
 
   void setEmail(String email) {
@@ -99,7 +99,7 @@ class LoginCubit extends Cubit<LoginState> {
     //add an artifical delay to test the UI
     //e.g. while the login attempt is in progress a progress indicator might be shown
     await Future.delayed(const Duration(seconds: 2));
-    var result = await authCubit.login(email: email, password: password);
+    var result = await authRepository.login(email: email, password: password);
     emit(state.copyWith(loginInProgress: false, loginResult: result));
   }
 }

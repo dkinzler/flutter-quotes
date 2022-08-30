@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/app_controller.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
-import 'package:flutter_quotes/favorites/cubit/cubit.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/routing/routing.dart';
-import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
-import 'package:flutter_quotes/tips/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatefulWidget {
@@ -61,7 +56,7 @@ class _AppState extends State<App> {
           //the always get created anyway?
           //can we avoid this somehow by also passing a "create/get" func instead of the actual bloc/cubit instances?
           Provider.value(value: _appController.router),
-          BlocProvider.value(value: _appController.authCubit),
+          RepositoryProvider.value(value: _appController.authRepository),
           RepositoryProvider.value(value: _appController.quoteRepository),
           BlocProvider.value(value: _appController.searchCubit),
           RepositoryProvider.value(value: _appController.favoritesRepository),

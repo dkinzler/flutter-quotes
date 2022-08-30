@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
 import 'package:flutter_quotes/auth/login/login_cubit.dart';
 import 'package:flutter_quotes/auth/login/tip.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
 
     return BlocProvider<LoginCubit>(
       create: (context) => LoginCubit(
-        authCubit: context.read<AuthCubit>(),
+        authRepository: context.read<AuthRepository>(),
       ),
       child: Scaffold(
         floatingActionButton: const LoginTipButton(),

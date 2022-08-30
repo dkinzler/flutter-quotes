@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quotes/auth/auth_cubit.dart';
+import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +13,9 @@ class LogoutIntent extends Intent {
 }
 
 class LogoutAction extends ContextAction<LogoutIntent> {
-  final AuthCubit authCubit;
+  final AuthRepository authRepository;
 
-  LogoutAction({required this.authCubit});
+  LogoutAction({required this.authRepository});
 
   @override
   void invoke(LogoutIntent intent, [BuildContext? context]) {
@@ -41,7 +41,7 @@ class LogoutAction extends ContextAction<LogoutIntent> {
                 key: const ValueKey(AppKey.logoutConfirmDialogConfirmButton),
                 child: const Text('Logout'),
                 onPressed: () {
-                  authCubit.logout();
+                  authRepository.logout();
                 },
               ),
             ],
@@ -68,7 +68,7 @@ class OpenSettingsAction extends Action<OpenSettingsIntent> {
 Map<Type, Action<Intent>> getHomeActions(BuildContext context) {
   return <Type, Action<Intent>>{
     LogoutIntent: LogoutAction(
-      authCubit: context.read<AuthCubit>(),
+      authRepository: context.read<AuthRepository>(),
     ),
     OpenSettingsIntent: OpenSettingsAction(
       appRouter: context.read<AppRouter>(),

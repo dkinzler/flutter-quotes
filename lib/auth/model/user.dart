@@ -11,10 +11,13 @@ class User extends Equatable {
     this.lastLoginTime,
   });
 
-  const User.empty()
-      : email = '',
-        name = '',
-        lastLoginTime = null;
+  bool get isEmpty => this == empty;
+
+  static const empty = User(
+    email: '',
+    name: '',
+    lastLoginTime: null,
+  );
 
   @override
   List<Object?> get props => [email, name, lastLoginTime];
