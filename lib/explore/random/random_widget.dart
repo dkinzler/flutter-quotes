@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
+import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
@@ -20,8 +21,8 @@ class RandomQuoteWidget extends StatelessWidget {
     var qp = context
         .select<SettingsCubit, QuoteProviderType>((c) => c.state.quoteProvider);
     return BlocProvider<RandomCubit>(
-      create: (context) => RandomCubit(
-          quoteProvider: QuoteProviderFactory.buildQuoteProvider(qp)),
+      create: (context) =>
+          RandomCubit(quoteRepository: context.read<QuoteRepository>()),
       child: const RandomQuoteCard(),
     );
   }

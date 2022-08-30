@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter_quotes/quote/quote.dart';
-import 'package:flutter_quotes/quote/provider.dart';
 
 /*
 RandomCubit manages and loads random quotes from a quote provider.
@@ -44,35 +44,23 @@ class RandomState extends Equatable {
 class RandomCubit extends Cubit<RandomState> {
   final _log = Logger('RandomCubit');
 
-  QuoteProvider? quoteProvider;
+  final QuoteRepository _quoteRepository;
   Queue<Quote> _cache = Queue();
 
   RandomCubit({
-    this.quoteProvider,
-  }) : super(const RandomState(
+    required QuoteRepository quoteRepository,
+  })  : _quoteRepository = quoteRepository,
+        super(const RandomState(
           status: LoadingStatus.idle,
           quote: null,
         )) {
-    if (quoteProvider != null) {
-      init();
-    }
+    init();
   }
 
-  void init({QuoteProvider? quoteProvider}) {
-    if (quoteProvider != null) {
-      this.quoteProvider = quoteProvider;
-    }
+  void init() {
     _cache = Queue();
     emit(const RandomState(status: LoadingStatus.idle, quote: null));
     loadMore();
-  }
-
-  bool get isInitialized {
-    if (quoteProvider == null) {
-      _log.warning('quoteProvider not initialized');
-      return false;
-    }
-    return true;
   }
 
   void reset() {
@@ -85,13 +73,9 @@ class RandomCubit extends Cubit<RandomState> {
     if (state.status == LoadingStatus.loading) {
       return;
     }
-    if (!isInitialized) {
-      return;
-    }
-
     emit(state.copyWith(status: LoadingStatus.loading));
     try {
-      var quotes = await quoteProvider!.random(10);
+      var quotes = await _quoteRepository.random(10);
       _cache.addAll(quotes);
       emit(state.copyWith(status: LoadingStatus.idle));
       if (state.quote == null) {

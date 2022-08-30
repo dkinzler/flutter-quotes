@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_quotes/quote/mock/example_quotes.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/mock/example_quotes.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 
 class MockQuoteApiClient implements QuoteProvider {

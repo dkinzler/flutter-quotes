@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/quote/quote.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
+import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:logging/logging.dart';
 
 /*
@@ -63,26 +64,11 @@ class SearchState extends Equatable {
 class SearchCubit extends Cubit<SearchState> {
   final _log = Logger('SearchCubit');
 
-  QuoteProvider? quoteProvider;
+  final QuoteRepository _quoteRepository;
 
-  SearchCubit({this.quoteProvider}) : super(const SearchState());
-
-  /*
-  The user can select a quote provider in the settings of the app.
-  Whenever the quote provider changes, the app needs to make sure to call init().
-  */
-  void init(QuoteProvider quoteProvider) {
-    this.quoteProvider = quoteProvider;
-    emit(const SearchState());
-  }
-
-  bool get isInitialized {
-    if (quoteProvider == null) {
-      _log.warning('quote provider not initialized');
-      return false;
-    }
-    return true;
-  }
+  SearchCubit({required QuoteRepository quoteRepository})
+      : _quoteRepository = quoteRepository,
+        super(const SearchState());
 
   void reset() {
     emit(const SearchState());
@@ -95,16 +81,13 @@ class SearchCubit extends Cubit<SearchState> {
     if (query.isEmpty || state.status == SearchStatus.inProgress) {
       return false;
     }
-    if (!isInitialized) {
-      return false;
-    }
     //before performing the search, update the state to indicate that a search operation is currently in progress
     emit(SearchState(
       status: SearchStatus.inProgress,
       query: query,
     ));
     try {
-      var result = await quoteProvider!.search(query);
+      var result = await _quoteRepository.search(query);
       emit(SearchState(
         status: SearchStatus.idle,
         query: query,
@@ -127,15 +110,12 @@ class SearchCubit extends Cubit<SearchState> {
     if (state.status == SearchStatus.inProgress) {
       return false;
     }
-    if (!isInitialized) {
-      return false;
-    }
     if (state.query.isEmpty || !state.hasResults || !state.canLoadMore) {
       return false;
     }
     emit(state.copyWith(status: SearchStatus.inProgress));
     try {
-      var result = await quoteProvider!.search(
+      var result = await _quoteRepository.search(
         state.query,
         queryCursor: state.queryCursor,
       );

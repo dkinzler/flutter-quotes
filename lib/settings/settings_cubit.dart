@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 /*

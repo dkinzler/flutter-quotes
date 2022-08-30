@@ -109,20 +109,12 @@ class FavoritesRepository {
     _streamController.add(favorites);
   }
 
-  var i = 0;
-
   Future<void> load() async {
     if (_favorites.status.isLoading) {
       return;
     }
     //this will keep the old list of favorites
     _add(_favorites.copyWith(status: Status.loading));
-    if (i < 3) {
-      await Future.delayed(const Duration(seconds: 4));
-      i++;
-      _add(_favorites.copyWith(status: Status.error));
-      return;
-    }
     try {
       var favorites = await _storage!.load();
       _add(Favorites(status: Status.loaded, favorites: favorites));

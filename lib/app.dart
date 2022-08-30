@@ -62,6 +62,7 @@ class _AppState extends State<App> {
           //can we avoid this somehow by also passing a "create/get" func instead of the actual bloc/cubit instances?
           Provider.value(value: _appController.router),
           BlocProvider.value(value: _appController.authCubit),
+          RepositoryProvider.value(value: _appController.quoteRepository),
           BlocProvider.value(value: _appController.searchCubit),
           RepositoryProvider.value(value: _appController.favoritesRepository),
           BlocProvider.value(value: _appController.favoritesCubit),

@@ -1,5 +1,5 @@
-import 'package:flutter_quotes/quote/mock/apiclient.dart';
-import 'package:flutter_quotes/quote/quotable/apiclient.dart';
+import 'package:flutter_quotes/quote/providers/mock/apiclient.dart';
+import 'package:flutter_quotes/quote/providers/quotable/apiclient.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 
 /*

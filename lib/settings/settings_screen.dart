@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/tips/bloc/bloc.dart';

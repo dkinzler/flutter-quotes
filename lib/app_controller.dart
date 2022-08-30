@@ -3,7 +3,8 @@ import 'package:flutter_quotes/auth/auth_cubit.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
-import 'package:flutter_quotes/quote/provider.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
+import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
@@ -16,7 +17,9 @@ class AppController {
     loginStore: useMockStorage ? null : HiveLoginStore(),
   );
   late final AppRouter router = AppRouter(authCubit: authCubit);
-  final SearchCubit searchCubit = SearchCubit();
+  late final QuoteRepository quoteRepository = QuoteRepository();
+  late final SearchCubit searchCubit =
+      SearchCubit(quoteRepository: quoteRepository);
 
   late final favoritesRepository = FavoritesRepository(
     storageType:
@@ -73,8 +76,8 @@ class AppController {
   }
 
   void _updateQuoteProvider(QuoteProviderType qp) {
-    var quoteProvider = QuoteProviderFactory.buildQuoteProvider(qp);
-    searchCubit.init(quoteProvider);
+    quoteRepository.changeProvider(qp);
+    searchCubit.reset();
   }
 
   //TODO do we really need this?

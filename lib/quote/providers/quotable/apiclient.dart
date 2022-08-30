@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_quotes/quote/quote.dart';
-import 'package:flutter_quotes/quote/provider.dart';
-import 'package:flutter_quotes/quote/quotable/model.dart';
+import 'package:flutter_quotes/quote/providers/provider.dart';
+import 'package:flutter_quotes/quote/providers/quotable/model.dart';
 
 //API client for the Quotable API.
 class QuotableApiClient implements QuoteProvider {
