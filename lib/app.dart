@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/app_controller.dart';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
@@ -59,15 +60,14 @@ class _AppState extends State<App> {
           //but then we have to read them to add them to blocprovider and then
           //the always get created anyway?
           //can we avoid this somehow by also passing a "create/get" func instead of the actual bloc/cubit instances?
-          Provider<AppRouter>.value(value: _appController.router),
-          BlocProvider<AuthCubit>.value(value: _appController.authCubit),
-          BlocProvider<SearchCubit>.value(value: _appController.searchCubit),
-          BlocProvider<FavoritesCubit>.value(
-              value: _appController.favoritesCubit),
-          BlocProvider<SettingsCubit>.value(
-              value: _appController.settingsCubit),
+          Provider.value(value: _appController.router),
+          BlocProvider.value(value: _appController.authCubit),
+          BlocProvider.value(value: _appController.searchCubit),
+          RepositoryProvider.value(value: _appController.favoritesRepository),
+          BlocProvider.value(value: _appController.favoritesCubit),
+          BlocProvider.value(value: _appController.settingsCubit),
           //TODO move this into appController too
-          BlocProvider<TipsBloc>.value(
+          BlocProvider.value(
             value: _appController.tipsBloc,
           ),
         ],

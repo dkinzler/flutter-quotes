@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_quotes/auth/auth_cubit.dart';
-import 'package:flutter_quotes/favorites/bloc/bloc.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
 import 'package:flutter_quotes/quote/provider.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:flutter_quotes/search/search_cubit.dart';
@@ -16,10 +18,12 @@ class AppController {
   late final AppRouter router = AppRouter(authCubit: authCubit);
   final SearchCubit searchCubit = SearchCubit();
 
+  late final favoritesRepository = FavoritesRepository(
+    storageType:
+        useMockStorage ? FavoritesStorageType.mock : FavoritesStorageType.hive,
+  );
   late final FavoritesCubit favoritesCubit = FavoritesCubit(
-    storageBuilder: useMockStorage
-        ? FavoritesCubit.mockStorageBuilder
-        : FavoritesCubit.defaultStorageBuilder,
+    favoritesRepository: favoritesRepository,
   );
 
   final SettingsCubit settingsCubit = SettingsCubit();
@@ -43,7 +47,7 @@ class AppController {
 
   void _handleAuthStateChange(AuthState authState) {
     if (authState.isAuthenticated) {
-      favoritesCubit.init(authState.user.email);
+      favoritesRepository.init(authState.user.email);
       router.go(const HomeRoute(tab: HomeTab.explore));
     } else {
       //TODO there might be some subtle async issues here
@@ -52,7 +56,7 @@ class AppController {
       //it might be easier to create a new cubit instance
       //after every login
       searchCubit.reset();
-      favoritesCubit.reset();
+      favoritesRepository.reset();
       router.go(const LoginRoute());
     }
   }

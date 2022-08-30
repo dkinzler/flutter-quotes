@@ -1,18 +1,25 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 
 class FilteredFavoritesState extends Equatable {
-  //the current list of favorites obtained from FavoritesCubit
+  final Status status;
+  bool get isLoading => status == Status.loading;
+  bool get isLoaded => status == Status.loaded;
+  bool get isError => status == Status.error;
+
+  //the current list of favorites obtained from FavoritesRepository
   final List<Favorite> favorites;
   //the list of favorites matching the filters below and sorted by sortOrder
-  //since bloc events are processed asynchronously, this will not always be immediately consistent with the filters and sort order below
-  //however eventually the filters will be applied
+  //since bloc events are processed asynchronously, this will not always be immediately consistent with the current filters and sort order
+  //eventually the filters will be applied
   final List<Favorite> filteredFavorites;
 
   final Filters filters;
   final SortOrder sortOrder;
 
   const FilteredFavoritesState({
+    required this.status,
     required this.filteredFavorites,
     required this.favorites,
     this.filters = const Filters(),
@@ -20,15 +27,18 @@ class FilteredFavoritesState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [favorites, filteredFavorites, filters, sortOrder];
+  List<Object?> get props =>
+      [status, favorites, filteredFavorites, filters, sortOrder];
 
   FilteredFavoritesState copyWith({
+    Status? status,
     List<Favorite>? filteredFavorites,
     List<Favorite>? favorites,
     Filters? filters,
     SortOrder? sortOrder,
   }) {
     return FilteredFavoritesState(
+      status: status ?? this.status,
       filteredFavorites: filteredFavorites ?? this.filteredFavorites,
       favorites: favorites ?? this.favorites,
       filters: filters ?? this.filters,

@@ -4,12 +4,12 @@ import 'dart:isolate';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/filter/filter_events.dart';
 import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 
 /*
 TODO
@@ -24,7 +24,7 @@ when copyWith is called?
 
 /*
 FilteredFavoritesBloc takes care of sorting, searching and filtering a user's favorites.
-It listens to state changes of FavoritesCubit, whenever the list of favorites changes, they are 
+It listens to FavoritesRepository to get the list of favorites of the user. Whenever the list of favorites changes, they are 
 filtered and sorted again.
 
 The favorites can be filtered by:
@@ -42,19 +42,20 @@ Using a bloc, however, does introduce some additional boilerplate code, as can b
 
 class FilteredFavoritesBloc
     extends Bloc<FilteredFavoritesEvent, FilteredFavoritesState> {
-  final FavoritesCubit favoritesCubit;
-  StreamSubscription? _favoritesCubitSubscription;
+  final FavoritesRepository favoritesRepository;
   final Duration? debounceTime;
 
   FilteredFavoritesBloc({
-    required this.favoritesCubit,
+    required this.favoritesRepository,
     //debouncing can be turned off e.g. for tests
     this.debounceTime = const Duration(milliseconds: 300),
   }) : super(const FilteredFavoritesState(
+          status: Status.loading,
           favorites: [],
           filteredFavorites: [],
         )) {
-    on<FavoritesChanged>(_onFavoritesChanged, transformer: sequential());
+    on<FavoritesSubscriptionRequested>(_onFavoritesSubscriptionRequested,
+        transformer: restartable());
     on<SearchTermChanged>(_onSearchTermChanged, transformer: sequential());
     on<FilterTagAdded>(_onTagAdded, transformer: sequential());
     on<FilterTagRemoved>(_onTagRemoved, transformer: sequential());
@@ -62,39 +63,44 @@ class FilteredFavoritesBloc
     on<RecomputeFavoritesRequested>(
       _onRecomputeRequested,
       /*
-      This will process the events sequentially but only process events that were added at least the given duration after the last event was processed.
+      This will process only the latest event and only if enough time has passed since the last event.
       Useful e.g. when a user types in a search term, a SearchTermChanged event will be fired for every additional letter typed.
       In turn every SearchTermChanged event will cause a RecomputeFavoritesRequested event to be added.
       However when the letters are typed in quick succession, we do not want to recompute the list of favorites matching the search term
       for every additional letter that changes.
       */
       transformer: debounceTime != null
-          ? (events, mapper) =>
-              events.debounceTime(debounceTime!).asyncExpand(mapper)
+          ? (events, mapper) => restartable<RecomputeFavoritesRequested>()
+              .call(events.debounceTime(debounceTime!), mapper)
           : restartable(),
     );
 
-    //listen to state changes in FavoritesCubit
-    _favoritesCubitSubscription =
-        favoritesCubit.stream.listen((favoritesState) {
-      add(FavoritesChanged(favorites: favoritesCubit.state.favorites));
-    });
-    //need to fire an event with the current cubit state, since the listener
-    //above will only be called for subsequent state changes
-    add(FavoritesChanged(favorites: favoritesCubit.state.favorites));
+    //start listening to changes in FavoritesRepository
+    add(const FavoritesSubscriptionRequested());
   }
 
   void _requestRecompute() {
     add(const RecomputeFavoritesRequested());
   }
 
-  void _onFavoritesChanged(
-      FavoritesChanged event, Emitter<FilteredFavoritesState> emit) {
-    //only process the event if the list of favorites actually changed
-    if (state.favorites != event.favorites) {
-      emit(state.copyWith(favorites: event.favorites));
-      _requestRecompute();
-    }
+  Future<void> _onFavoritesSubscriptionRequested(
+    FavoritesSubscriptionRequested event,
+    Emitter<FilteredFavoritesState> emit,
+  ) async {
+    await emit.onEach<Favorites>(
+      favoritesRepository.getFavorites(),
+      onData: (Favorites favorites) {
+        //make sure to change the state first before adding the event to request a recompute
+        //otherwise we might run into some weird asynchrouns issues, i.e. the recompute event being processed before the state is changed
+        emit(state.copyWith(
+            status: favorites.status, favorites: favorites.favorites));
+        if (favorites.status.isLoaded) {
+          _requestRecompute();
+        }
+      },
+      //this shouldn't happen
+      onError: (_, __) => emit(state.copyWith(status: Status.error)),
+    );
   }
 
   void _onSearchTermChanged(
@@ -160,9 +166,12 @@ class FilteredFavoritesBloc
     }
   }
 
+  //reload favorites
+  //convenience method so that calling code doesn't have to depend on FavoritesRepository
+  Future<void> reload() => favoritesRepository.load();
+
   @override
   Future<void> close() {
-    _favoritesCubitSubscription?.cancel();
     return super.close();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
@@ -208,7 +208,7 @@ class FilterAddTagsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     //we don't rebuild here on changes to the list of favorites
     //since the favorites shouldn't change anyway while we are in this dialog
-    var favorites = context.read<FavoritesCubit>().state.favorites;
+    var favorites = context.read<FilteredFavoritesBloc>().state.favorites;
     Set<String> tags = Set<String>.from(
         favorites.expand<String>((favorite) => favorite.quote.tags));
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/bloc.dart';
 import 'package:flutter_quotes/favorites/filter/filter_bloc.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/ui/favorites_list.dart';
 import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
 import 'package:flutter_quotes/favorites/ui/sliver_favorites_list.dart';
@@ -57,8 +57,8 @@ class FavoritesScreen extends StatelessWidget {
     }
 
     return BlocProvider<FilteredFavoritesBloc>(
-      create: (context) =>
-          FilteredFavoritesBloc(favoritesCubit: context.read<FavoritesCubit>()),
+      create: (context) => FilteredFavoritesBloc(
+          favoritesRepository: context.read<FavoritesRepository>()),
       child: child,
     );
   }

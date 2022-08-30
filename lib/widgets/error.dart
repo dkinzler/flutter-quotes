@@ -63,7 +63,7 @@ class ErrorRetryWidget extends StatelessWidget {
           ),
         SizedBox(height: hs),
         Text(
-          'Ups, something went wrong',
+          text,
           style: ts,
         ),
         SizedBox(height: hs),

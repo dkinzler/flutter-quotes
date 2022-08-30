@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
 import 'package:flutter_quotes/favorites/filter/filter_state.dart';
 
 class FilteredFavoritesEvent extends Equatable {
@@ -9,13 +8,9 @@ class FilteredFavoritesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FavoritesChanged extends FilteredFavoritesEvent {
-  final List<Favorite> favorites;
-
-  const FavoritesChanged({required this.favorites});
-
-  @override
-  List<Object?> get props => [favorites];
+//will cause FilteredFavoritesBloc to start listening to FavoritesRepository
+class FavoritesSubscriptionRequested extends FilteredFavoritesEvent {
+  const FavoritesSubscriptionRequested();
 }
 
 class SearchTermChanged extends FilteredFavoritesEvent {

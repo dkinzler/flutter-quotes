@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
@@ -20,21 +21,20 @@ class FavoriteWidget extends StatefulWidget {
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   @override
   Widget build(BuildContext context) {
-    var status =
-        context.select<FavoritesCubit, LoadingStatus>((c) => c.state.status);
+    var status = context.select<FavoritesCubit, Status>((c) => c.state.status);
     var favorites = context.read<FavoritesCubit>().state.favorites;
 
     Widget content;
-    if (status == LoadingStatus.loading) {
+    if (status.isLoading) {
       content = Padding(
         padding: context.insets.paddingM,
         child: const Center(
           child: CircularProgressIndicator(),
         ),
       );
-    } else if (status == LoadingStatus.error) {
+    } else if (status.isError) {
       content = ErrorRetryWidget(
-        onPressed: () => context.read<FavoritesCubit>().load(),
+        onPressed: () => context.read<FavoritesCubit>().reload(),
       );
     } else {
       Favorite? f;
@@ -64,7 +64,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     }
 
     Widget? trailing;
-    if (status == LoadingStatus.loaded) {
+    if (status.isLoaded) {
       trailing = ElevatedButton(
         key: const ValueKey(AppKey.exploreFavoritesNextButton),
         child: const Text('Another one'),

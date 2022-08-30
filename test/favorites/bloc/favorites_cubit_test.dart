@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_quotes/favorites/bloc/bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_storage.dart';
+import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';

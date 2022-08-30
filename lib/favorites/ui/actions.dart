@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/quote/quote.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +90,7 @@ class DeleteFavoriteAction extends ContextAction<DeleteFavoriteIntent> {
   @override
   Future<void> invoke(DeleteFavoriteIntent intent,
       [BuildContext? context]) async {
-    favoritesCubit.removeById(intent.favorite.id);
+    favoritesCubit.remove(favorite: intent.favorite);
     if (context != null && intent.showUndoSnackBar) {
       var scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
       scaffoldMessenger?.hideCurrentSnackBar();

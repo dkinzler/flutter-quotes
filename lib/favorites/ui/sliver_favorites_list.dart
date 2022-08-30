@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/bloc.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/widgets/error.dart';
@@ -12,19 +11,19 @@ class SliverFavoritesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var status =
-        context.select<FavoritesCubit, LoadingStatus>(((c) => c.state.status));
     var state = context.watch<FilteredFavoritesBloc>().state;
+    var status = state.status;
     var favorites = state.favorites;
     var filteredFavorites = state.filteredFavorites;
 
     Widget? child;
-    if (status == LoadingStatus.loading) {
+    if (status.isLoading) {
       child = const CircularProgressIndicator();
-    } else if (status == LoadingStatus.error) {
+    } else if (status.isError) {
       child = ErrorRetryWidget(
+        text: 'Ups, something went wrong. Your favorites could not be loaded.',
         key: const ValueKey(AppKey.favoritesErrorRetryWidget),
-        onPressed: () => context.read<FavoritesCubit>().load(),
+        onPressed: () => context.read<FilteredFavoritesBloc>().reload(),
       );
     } else if (favorites.isEmpty) {
       child = const Text(

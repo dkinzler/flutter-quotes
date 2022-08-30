@@ -31,15 +31,18 @@ class QuoteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var qts = quoteTextStyle ?? context.theme.textTheme.bodyLarge;
+    var ats = authorTextStyle ?? context.theme.textTheme.bodyLarge;
+
     var quoteTextWidgets = <Widget>[
       Text(
         quote.text,
-        style: quoteTextStyle,
+        style: qts,
       ),
       SizedBox(height: context.sizes.spaceM),
       Text(
         '- ${quote.author}',
-        style: authorTextStyle,
+        style: ats,
       ),
       /*
       Row(

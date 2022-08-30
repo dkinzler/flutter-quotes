@@ -1,15 +1,8 @@
 import 'dart:convert';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
-
-//any class implementing this interface can be used by FavoritesCubit
-//to persist the favorites of a user
-abstract class FavoritesStorage {
-  Future<List<Favorite>> load();
-  Future<bool> add(Favorite favorite);
-  Future<bool> remove(String id);
-}
+import 'favorites_storage.dart';
 
 //Implementation of FavoritesStorage using the hive package
 class HiveFavoritesStorage implements FavoritesStorage {
@@ -37,6 +30,11 @@ class HiveFavoritesStorage implements FavoritesStorage {
 
   @override
   Future<bool> add(Favorite favorite) async {
+    if (box == null) {
+      if (!await _init()) {
+        return false;
+      }
+    }
     try {
       await box!.put(favorite.id, jsonEncode(favorite.toMap()));
       return true;
@@ -77,23 +75,5 @@ class HiveFavoritesStorage implements FavoritesStorage {
       _log.warning('could not load favorites');
       rethrow;
     }
-  }
-}
-
-//can be used for testing
-class MockFavoriteStorage implements FavoritesStorage {
-  @override
-  Future<bool> add(Favorite favorite) async {
-    return true;
-  }
-
-  @override
-  Future<List<Favorite>> load() async {
-    return [];
-  }
-
-  @override
-  Future<bool> remove(String id) async {
-    return true;
   }
 }

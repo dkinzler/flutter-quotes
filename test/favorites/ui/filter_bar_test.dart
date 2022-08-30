@@ -19,7 +19,7 @@ void main() {
           FavoritesCubit(storageBuilder: FavoritesCubit.mockStorageBuilder);
       favoritesCubit.init('testUser');
       filteredFavoritesBloc = FilteredFavoritesBloc(
-          favoritesCubit: favoritesCubit, debounceTime: null);
+          favoritesRepository: favoritesCubit, debounceTime: null);
       //we insert the providers above MaterialApp so that they can also be found from any dialogs
       widget = MultiBlocProvider(
         providers: [

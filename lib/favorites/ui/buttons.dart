@@ -1,9 +1,20 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/bloc/favorite.dart';
-import 'package:flutter_quotes/favorites/bloc/favorites_cubit.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/ui/actions.dart';
 import 'package:flutter_quotes/quote/quote.dart';
+
+class _QuoteFavoriteState extends Equatable {
+  final bool isFavorited;
+  final bool isEnabled;
+
+  const _QuoteFavoriteState(
+      {required this.isFavorited, required this.isEnabled});
+
+  List<Object?> get props => [isFavorited, isEnabled];
+}
 
 class FavoriteButton extends StatelessWidget {
   final Quote quote;
@@ -17,19 +28,24 @@ class FavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isFavorited = context
-        .select<FavoritesCubit, bool>((c) => c.state.containsQuote(quote));
+    //while the favorites of the user have not been loaded successfully, the button should be disabled
+    var fs = context.select<FavoritesCubit, _QuoteFavoriteState>((c) =>
+        _QuoteFavoriteState(
+            isFavorited: c.state.containsQuote(quote),
+            isEnabled: c.state.status.isLoaded));
     return IconButton(
       splashRadius: iconSize != null ? iconSize! + 8 : null,
       icon: Icon(
-        isFavorited ? Icons.favorite : Icons.favorite_border,
-        color: Colors.pink.shade700,
+        fs.isFavorited ? Icons.favorite : Icons.favorite_border,
+        color: fs.isEnabled ? Colors.pink.shade700 : Colors.grey,
         size: iconSize,
       ),
-      onPressed: () {
-        Actions.invoke<ToggleFavoriteIntent>(
-            context, ToggleFavoriteIntent(quote: quote));
-      },
+      onPressed: fs.isEnabled
+          ? () {
+              Actions.invoke<ToggleFavoriteIntent>(
+                  context, ToggleFavoriteIntent(quote: quote));
+            }
+          : null,
     );
   }
 }
