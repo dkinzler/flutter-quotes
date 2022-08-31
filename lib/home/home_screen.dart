@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/app_controller.dart';
 import 'package:flutter_quotes/explore/explore_screen.dart';
+import 'package:flutter_quotes/favorites/cubit/cubit.dart';
+import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
+import 'package:flutter_quotes/favorites/repository/storage/storage.dart';
 import 'package:flutter_quotes/favorites/ui/actions.dart';
 import 'package:flutter_quotes/home/actions.dart';
 import 'package:flutter_quotes/home/appbar.dart';
+import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:flutter_quotes/search/actions.dart';
 import 'package:flutter_quotes/favorites/ui/favorites_screen.dart';
 import 'package:flutter_quotes/home/nav.dart';
 import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/search/search_screen.dart';
+import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final HomeTab tab;
@@ -108,18 +117,68 @@ class _HomeScreenState extends State<HomeScreen>
       appBar = CustomAppBar();
     }
 
+    return MultiProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => FavoritesRepository(
+            storageType:
+                context.read<AppController>().state.favoritesStorageType,
+            userId: context.read<AppController>().state.user.email,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => QuoteRepository(
+            quoteProviderType:
+                context.read<SettingsCubit>().state.quoteProvider,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => FavoritesCubit(
+            favoritesRepository: context.read<FavoritesRepository>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SearchCubit(
+            quoteRepository: context.read<QuoteRepository>(),
+          ),
+        ),
+      ],
+      child: BlocListener<SettingsCubit, Settings>(
+        //inform QuoteRepository when quote provider changes
+        listenWhen: (previous, current) =>
+            previous.quoteProvider != current.quoteProvider,
+        listener: (context, state) {
+          context.read<QuoteRepository>().changeProvider(state.quoteProvider);
+          //reset search state, since old query cursor (if any) cannot be used with new quote provider
+          context.read<SearchCubit>().reset();
+        },
+        child: _AppActions(
+          child: Scaffold(
+            appBar: appBar,
+            bottomNavigationBar:
+                isMobile ? BottomNavBar(selectedTab: widget.tab) : null,
+            body: SafeArea(child: body),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppActions extends StatelessWidget {
+  final Widget child;
+
+  const _AppActions({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Actions(
       actions: <Type, Action<Intent>>{
         ...getSearchActions(context),
         ...getHomeActions(context),
         ...getFavoriteActions(context),
       },
-      child: Scaffold(
-        appBar: appBar,
-        bottomNavigationBar:
-            isMobile ? BottomNavBar(selectedTab: widget.tab) : null,
-        body: SafeArea(child: body),
-      ),
+      child: child,
     );
   }
 }

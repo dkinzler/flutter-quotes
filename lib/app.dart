@@ -44,28 +44,13 @@ class _AppState extends State<App> {
     }
 
     return MultiProvider(
+        //insert global dependencies
         providers: [
-          //TODO can we make this lazy somehow, so that only the cubits and stuff that are
-          //actually needed are created
-          //we could use normal Blocprovider constructor with create() func
-          //but this will call close() on the bloc when the provider widget gets out of scope
-          //would this be a problem
-          //is there another way?
-          //alternatively we could create the blocs outside of appController again?
-          //but then we have to read them to add them to blocprovider and then
-          //the always get created anyway?
-          //can we avoid this somehow by also passing a "create/get" func instead of the actual bloc/cubit instances?
+          BlocProvider.value(value: _appController),
           Provider.value(value: _appController.router),
           RepositoryProvider.value(value: _appController.authRepository),
-          RepositoryProvider.value(value: _appController.quoteRepository),
-          BlocProvider.value(value: _appController.searchCubit),
-          RepositoryProvider.value(value: _appController.favoritesRepository),
-          BlocProvider.value(value: _appController.favoritesCubit),
           BlocProvider.value(value: _appController.settingsCubit),
-          //TODO move this into appController too
-          BlocProvider.value(
-            value: _appController.tipsBloc,
-          ),
+          BlocProvider.value(value: _appController.tipsBloc),
         ],
         child: Builder(builder: (context) {
           var darkMode =

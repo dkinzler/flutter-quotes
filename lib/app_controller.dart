@@ -1,14 +1,11 @@
 import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/auth/model/user.dart';
 import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_quotes/auth/repository/storage.dart';
-import 'package:flutter_quotes/favorites/cubit/cubit.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
-import 'package:flutter_quotes/quote/providers/provider.dart';
-import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:flutter_quotes/routing/routing.dart';
-import 'package:flutter_quotes/search/search_cubit.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/tips/bloc/bloc.dart';
 
@@ -66,6 +63,8 @@ sense to introduce a SettingsRepository.
 
 When and where to create dependencies
 -------------------------------------
+(These are some thoughts about where and when to create dependencies like Blocs/Cubits/Repositories, the pros, cons, possible problems and things to consider
+with different approaches. Might be interesting for future reference, when similar questions come up in another project.)
 
 There are different approaches to creating repositories/blocs/cubits:
 
@@ -103,39 +102,75 @@ There are different approaches to creating repositories/blocs/cubits:
       will often involve a tradeoff that might e.g. introduce a lot of additonal code.
   * Creating all dependencies globally might have some performance and memory impact,
     although in this app the cubit states will be very small, e.g. just a list of quotes/text.
+  * Creating e.g. a Bloc globally and then resetting/reinitializing it when a new user logs in
+    might produce some subtle issues with asynchronous operations.
+    E.g. if we logout while some async operation (e.g. a network request to load some data) is still in progress,
+    we will reset the cubit state and then the async operation will finish and change the state.
+    Although this scenario is not that likely, it is still something to be considered, especially if there are async operations that typically take a couple of seconds to complete.
+    This problem doesn't arise when we create a new Bloc instance every time a new user logs in.
 
-As discussed, there are pros and cons to both approaches. For this app we decided to go with the global approach (mostly, there are some dependencies that are inserted locally), as it makes some coordination tasks
-smoother and the performance hit for such a small app should be minimal.
+- Not globally, but available across app routes/pages/screens
+  * If we use nested routes (as in this app) we might have a home route/HomeScreen widget that shows the app scaffold (app bar, maybe a bottom navigation bar or navigation rail) while the body
+    of the widget is used to show the different screens of the app. As soon as a user logs in the HomeScreen will be shown and it will remain there until the user logs out.
+  * To make a Bloc or Cubit available to multiple screens/routes of the app, we can then create these dependencies directly above the HomeScreen widget.
+    However these are not global, when the user logs out they will be disposed and when a new user logs in, new instances of the Blocs/Cubits will be created.
+
+As discussed, there are pros and cons to all the approaches. For this app we decided to have:
+- Some global dependencies, e.g. AuthRepository, SettingsCubit and TipsBloc, they are created only once on app startup.
+- Some local dependencies, e.g. the FilteredFavoritesBloc that can be used to search/filter/sort the set of quotes a user has favorited.
+  Everytime we navigate to the favorites screen/tab a new instance of this bloc is created.
+- FavoritesRepository, QuoteRepository, FavoritesCubit and SearchCubit are inserted above the HomeScreen, and therefore available across the three routes/tabs (explore/search/favorites) of the app.
+  They will be recreated every time a user logs out and a new user logs back in.
 */
 
-class AppController {
-  //use for testing
+/*
+AppController is a cubit that makes the current authentication state and some other properties available to the app.
+It is also the place to implement app-global coordination tasks. E.g. AppController listens to AuthRepository for changes in the
+authentication state. If a user logs in or a user logs out AppController will change the route of the app.
+*/
+class AppState extends Equatable {
+  //set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
   final bool useMockStorage;
+  FavoritesStorageType get favoritesStorageType =>
+      useMockStorage ? FavoritesStorageType.mock : FavoritesStorageType.hive;
 
-  //repositories
+  //the current user or User.empty if no user is logged in
+  final User user;
+  bool get isUnauthenticated => user == User.empty;
+  bool get isAuthenticated => !isUnauthenticated;
+
+  const AppState({
+    this.useMockStorage = false,
+    this.user = User.empty,
+  });
+
+  @override
+  List<Object?> get props => [useMockStorage, user];
+
+  AppState copyWith({
+    bool? useMockStorage,
+    User? user,
+  }) {
+    return AppState(
+      useMockStorage: useMockStorage ?? this.useMockStorage,
+      user: user ?? this.user,
+    );
+  }
+}
+
+class AppController extends Cubit<AppState> {
   late final authRepository = AuthRepository(
-    loginStore: useMockStorage ? null : HiveLoginStore(),
-  );
-  late final quoteRepository = QuoteRepository();
-  late final favoritesRepository = FavoritesRepository(
-    storageType:
-        useMockStorage ? FavoritesStorageType.mock : FavoritesStorageType.hive,
+    loginStore: state.useMockStorage ? null : HiveLoginStore(),
   );
 
-  //router
   late final AppRouter router = AppRouter(authRepository: authRepository);
 
-  //blocs/cubits
-  late final searchCubit = SearchCubit(quoteRepository: quoteRepository);
-  late final favoritesCubit =
-      FavoritesCubit(favoritesRepository: favoritesRepository);
   late final settingsCubit = SettingsCubit();
   late final TipsBloc tipsBloc = TipsBloc();
 
   AppController({
-    //set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
-    this.useMockStorage = false,
-  }) {
+    bool useMockStorage = false,
+  }) : super(AppState(useMockStorage: useMockStorage)) {
     init();
   }
 
@@ -147,54 +182,19 @@ class AppController {
   }
 
   void _handleAuthUserChanged(User user) {
+    emit(state.copyWith(user: user));
     if (!user.isEmpty) {
-      favoritesRepository.init(user.email);
       router.go(const HomeRoute(tab: HomeTab.explore));
     } else {
-      //TODO there might be some subtle async issues here
-      //e.g. if we logout while some operation to load stuff is still in progress
-      //then we might reset the cubit but when the operation finishes it will alter the state
-      //it might be easier to create a new cubit instance
-      //after every login
-      searchCubit.reset();
-      favoritesRepository.reset();
       router.go(const LoginRoute());
     }
   }
 
-  void _handleSettingsChanged(Settings settings) {
-    if (_currentSettings != null) {
-      if (_currentSettings!.quoteProvider != settings.quoteProvider) {
-        _updateQuoteProvider(settings.quoteProvider);
-      }
-    } else {
-      _updateQuoteProvider(settings.quoteProvider);
-    }
-    _currentSettings = settings;
-  }
-
-  void _updateQuoteProvider(QuoteProviderType qp) {
-    quoteRepository.changeProvider(qp);
-    searchCubit.reset();
-  }
-
-  //TODO do we really need this?
+  @override
   Future<void> close() async {
-    await _authRepositorySubscription.cancel();
-    await _settingsCubitSubscription.cancel();
+    await _authRepositorySubscription?.cancel();
     router.close();
     await authRepository.close();
-    await searchCubit.close();
+    return super.close();
   }
 }
-
-/*
-Could make AppController a Cubit that keeps the current authState and maybe has isAuthenticated getters/setters
-and also the usemockStorage parameter
-
-we can then build the repositories and stuff on the home screen
--> this will avoid the async issues, we should comment this above
--> maybe also that we considered the different approaches and some of the pros/cons issues involved, and that we documented the thought here for further reference
--> also comment that some stuff does not need to be completely global, e.g. we can insert SearchCubit above HomeScreen which will still allow use to have the benefits
-  of persisting state when changing tabs
-*/

@@ -97,10 +97,13 @@ class FavoritesRepository {
     FavoritesStorageType storageType = FavoritesStorageType.hive,
     //can be used e.g. in testing to inject a mock storage instance
     FavoritesStorageBuilder storageBuilder = _defaultStorageBuilder,
+    //initialize the repository for the given user
+    String? userId,
   })  : _storageType = storageType,
-        _storageBuilder = storageBuilder;
+        _storageBuilder = storageBuilder {
+    if (userId != null) init(userId);
+  }
 
-  //need to call init() every time the logged in user changes.
   Future<void> init(String userId) async {
     _storage = _storageBuilder(_storageType, userId);
     _add(const Favorites.initial());

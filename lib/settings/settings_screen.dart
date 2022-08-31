@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/app_controller.dart';
+import 'package:flutter_quotes/auth/model/user.dart';
 import 'package:flutter_quotes/auth/repository/repository.dart';
 import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
@@ -149,11 +151,11 @@ class MyAccountTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO reading directly from a repository in the UI is not optimal, could create an AuthCubit, however right now we don't need it anywhere else, so this is fine for now
-    var user = context.read<AuthRepository>().user;
+    var appState = context.watch<AppController>().state;
 
     List<Widget> children;
-    if (!user.isEmpty) {
+    if (appState.isAuthenticated) {
+      var user = appState.user;
       children = [
         ListTile(
           title: const Text('Email'),
