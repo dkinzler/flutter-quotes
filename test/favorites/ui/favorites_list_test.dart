@@ -22,7 +22,7 @@ and a Widget that changes based on that state.
 There are two different things we test here:
 
 * Based on the state of FavoritesCubit/FilteredFavoritesBloc, the FavoritesList widget shows the correct UI.
-  E.g. while FavoritesCubit loads the favorites of the user from storage, the UI should show a CircularProgressIndicator.
+  E.g. while FavoritesRepository loads the favorites of the user from storage, the UI should show a CircularProgressIndicator.
   If the user has not yet favorited any quotes, show a Text widget with text 'You have not favorited any quotes'.
   If the user has filtered the quotes (e.g. by entering a serach term or selecting a particular tag), only show the qutoes that match. 
   This type of test is typically performed by the following steps:
@@ -32,7 +32,8 @@ There are two different things we test here:
     * check that FavoritesList updates the ui and shows the correct elements
 
 * When we interact with the FavoritesList widget, the state of FavoritesCubit/FilteredFavoritesBloc is updated correctly.
-  E.g. when we press on the button to delete a favorite, we expect FavoritesCubit to update its list of favorites to no longer include the quote.
+  E.g. when we press on the button to delete a favorite, we expect FavoritesRepository to remove the favorite from storage and
+  FavoritesCubit/FilteredFavoritesBloc to update its list of favorites to no longer include the quote.
   This type of test typically takes the following form:
     * create an instance of FavoritesCubit and FilteredFavoritesBloc
     * build the FavoritesListWidget

@@ -15,8 +15,6 @@ Here LoginCubit just has a single dependency AuthRepository which in turn doesn'
 any dependencies, so we can just create an instance of AuthRepository.
 However for more complex cubits it might be easier to mock/fake the dependencies instead of creating
 the whole dependency graph needed to create an instance of the cubit/bloc under test.
-E.g. see 'test/favorites/bloc/favorites_cubit_test.dart', which uses the 'mocktail' package to
-create mock dependencies to test the FavoritesCubit class.
 */
 void main() {
   group('LoginCubit', () {
