@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
 
@@ -29,12 +30,7 @@ Depending on the implementation, the logs and errors could e.g. just be printed 
 or sent to a cloud service like Sentry.
 */
 
-void initLogging(Logger logger, {bool setOnError = true}) {
-  logging.Logger.root.onRecord.listen((record) => logger.log(record));
-  if (setOnError) {
-    FlutterError.onError = logger.logFlutterError;
-  }
-}
+void initLogging(Logger logger, {bool setOnError = true}) {}
 
 /*
 Interface for classes that want to handle the log messages and errors of the application.
@@ -43,18 +39,41 @@ For a production app we could use an implementation that sends the logs and erro
 like Sentry or FirebaseCrashlytics.
 */
 abstract class Logger {
+  final bool setFlutterOnError;
+
+  Logger({
+    //turn of using FlutterError.onError, it is e.g. not compatible with integration_test
+    this.setFlutterOnError = true,
+  });
+
   //used for application logs, i.e. blocs/cubits/repositories/... that use the logging package
   void log(logging.LogRecord record);
 
-  //passed to runZoneGuarded.onError to log any otherwise uncaught errors
-  void logError(Object error, {StackTrace? stackTrace});
+  //pass to runZoneGuarded.onError to log any otherwise uncaught errors
+  void logError(Object error, StackTrace? stackTrace);
 
   //used to log flutter errors by setting FlutterError.onError to this function
   void logFlutterError(FlutterErrorDetails details);
+
+  StreamSubscription? _loggingSubscription;
+
+  void initLogging() {
+    _loggingSubscription =
+        logging.Logger.root.onRecord.listen((record) => log(record));
+    if (setFlutterOnError) {
+      FlutterError.onError = logFlutterError;
+    }
+  }
+
+  Future<void> close() async {
+    return _loggingSubscription?.cancel();
+  }
 }
 
 //Simple implementation of the Logger interface that just prints any log and error messages to console.
 class ConsoleLogger extends Logger {
+  ConsoleLogger({super.setFlutterOnError = true});
+
   @override
   void log(logging.LogRecord record) {
     print('''
@@ -67,7 +86,7 @@ class ConsoleLogger extends Logger {
   }
 
   @override
-  void logError(Object error, {StackTrace? stackTrace}) {
+  void logError(Object error, StackTrace? stackTrace) {
     print('''
       Error: $error,
       StackTrace:
