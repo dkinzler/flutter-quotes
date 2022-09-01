@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/util/time.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 
 class Favorite extends Equatable {
   String get id => quote.id;

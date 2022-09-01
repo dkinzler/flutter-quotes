@@ -6,12 +6,10 @@ import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
     hide Status;
 import 'package:flutter_quotes/favorites/repository/storage/storage.dart';
-import 'package:flutter_quotes/favorites/ui/actions.dart';
-import 'package:flutter_quotes/favorites/ui/buttons.dart';
-import 'package:flutter_quotes/favorites/ui/favorites_list.dart';
+import 'package:flutter_quotes/favorites/widgets/widgets.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/quote/quote.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../widget_test_helpers.dart';
 

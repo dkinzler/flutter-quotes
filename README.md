@@ -13,7 +13,7 @@ A sample app for browsing quotes, intended to showcase Flutter development featu
 * Testing: unit, widget and integration tests
 * Performance profiling
 
-The source code of the app is organized by feature, e.g. the code for the search and favorites feature can be found in the folders `lib/search` and `lib/favorites` respectively.
+The source code of the app is organized by feature, e.g. the code for the search and favorites features can be found in the folders `lib/search` and `lib/favorites` respectively.
 
 ## Documentation
 
@@ -22,11 +22,11 @@ Here are some pointers:
 
 * [Architecture of the app](lib/app_controller.dart)
 * State management using Blocs/Cubits for more complex features like search and favorites 
-   [1](lib/search/search_cubit.dart) 
+   [1](lib/search/cubit/search_cubit.dart) 
    [2](lib/favorites/cubit/favorites_cubit.dart)
    [3](lib/favorites/filter/filter_bloc.dart)
 * [Routing](lib/routing/router.dart)
-* [Implementing user interaction using Intents and Actions](lib/search/actions.dart)
+* [Implementing user interaction using Intents and Actions](lib/search/widgets/actions.dart)
 * [Using a Bloc to track metrics/analytics](lib/tips/bloc/bloc.dart)
 * [Theming, keeping the UI consistent across features and making it easier to change](lib/theme/app_theme.dart)
 * [Logging](lib/logging.dart)

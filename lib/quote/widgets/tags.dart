@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 
-//TODO show an animation here
 class QuoteTagList extends StatefulWidget {
   final List<String> tags;
   //max number of tags to show, if there are more there will be a button to show all

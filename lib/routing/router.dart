@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/auth/login/login_screen.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/home/home_screen.dart';
 import 'package:flutter_quotes/routing/error_screen.dart';
 import 'package:flutter_quotes/settings/settings_screen.dart';

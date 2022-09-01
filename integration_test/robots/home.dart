@@ -1,8 +1,8 @@
 import 'package:flutter_quotes/explore/explore_screen.dart';
-import 'package:flutter_quotes/favorites/ui/favorites_screen.dart';
+import 'package:flutter_quotes/favorites/view/favorites_screen.dart';
 import 'package:flutter_quotes/home/home_screen.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/search/search_screen.dart';
+import 'package:flutter_quotes/search/view/search_screen.dart';
 import 'package:flutter_quotes/settings/settings_screen.dart';
 import 'robot.dart';
 

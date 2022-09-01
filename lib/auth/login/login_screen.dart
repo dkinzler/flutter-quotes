@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_quotes/auth/login/login_cubit.dart';
 import 'package:flutter_quotes/auth/login/tip.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';

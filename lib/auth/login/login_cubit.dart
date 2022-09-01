@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 
 /*
 LoginCubit manages the login form state, which consists of the following:

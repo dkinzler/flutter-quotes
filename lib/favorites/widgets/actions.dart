@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 import 'package:provider/provider.dart';
 
 /*

@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_quotes/auth/login/login_cubit.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /*

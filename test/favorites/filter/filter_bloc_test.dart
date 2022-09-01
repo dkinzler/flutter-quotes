@@ -4,7 +4,7 @@ import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
     hide Status;
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 

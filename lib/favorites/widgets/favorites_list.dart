@@ -5,8 +5,8 @@ import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
-import 'package:flutter_quotes/favorites/ui/buttons.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
+import 'package:flutter_quotes/favorites/widgets/buttons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FavoritesList extends StatelessWidget {

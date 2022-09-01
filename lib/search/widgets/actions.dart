@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/routing/routing.dart';
-import 'package:flutter_quotes/search/search_cubit.dart';
+import 'package:flutter_quotes/search/cubit/search_cubit.dart';
 import 'package:provider/provider.dart';
 
 /*

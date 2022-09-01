@@ -1,5 +1,5 @@
 import 'package:flutter_quotes/auth/model/user.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
@@ -83,6 +84,8 @@ typedef FavoritesStorageBuilder = FavoritesStorage Function(
     FavoritesStorageType, String);
 
 class FavoritesRepository {
+  final _log = Logger('FavoritesRepository');
+
   final FavoritesStorageType _storageType;
   FavoritesStorage? _storage;
 
@@ -141,8 +144,9 @@ class FavoritesRepository {
     try {
       var favorites = await _storage!.load();
       _add(Favorites.loaded(favorites: favorites));
-    } catch (e) {
+    } catch (e, st) {
       _add(const Favorites.error());
+      _log.warning('could not load favorites', e, st);
     }
   }
 
@@ -167,7 +171,8 @@ class FavoritesRepository {
       } else {
         return false;
       }
-    } catch (e) {
+    } catch (e, st) {
+      _log.warning('could not add favorite', e, st);
       return false;
     }
   }
@@ -190,7 +195,8 @@ class FavoritesRepository {
       } else {
         return false;
       }
-    } catch (e) {
+    } catch (e, st) {
+      _log.warning('could not remove favorite', e, st);
       return false;
     }
   }

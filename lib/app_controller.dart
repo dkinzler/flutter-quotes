@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/auth/model/user.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/auth/repository/storage.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
 import 'package:flutter_quotes/routing/routing.dart';

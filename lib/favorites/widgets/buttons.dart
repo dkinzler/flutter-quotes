@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
-import 'package:flutter_quotes/favorites/ui/actions.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/favorites/widgets/actions.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 
 class _QuoteFavoriteState extends Equatable {
   final bool isFavorited;

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/widgets/error.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
-import 'package:flutter_quotes/favorites/ui/buttons.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
+import 'package:flutter_quotes/favorites/widgets/buttons.dart';
 
 class SliverFavoritesList extends StatelessWidget {
   const SliverFavoritesList({Key? key}) : super(key: key);

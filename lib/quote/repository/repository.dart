@@ -1,5 +1,5 @@
 import 'package:flutter_quotes/quote/providers/provider.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 
 /*
 QuoteRepository acts as an intermediary between the quote providers (e.g. an API client for some quote api) and the application/UI-level blocs and cubits.

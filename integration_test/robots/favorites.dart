@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
-import 'package:flutter_quotes/favorites/ui/buttons.dart';
-import 'package:flutter_quotes/favorites/ui/favorites_screen.dart';
-import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
+import 'package:flutter_quotes/favorites/view/favorites_screen.dart';
+import 'package:flutter_quotes/favorites/widgets/widgets.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'robot.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quotes/auth/repository/repository.dart';
+import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/routing/routing.dart';
 import 'package:provider/provider.dart';

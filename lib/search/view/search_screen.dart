@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/search/search_bar.dart';
-import 'package:flutter_quotes/search/search_cubit.dart';
-import 'package:flutter_quotes/search/search_result_header.dart';
-import 'package:flutter_quotes/search/search_results.dart';
-import 'package:flutter_quotes/search/sliver_search_results.dart';
+import 'package:flutter_quotes/search/cubit/search_cubit.dart';
+import 'package:flutter_quotes/search/widgets/widgets.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 
 class SearchScreen extends StatefulWidget {

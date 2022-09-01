@@ -4,9 +4,9 @@ import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.dart';
-import 'package:flutter_quotes/favorites/ui/filter_bar.dart';
+import 'package:flutter_quotes/favorites/widgets/filter_bar.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../widget_test_helpers.dart';
 

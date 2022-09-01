@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:logging/logging.dart';
-import 'package:flutter_quotes/quote/quote.dart';
+import 'package:flutter_quotes/quote/model/quote.dart';
 
 /*
 RandomCubit manages and loads random quotes from a quote provider.

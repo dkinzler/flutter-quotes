@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/search/widgets/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
 
 class FavoriteWidget extends StatefulWidget {
   const FavoriteWidget({Key? key}) : super(key: key);

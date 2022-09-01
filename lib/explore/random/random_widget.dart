@@ -4,13 +4,13 @@ import 'package:flutter_quotes/explore/random/random_cubit.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/quote/repository/repository.dart';
-import 'package:flutter_quotes/search/actions.dart';
+import 'package:flutter_quotes/search/widgets/actions.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
-import 'package:flutter_quotes/favorites/ui/buttons.dart';
-import 'package:flutter_quotes/widgets/quote.dart';
+import 'package:flutter_quotes/favorites/widgets/buttons.dart';
+import 'package:flutter_quotes/quote/widgets/quote.dart';
 
 class RandomQuoteWidget extends StatelessWidget {
   const RandomQuoteWidget({Key? key}) : super(key: key);
