@@ -10,27 +10,6 @@ import 'package:flutter_quotes/favorites/widgets/buttons.dart';
 import 'package:flutter_quotes/quote/widgets/quote.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-/*
-What are the approaches we can take, whats the actual problem
-
-On mobile we want to show at least one favorite and one random quote
-however this might not fit, so we need a singlechildscrollview
--> just handle this case separately
-
-RandomQuoteWidget should probably just receive parameters not not take care itself of 
-calculating the number to be shown, this should be done in explorescreen
-
-show loading indicator where the reload button is
-remove center for error widget
-
-and if screen is not that high, <= 500, we will use a single child scrollview
-
-//maybe just do a grid view with reload button at the bottom
--> this should be fine for larger screens
--> and we can still limit the number of elements shown so that they will probably fit
-
-*/
-
 class RandomQuoteWidget extends StatefulWidget {
   //number of quotes to show
   final int numQuotes;

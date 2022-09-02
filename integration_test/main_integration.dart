@@ -1,4 +1,3 @@
-import 'package:flutter_quotes/app_controller.dart';
 import 'package:flutter_quotes/bootstrap.dart';
 import 'package:flutter_quotes/logging.dart';
 
@@ -12,7 +11,6 @@ Future<void> mainIntegrationTest() async {
     AppConfig(
       logger: ConsoleLogger(setFlutterOnError: false),
       useMockStorage: true,
-      runInZone: false,
     ),
   );
 }

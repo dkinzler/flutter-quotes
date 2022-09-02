@@ -49,7 +49,7 @@ abstract class Logger {
   //used for application logs, i.e. blocs/cubits/repositories/... that use the logging package
   void log(logging.LogRecord record);
 
-  //pass to runZoneGuarded.onError to log any otherwise uncaught errors
+  //catch any otherwise uncaught errors by setting PlatformDispatcher.instance.onError to this function
   void logError(Object error, StackTrace? stackTrace);
 
   //used to log flutter errors by setting FlutterError.onError to this function
@@ -58,6 +58,10 @@ abstract class Logger {
   StreamSubscription? _loggingSubscription;
 
   void initLogging() {
+    PlatformDispatcher.instance.onError = (error, stack) {
+      logError(error, stack);
+      return true;
+    };
     _loggingSubscription =
         logging.Logger.root.onRecord.listen((record) => log(record));
     if (setFlutterOnError) {

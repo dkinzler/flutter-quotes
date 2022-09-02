@@ -6,6 +6,5 @@ Future<void> main() async {
   return bootstrap(AppConfig(
     logger: ConsoleLogger(),
     useMockStorage: false,
-    runInZone: true,
   ));
 }
