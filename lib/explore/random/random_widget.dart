@@ -1,112 +1,163 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/explore/random/random_cubit.dart';
+import 'package:flutter_quotes/explore/widgets/header.dart';
 import 'package:flutter_quotes/keys.dart';
-import 'package:flutter_quotes/quote/providers/provider.dart';
-import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:flutter_quotes/search/widgets/actions.dart';
-import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
-import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/favorites/widgets/buttons.dart';
 import 'package:flutter_quotes/quote/widgets/quote.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class RandomQuoteWidget extends StatelessWidget {
-  const RandomQuoteWidget({Key? key}) : super(key: key);
+/*
+What are the approaches we can take, whats the actual problem
+
+On mobile we want to show at least one favorite and one random quote
+however this might not fit, so we need a singlechildscrollview
+-> just handle this case separately
+
+RandomQuoteWidget should probably just receive parameters not not take care itself of 
+calculating the number to be shown, this should be done in explorescreen
+
+show loading indicator where the reload button is
+remove center for error widget
+
+and if screen is not that high, <= 500, we will use a single child scrollview
+
+//maybe just do a grid view with reload button at the bottom
+-> this should be fine for larger screens
+-> and we can still limit the number of elements shown so that they will probably fit
+
+*/
+
+class RandomQuoteWidget extends StatefulWidget {
+  //number of quotes to show
+  final int numQuotes;
+  //how many quotes to show side by side
+  final int numColumns;
+  final bool expand;
+
+  const RandomQuoteWidget({
+    Key? key,
+    required this.numQuotes,
+    this.numColumns = 1,
+    this.expand = false,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //rebuild whenever the quote provider of the app changes
-    var qp = context
-        .select<SettingsCubit, QuoteProviderType>((c) => c.state.quoteProvider);
-    return BlocProvider<RandomCubit>(
-      create: (context) =>
-          RandomCubit(quoteRepository: context.read<QuoteRepository>()),
-      child: const RandomQuoteCard(),
-    );
-  }
+  State<RandomQuoteWidget> createState() => _RandomQuoteWidgetState();
 }
 
-class RandomQuoteCard extends StatelessWidget {
-  const RandomQuoteCard({Key? key}) : super(key: key);
+class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
+  int get numQuotes => widget.numQuotes;
+  int get numColumns => widget.numColumns;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<RandomCubit>().loadQuotes(numQuotes);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      header: Text(
-        'Random Quote',
-        style: context.theme.textTheme.headlineSmall,
-      ),
-      content: Builder(
-        builder: (context) {
-          var randomCubit = context.watch<RandomCubit>();
-          var state = randomCubit.state;
+    var randomCubit = context.watch<RandomCubit>();
+    var state = randomCubit.state;
 
-          Widget child;
-          if (state.quote != null) {
-            var quote = state.quote!;
-            child = QuoteWidget(
-              key: ValueKey(quote.id),
-              quote: state.quote!,
-              button: FavoriteButton(
-                quote: quote,
-              ),
-              onTagPressed: (String tag) {
-                Actions.invoke<SearchIntent>(
-                    context,
-                    SearchIntent(
-                      query: tag,
-                      gotoSearchScreen: true,
-                    ));
-              },
-            );
-          } else if (state.status == LoadingStatus.loading) {
-            child = Center(
-              child: Padding(
-                padding: context.insets.paddingM,
-                child: const CircularProgressIndicator(),
-              ),
-            );
-          } else {
-            child = ErrorRetryWidget(
-              key: const ValueKey(AppKey.exploreRandomErrorRetryWidget),
-              onPressed: () => randomCubit.next(),
-            );
-          }
+    Widget child;
+    if (state.status == LoadingStatus.error) {
+      child = Center(
+        child: Padding(
+          padding: context.insets.paddingM,
+          child: ErrorRetryWidget(
+            key: const ValueKey(AppKey.exploreRandomErrorRetryWidget),
+            onPressed: () => randomCubit.loadQuotes(numQuotes),
+          ),
+        ),
+      );
+    } else if (state.quotes.isEmpty) {
+      child = const SizedBox.shrink();
+    } else {
+      if (numQuotes == 1) {
+        var q = state.quotes.first;
+        child = QuoteCard(
+          quote: q,
+          button: FavoriteButton(
+            quote: q,
+          ),
+          onTagPressed: (String tag) {
+            Actions.invoke<SearchIntent>(
+                context,
+                SearchIntent(
+                  query: tag,
+                  gotoSearchScreen: true,
+                ));
+          },
+        );
+      } else {
+        child = MasonryGridView(
+          gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: numColumns),
+          children: state.quotes
+              .map<Widget>((q) => QuoteCard(
+                    quote: q,
+                    button: FavoriteButton(
+                      quote: q,
+                    ),
+                    onTagPressed: (String tag) {
+                      Actions.invoke<SearchIntent>(
+                          context,
+                          SearchIntent(
+                            query: tag,
+                            gotoSearchScreen: true,
+                          ));
+                    },
+                  ))
+              .toList(),
+        );
+      }
+    }
 
-          /*
-              return PageTransitionSwitcher(
-                transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                  animation: primaryAnimation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: child,
-                ),
-                child: child,
+    child = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: child,
+    );
+
+    if (widget.expand) {
+      child = Expanded(child: child);
+    }
+
+    return Column(
+      mainAxisSize: widget.expand ? MainAxisSize.max : MainAxisSize.min,
+      children: [
+        const Header(
+          text: 'Random Quotes',
+        ),
+        SizedBox(height: context.sizes.spaceM),
+        child,
+        SizedBox(height: context.sizes.spaceM),
+        Builder(
+          builder: (context) {
+            var status = context
+                .select<RandomCubit, LoadingStatus>((c) => c.state.status);
+
+            var child;
+            if (status == LoadingStatus.loading) {
+              child = const CircularProgressIndicator();
+            } else {
+              child = IconButton(
+                key: const ValueKey(AppKey.exploreRandomReloadButton),
+                icon: const Icon(Icons.refresh),
+                iconSize: context.sizes.scaled(32.0),
+                onPressed: status == LoadingStatus.idle
+                    ? () => context.read<RandomCubit>().loadQuotes(numQuotes)
+                    : null,
               );
-              */
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: child,
-          );
-        },
-      ),
-      trailing: Builder(builder: (context) {
-        var state = context.watch<RandomCubit>().state;
-        var status = state.status;
-        if (state.quote != null || status == LoadingStatus.loading) {
-          var isEnabled = state.quote != null;
-          return ElevatedButton(
-            key: const ValueKey(AppKey.exploreRandomNextButton),
-            onPressed:
-                isEnabled ? () => context.read<RandomCubit>().next() : null,
-            child: const Text('Next'),
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      }),
+            }
+            return child;
+          },
+        ),
+      ],
     );
   }
 }

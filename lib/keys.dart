@@ -29,8 +29,7 @@ enum AppKey {
   logoutConfirmDialogConfirmButton,
   logoutConfirmDialogCancelButton,
 
-  exploreFavoritesNextButton,
-  exploreRandomNextButton,
+  exploreRandomReloadButton,
   exploreRandomErrorRetryWidget,
 
   favoritesNoFavoritesText,

@@ -75,6 +75,7 @@ There are still many possibilities to improve this app:
 * improve performance
 * settings right now are global, not specific to each user that logs in
 * add ability to listen to routing events, e.g. to collect analytics (see [lib/routing/router.dart](lib/routing/router.dart))
+* feature: let users add their own quotes
 * ...
 
 ## License

@@ -1,23 +1,22 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quotes/explore/widgets/header.dart';
 import 'package:flutter_quotes/favorites/cubit/cubit.dart';
 import 'package:flutter_quotes/favorites/model/favorite.dart';
-import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/search/widgets/actions.dart';
 import 'package:flutter_quotes/theme/theme.dart';
-import 'package:flutter_quotes/widgets/card.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/quote/widgets/quote.dart';
 
-class FavoriteWidget extends StatefulWidget {
-  const FavoriteWidget({Key? key}) : super(key: key);
+/*
+Show a single row of quotes selected randomly from the user's favorites.
+*/
+class FavoritesWidget extends StatelessWidget {
+  //how many quotes to show in the row
+  final int numQuotes;
 
-  @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
-}
+  const FavoritesWidget({Key? key, required this.numQuotes}) : super(key: key);
 
-class _FavoriteWidgetState extends State<FavoriteWidget> {
   @override
   Widget build(BuildContext context) {
     var status = context.select<FavoritesCubit, Status>((c) => c.state.status);
@@ -32,61 +31,60 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         ),
       );
     } else if (status.isError) {
-      content = ErrorRetryWidget(
-        onPressed: () => context.read<FavoritesCubit>().reload(),
+      content = Padding(
+        padding: context.insets.paddingM,
+        child: Center(
+          child: ErrorRetryWidget(
+            onPressed: () => context.read<FavoritesCubit>().reload(),
+          ),
+        ),
+      );
+    } else if (favorites.isEmpty) {
+      content = Padding(
+        padding: context.insets.paddingM,
+        child: const Center(
+          child: Text('You have not added any quotes to favorites.'),
+        ),
       );
     } else {
-      Favorite? f;
-      if (favorites.isNotEmpty) {
-        f = favorites[Random().nextInt(favorites.length)];
-      }
-
-      if (f == null) {
-        content = Padding(
-          padding: context.insets.paddingM,
-          child: const Text('You have not added any quotes to favorites'),
-        );
-      } else {
-        content = QuoteWidget(
-          key: ValueKey(f.id),
-          quote: f.quote,
-          onTagPressed: (String tag) {
-            Actions.invoke<SearchIntent>(
-                context,
-                SearchIntent(
-                  gotoSearchScreen: true,
-                  query: tag,
-                ));
-          },
-        );
-      }
-    }
-
-    Widget? trailing;
-    if (status.isLoaded) {
-      trailing = ElevatedButton(
-        key: const ValueKey(AppKey.exploreFavoritesNextButton),
-        child: const Text('Another one'),
-        onPressed: () {
-          //Note: this is kind of a hack
-          //calling setState will cause the build function to run again, thus choosing another random quote
-          //alternatively we could add a Favorite field to the state of this widget and then
-          //recompute another random favorite whenever the button here is pressed
-          setState(() {});
-        },
+      content = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _getRandomFavorites(favorites)
+            .map<Widget>(
+              (f) => Flexible(
+                child: QuoteCard(
+                  key: ValueKey(f.id),
+                  quote: f.quote,
+                  onTagPressed: (String tag) {
+                    Actions.invoke<SearchIntent>(
+                        context,
+                        SearchIntent(
+                          gotoSearchScreen: true,
+                          query: tag,
+                        ));
+                  },
+                ),
+              ),
+            )
+            .toList(),
       );
     }
 
-    return CustomCard(
-      header: Text(
-        'From your favorites',
-        style: context.theme.textTheme.headlineSmall,
-      ),
-      content: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: content,
-      ),
-      trailing: trailing,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Header(text: 'From your favorites'),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: content,
+        ),
+      ],
     );
+  }
+
+  Iterable<Favorite> _getRandomFavorites(List<Favorite> favorites) {
+    var shuffled = List<Favorite>.from(favorites);
+    return shuffled.take(numQuotes);
   }
 }
