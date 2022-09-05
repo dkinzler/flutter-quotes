@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quotes/favorites/repository/favorites_repository.dart';
 import 'package:flutter_quotes/favorites/filter/filter.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/theme/theme.dart';

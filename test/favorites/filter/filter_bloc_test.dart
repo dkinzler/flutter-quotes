@@ -34,7 +34,6 @@ void main() {
 
   var f1 = exampleFavorites[0];
   var f2 = exampleFavorites[1];
-  var f3 = exampleFavorites[2];
 
   group('FilteredFavoritesBloc', () {
     late FilteredFavoritesBloc filteredFavoritesBloc;

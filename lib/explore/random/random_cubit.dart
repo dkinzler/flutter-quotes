@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_quotes/quote/repository/repository.dart';

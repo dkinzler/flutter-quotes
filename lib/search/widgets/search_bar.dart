@@ -67,7 +67,8 @@ class _SearchBarState extends State<SearchBar> {
           /*
             TODO
             We use a table to make the search button the same height as the text field,
-            this is not easily possible with a Row widget. The cleanest solution would probably be using a CustomMultiChildLayout.
+            this is not easily possible with a Row widget. 
+            A cleaner solution might use a CustomMultiChildLayout.
           */
           child: Table(
             columnWidths: const {

@@ -13,6 +13,7 @@ class _QuoteFavoriteState extends Equatable {
   const _QuoteFavoriteState(
       {required this.isFavorited, required this.isEnabled});
 
+  @override
   List<Object?> get props => [isFavorited, isEnabled];
 }
 

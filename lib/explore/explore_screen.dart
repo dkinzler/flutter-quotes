@@ -47,7 +47,6 @@ class _ExploreScreenWidget extends StatelessWidget {
         ),
       );
     } else {
-      var space = context.sizes.spaceL;
       return LayoutBuilder(
         builder: ((context, constraints) {
           var numColumns = 1;

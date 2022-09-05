@@ -22,7 +22,6 @@ class QuotableApiClient implements QuoteProvider {
       count = 20;
     }
     try {
-      //TODO maybe don't fail if only a single request fails?
       List<Quote> results = [];
       for (int i = 0; i < count; i++) {
         results.add(await _singleRandom());

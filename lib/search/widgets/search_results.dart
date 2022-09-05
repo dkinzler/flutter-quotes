@@ -109,7 +109,7 @@ class SearchResultsWidget extends StatelessWidget {
           onPressed: () => context.read<SearchCubit>().loadMoreResults(),
           child: const Text(
             'More',
-            key: const ValueKey(AppKey.searchLoadMoreButton),
+            key: ValueKey(AppKey.searchLoadMoreButton),
           ),
         );
       }

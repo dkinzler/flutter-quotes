@@ -120,7 +120,7 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
             var status = context
                 .select<RandomCubit, LoadingStatus>((c) => c.state.status);
 
-            var child;
+            Widget child;
             if (status == LoadingStatus.loading) {
               child = const CircularProgressIndicator();
             } else {

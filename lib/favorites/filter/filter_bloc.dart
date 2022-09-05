@@ -11,17 +11,6 @@ import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
     hide Status;
 
 /*
-TODO
-filtered favorites get recomputed on every change to favorites
-even if the favorites page isn't even open
-we could avoid this by having a filteredFavorites getter
-that returns a future
-however we then have the problem of how we apply debouncing
-we could e.g. add a ticker to the state where the same instance always gets passed to the next state
-when copyWith is called?
-*/
-
-/*
 FilteredFavoritesBloc takes care of sorting, searching and filtering a user's favorites.
 It listens to FavoritesRepository to get the list of favorites of the user. Whenever the list of favorites changes, they are 
 filtered and sorted again.

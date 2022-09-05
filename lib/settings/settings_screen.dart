@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/app_controller.dart';
-import 'package:flutter_quotes/auth/model/user.dart';
-import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/settings/settings_cubit.dart';
 import 'package:flutter_quotes/theme/theme.dart';
