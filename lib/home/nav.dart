@@ -32,6 +32,7 @@ class _NavRailState extends State<NavRail> {
       extended: extended,
       minExtendedWidth: minExtendedWidth,
       selectedIndex: _tabToIndex(widget.selectedTab),
+      labelType: NavigationRailLabelType.none,
       leading: IconButton(
         key: const ValueKey(AppKey.drawerExtendButton),
         icon: extendIcon,

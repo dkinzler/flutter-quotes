@@ -4,7 +4,7 @@ import 'package:flutter_quotes/theme/theme.dart';
 class QuoteTagList extends StatefulWidget {
   final List<String> tags;
   //max number of tags to show, if there are more there will be a button to show all
-  //if -1 show all tags by default
+  //if <= 0 show all tags by default
   final int maxTagsToShow;
   final void Function(String tag)? onTagPressed;
 
@@ -57,8 +57,6 @@ class _QuoteTagListState extends State<QuoteTagList> {
               tooltip: t.length > 25 ? t : null,
             ))
         .toList());
-
-    //TODO this logic is not as easy to follow
 
     var hasMoreTagsToShow = maxTagsToShow < widget.tags.length;
     if (hasMoreTagsToShow) {

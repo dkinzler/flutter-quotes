@@ -132,6 +132,7 @@ class _TipDialogState extends State<TipDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var sizeM = context.sizes.spaceM;
     return AlertDialog(
       alignment: widget.alignment,
       title: widget.title ??
@@ -180,6 +181,7 @@ class _TipDialogState extends State<TipDialog> {
               TipDialogResult(dontShowAgain: disableTipsCheckboxValue)),
         ),
       ],
+      actionsPadding: EdgeInsets.fromLTRB(sizeM, 0, sizeM, sizeM),
     );
   }
 }

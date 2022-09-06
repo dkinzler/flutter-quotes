@@ -97,7 +97,10 @@ class _SearchBarState extends State<SearchBar> {
                       contentPadding: context.insets.paddingS,
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
-                        onPressed: () => _searchFieldController.clear(),
+                        onPressed: () {
+                          _searchFieldController.clear();
+                          context.read<SearchCubit>().reset();
+                        },
                       ),
                     ),
                   ),
