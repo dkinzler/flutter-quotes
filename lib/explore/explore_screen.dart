@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quotes/explore/favorites/favorite_widget.dart';
@@ -47,39 +46,50 @@ class _ExploreScreenWidget extends StatelessWidget {
         ),
       );
     } else {
-      return LayoutBuilder(
-        builder: ((context, constraints) {
-          var numColumns = 1;
-          if (constraints.maxWidth.isFinite) {
-            numColumns = max(1,
-                (constraints.maxWidth / context.appTheme.scale / 400).floor());
-          }
-          var numRows = 1;
-          if (constraints.maxHeight.isFinite) {
-            numRows = max(
-                1,
-                (constraints.maxHeight / context.appTheme.scale / 220).floor() -
-                    1);
-          }
-          return Padding(
-            padding: padding,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                FavoritesWidget(numQuotes: numColumns),
-                SizedBox(height: context.sizes.spaceM),
-                Expanded(
-                  child: RandomQuoteWidget(
-                    numQuotes: numRows * numColumns,
-                    numColumns: numColumns,
-                    expand: true,
-                  ),
+      return Padding(
+        padding: padding,
+        child: Column(
+          children: [
+            LayoutBuilder(builder: (context, constraints) {
+              return FavoritesWidget(
+                numQuotes: _computeColumns(
+                  constraints,
+                  scale: context.appTheme.scale,
                 ),
-              ],
+              );
+            }),
+            SizedBox(height: context.sizes.spaceM),
+            Expanded(
+              child: LayoutBuilder(builder: (context, constraints) {
+                var scale = context.appTheme.scale;
+                var numColumns = _computeColumns(constraints, scale: scale);
+                var numRows = _computeRows(constraints, scale: scale);
+                return RandomQuoteWidget(
+                  numQuotes: numRows * numColumns,
+                  numColumns: numColumns,
+                  expand: true,
+                );
+              }),
             ),
-          );
-        }),
+          ],
+        ),
       );
     }
+  }
+
+  int _computeColumns(BoxConstraints constraints, {double scale = 1.0}) {
+    var numColumns = 1;
+    if (constraints.maxWidth.isFinite) {
+      numColumns = max(1, (constraints.maxWidth / scale / 400).floor());
+    }
+    return numColumns;
+  }
+
+  int _computeRows(BoxConstraints constraints, {double scale = 1.0}) {
+    var numRows = 1;
+    if (constraints.maxHeight.isFinite) {
+      numRows = max(1, (constraints.maxHeight / scale / 180).floor());
+    }
+    return numRows;
   }
 }

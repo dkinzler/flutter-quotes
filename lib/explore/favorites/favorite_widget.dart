@@ -75,6 +75,7 @@ class FavoritesWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Header(text: 'From your favorites'),
+        SizedBox(height: context.sizes.spaceS),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: content,

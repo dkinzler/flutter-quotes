@@ -38,6 +38,10 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
     context.read<RandomCubit>().loadQuotes(numQuotes);
   }
 
+  void _refreshQuotes() {
+    context.read<RandomCubit>().loadQuotes(numQuotes);
+  }
+
   @override
   Widget build(BuildContext context) {
     var randomCubit = context.watch<RandomCubit>();
@@ -74,6 +78,7 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
           },
         );
       } else {
+        /*
         child = MasonryGridView(
           gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: numColumns),
@@ -94,6 +99,28 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
                   ))
               .toList(),
         );
+        */
+        child = MasonryGridView.count(
+          crossAxisCount: numColumns,
+          itemCount: state.quotes.length,
+          itemBuilder: (context, index) {
+            var q = state.quotes[index];
+            return QuoteCard(
+              quote: q,
+              button: FavoriteButton(
+                quote: q,
+              ),
+              onTagPressed: (String tag) {
+                Actions.invoke<SearchIntent>(
+                    context,
+                    SearchIntent(
+                      query: tag,
+                      gotoSearchScreen: true,
+                    ));
+              },
+            );
+          },
+        );
       }
     }
 
@@ -107,35 +134,41 @@ class _RandomQuoteWidgetState extends State<RandomQuoteWidget> {
     }
 
     return Column(
-      mainAxisSize: widget.expand ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        const Header(
-          text: 'Random Quotes',
-        ),
-        SizedBox(height: context.sizes.spaceM),
-        child,
-        SizedBox(height: context.sizes.spaceM),
-        Builder(
-          builder: (context) {
-            var status = context
-                .select<RandomCubit, LoadingStatus>((c) => c.state.status);
+        Header(
+          text: 'Random quotes',
+          trailing: Builder(
+            builder: (context) {
+              var status = context
+                  .select<RandomCubit, LoadingStatus>((c) => c.state.status);
 
-            Widget child;
-            if (status == LoadingStatus.loading) {
-              child = const CircularProgressIndicator();
-            } else {
-              child = IconButton(
-                key: const ValueKey(AppKey.exploreRandomReloadButton),
-                icon: const Icon(Icons.refresh),
-                iconSize: context.sizes.scaled(32.0),
-                onPressed: status == LoadingStatus.idle
-                    ? () => context.read<RandomCubit>().loadQuotes(numQuotes)
-                    : null,
-              );
-            }
-            return child;
-          },
+              Widget child;
+              if (status == LoadingStatus.loading) {
+                child = const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                child = IconButton(
+                  key: const ValueKey(AppKey.exploreRandomReloadButton),
+                  icon: const Icon(Icons.refresh),
+                  iconSize: 32.0,
+                  constraints: BoxConstraints.tight(const Size(48, 48)),
+                  onPressed:
+                      status == LoadingStatus.idle ? _refreshQuotes : null,
+                );
+              }
+              return child;
+            },
+          ),
         ),
+        SizedBox(height: context.sizes.spaceS),
+        child,
       ],
     );
   }
