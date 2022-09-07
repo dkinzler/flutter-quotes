@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quotes/theme/theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Header extends StatelessWidget {
   final String text;
@@ -26,7 +27,11 @@ class Header extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Text(
           text,
-          style: context.theme.textTheme.headlineSmall,
+          //style: context.theme.textTheme.headlineSmall,
+          style: GoogleFonts.lobster(
+            textStyle: context.theme.textTheme.headlineMedium,
+            color: context.theme.colorScheme.onBackground,
+          ),
         ),
       ),
     );

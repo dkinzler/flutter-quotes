@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_quotes/app.dart';
 import 'package:flutter_quotes/app_controller.dart';
+import 'package:flutter_quotes/licenses.dart';
 import 'package:flutter_quotes/logging.dart';
 import 'package:flutter_quotes/util/mock_hydrated_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,6 +16,8 @@ import 'package:path/path.dart' as p;
 //bootstrap sets up and runs the app with the given configuration
 Future<void> bootstrap(AppConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  registerLicenses();
 
   //setup logging
   var logger = config.logger;

@@ -50,11 +50,14 @@ dependencies:
   bloc_concurrency: ^0.2.0
   device_preview: ^1.1.0
   animations: ^2.0.3
+  #dev version to avoid having to use zone overrides
+  #they cause problems e.g. with integration tests
   hydrated_bloc: ^9.0.0-dev.3
   path: ^1.8.1
   path_provider: ^2.0.11
   intl: ^0.17.0
   collection: ^1.16.0
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   integration_test:
@@ -86,9 +89,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
