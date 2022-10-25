@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quotes/auth/repository/auth_repository.dart';
 import 'package:flutter_quotes/keys.dart';
 import 'package:flutter_quotes/routing/routing.dart';
+import 'package:flutter_quotes/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 /*
@@ -28,7 +29,8 @@ class LogoutAction extends ContextAction<LogoutIntent> {
         builder: (context) {
           return AlertDialog(
             content: const Text('Do you really want to logout?'),
-            actionsPadding: const EdgeInsets.all(8.0),
+            contentPadding: context.insets.paddingM,
+            actionsPadding: context.insets.paddingM,
             actions: [
               ElevatedButton(
                 key: const ValueKey(AppKey.logoutConfirmDialogCancelButton),

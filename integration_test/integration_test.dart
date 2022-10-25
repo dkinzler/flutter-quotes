@@ -46,6 +46,9 @@ provides methods to enter text, tap buttons, scroll, etc.
 Usually the method of robot subclasses just have to call one of these methods with the appropriate AppKey or widget type 
 to define which widget the robot should interact with.
 
+TODO
+We could also auto-generate the robots, e.g. by adding annotations like @RobotButton/@RobotTextField to the elements
+of the AppKey enum.
 
 *¹ Of course HomeRobot would have many more methods to navigate between tabs, press buttons, etc., 
 but for the pruposes of this example we just need that one method.
