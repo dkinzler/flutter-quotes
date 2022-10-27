@@ -3,7 +3,7 @@
 A sample app for browsing quotes, intended to showcase Flutter development features and best practices.
 [Test the app live in your browser.](https://d39b.github.io/flutter-quotes/web)
 
-https://user-images.githubusercontent.com/15326809/198374597-98cef1a9-d33f-4a6b-a736-067629a0fbc7.mp4
+https://user-images.githubusercontent.com/15326809/198375308-5efdb227-91cb-4741-8a83-e047f02a6bec.mp4
 
 * State management using the [bloc library](https://pub.dev/packages/bloc)
 * Declarative routing using the [go_router package](https://pub.dev/packages/go_router)
