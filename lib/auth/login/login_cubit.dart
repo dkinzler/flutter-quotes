@@ -98,7 +98,7 @@ class LoginCubit extends Cubit<LoginState> {
     ));
     //add an artifical delay to test the UI
     //e.g. while the login attempt is in progress a progress indicator might be shown
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     var result = await authRepository.login(email: email, password: password);
     emit(state.copyWith(loginInProgress: false, loginResult: result));
   }

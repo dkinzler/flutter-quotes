@@ -12,7 +12,7 @@ class MockQuoteApiClient implements QuoteProvider {
   Duration delay;
 
   MockQuoteApiClient({
-    this.delay = const Duration(seconds: 2),
+    this.delay = const Duration(seconds: 1),
   });
 
   void setDelay(Duration delay) {
