@@ -1,7 +1,7 @@
 # Flutter Quotes
 
 A sample app for browsing quotes, intended to showcase Flutter development features and best practices.
-[Test the app live in your browser.](https://d39b.github.io/flutter-quotes/web)
+[Test the app live in your browser.](https://dkinzler.github.io/flutter-quotes/web)
 
 https://user-images.githubusercontent.com/15326809/198375308-5efdb227-91cb-4741-8a83-e047f02a6bec.mp4
 
