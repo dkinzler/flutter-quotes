@@ -18,10 +18,10 @@ The components of this app can be thought of as belonging to different layers:
 
 * Data providers
   - retrieves/manipulates "raw" data, usually provides simple methods to create/save/delete/load/query/search data
-  - "raw" data means that the data might not be a format that is usable/convenient for the app, it needs to be further processed 
+  - "raw" data means that the data might not be in a format that is usable/convenient for the app, it needs to be further processed 
     until it reaches the user's screen
   - examples: 
-    - a client for a quotes API provides data obtained over the network (see e.g. QuoteableApiClient in this app)
+    - a client for a quotes API provides data obtained over the network (see e.g. QuotableApiClient in this app)
     - a storage class that loads/persists data to disk (see e.g. FavoritesStorage)
 
 * Repositories
@@ -31,7 +31,7 @@ The components of this app can be thought of as belonging to different layers:
   - decouples the application/ui layer from the data providers, can implement a repository in such a way, that it is
     e.g. possible to switch from one quotes API to another, without the application layer noticing/being involved 
     and without having to recreate the repository
-  - examples in this app: AuthRepository, FavoritesRepository, QutoesRepository
+  - examples in this app: AuthRepository, FavoritesRepository, QuotesRepository
 
 * Business logic
   - the components of the business logic layer are typically Blocs/Cubits
@@ -99,7 +99,7 @@ There are different approaches to creating repositories/blocs/cubits:
       to changes in SettingsCubit and when the quote API setting changes, call a method on QuoteRepository to change the quote provider.
       But now this coordination between SettingsCubit and QuoteRepository is in code located somewhere among UI/presentation layer code, where it doesn't really belong.
       One might argue that usually this coordination can be avoided in the first place by setting up the dependencies correctly, but this in itself
-      will often involve a tradeoff that might e.g. introduce a lot of additonal code.
+      will often involve a tradeoff that might e.g. introduce a lot of additional code.
   * Creating all dependencies globally might have some performance and memory impact,
     although in this app the cubit states will be very small, e.g. just a list of quotes/text.
   * Creating e.g. a Bloc globally and then resetting/reinitializing it when a new user logs in
@@ -117,8 +117,8 @@ There are different approaches to creating repositories/blocs/cubits:
 
 As discussed, there are pros and cons to all the approaches. For this app we decided to have:
 - Some global dependencies, e.g. AuthRepository, SettingsCubit and TipsBloc, they are created only once on app startup.
-- Some local dependencies, e.g. the FilteredFavoritesBloc that can be used to search/filter/sort the set of quotes a user has favorited.
-  Everytime we navigate to the favorites screen/tab a new instance of this bloc is created.
+- Some local dependencies, e.g. the FilteredFavoritesBloc that can be used to search/filter/sort the set of favorite quotes of a user.
+  Every time we navigate to the favorites screen/tab a new instance of this bloc is created.
 - FavoritesRepository, QuoteRepository, FavoritesCubit and SearchCubit are inserted above the HomeScreen, and therefore available across the three routes/tabs (explore/search/favorites) of the app.
   They will be recreated every time a user logs out and a new user logs back in.
 */

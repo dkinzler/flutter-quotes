@@ -9,9 +9,9 @@ TipsBloc keeps track of the settings for showing tips automatically to users and
 We use a bloc here that accepts 3 different events:
 - TipOpened: should be added by the app when a tip dialog is shown, either automatically or initiated by the user e.g. by clicking a button
 - TipClosed: should be added by the app when a tip dialog is closed
-- TipSettingsChanged: can be added to change the behaviour of the tip system, e.g. set whether or not tips should be shown automatically the first time a user sees a certain app page/screen
+- TipSettingsChanged: can be added to change the behavior of the tip system, e.g. set whether or not tips should be shown automatically the first time a user sees a certain app page/screen
 
-Using the events we can track user behaviour and calculate metrics/analytics, 
+Using the events we can track user behavior and calculate metrics/analytics, 
 e.g. are users actually using the tips and if yes how long are the looking at them.
 By interpreting this data we can then try and gauge whether or not the tips are actually interesting/helpful to the users
 and in consequence whether or not the tip feature is a valuable feature for the app.

@@ -54,7 +54,7 @@ flutter drive \
  --target=integration_test/integration_test.dart
 ```
 
-Not all the code of the app is tested, however there are enough tests to showcase strategies to test the different types of components of the app.
+Not all of the code of the app is tested, however there are enough tests to showcase strategies to test the different types of components.
 
 ## Performance Profiling
 
