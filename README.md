@@ -14,8 +14,8 @@ https://user-images.githubusercontent.com/15326809/198375308-5efdb227-91cb-4741-
 * Performance profiling
 
 Note
-* Things move fast, by the time you read this packages might be outdated, new approaches or tools to common problems like state management, routing or testing might exist etc.
-* This app is intended to explore the possibilities of Flutter, many features could have been implemented in a more simple or straightforward way.
+* Things move fast, by the time you read this packages might be outdated, new approaches or tools might exist to solve common problems like state management, routing or testing etc.
+* This project is intended to explore the possibilities of Flutter. In a real app of this size, some features could be implemented in a simpler way.
 
 ## Documentation
 
