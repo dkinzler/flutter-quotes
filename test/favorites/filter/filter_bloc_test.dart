@@ -53,7 +53,7 @@ void main() {
       act: (c) async {
         await favoritesRepository.init('test');
         await favoritesRepository.add(f1);
-        //wait for events to be processed
+        // wait for events to be processed
         await Future.delayed(const Duration(milliseconds: 10));
         await favoritesRepository.remove(f1.id);
       },
@@ -96,9 +96,9 @@ void main() {
       ),
       wait: const Duration(milliseconds: 10),
       act: (c) async {
-        //this should match f1
+        // this should match f1
         c.add(const SearchTermChanged(searchTerm: 'abc'));
-        //this should match nothing
+        // this should match nothing
         c.add(const SearchTermChanged(searchTerm: '%&/'));
       },
       expect: () => [
@@ -133,13 +133,13 @@ void main() {
       ),
       wait: const Duration(milliseconds: 40),
       act: (c) async {
-        //should match just f1
+        // should match just f1
         c.add(const FilterTagAdded(tag: 'tag1'));
         await Future.delayed(const Duration(milliseconds: 10));
-        //should match both f1 and f2
+        // should match both f1 and f2
         c.add(const FilterTagAdded(tag: 'tag3'));
         await Future.delayed(const Duration(milliseconds: 10));
-        //match only f2
+        // match only f2
         c.add(const FilterTagRemoved(tag: 'tag1'));
       },
       expect: () => [

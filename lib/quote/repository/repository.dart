@@ -7,7 +7,7 @@ It uses a single quote provider to search for quotes/get random quotes.
 In contrast to directly using an instance of QuoteProvider in e.g. SearchCubit, we can change the quote provider without having to touch SearachCubit at all,
 because it will always use the same QuoteRepository. 
 
-QuoteRepository could be used to implement more advanced functionality. We could e.g. use multiple quote providers to answer queries, cache results, etc.
+QuoteRepository could be used to implement more advanced functionality, e.g. use multiple quote providers, cache results, etc.
 */
 class QuoteRepository {
   QuoteProviderType _quoteProviderType;

@@ -13,19 +13,17 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-//bootstrap sets up and runs the app with the given configuration
+// setup and run the app with the given configuration
 Future<void> bootstrap(AppConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   registerLicenses();
 
-  //setup logging
   var logger = config.logger;
   if (logger != null) {
     logger.initLogging();
   }
 
-  //init storage
   if (!config.useMockStorage) {
     await Hive.initFlutter(storageSubDir);
   }
@@ -43,10 +41,9 @@ Future<void> bootstrap(AppConfig config) async {
 }
 
 class AppConfig extends Equatable {
-  //the logger to use and init
   final Logger? logger;
-  //will use mock storage for repositories and HydratedBlocs/HydratedCubits
-  //this is useful for testing, because no files will actually be created and thus we don't have to perform any cleanup up after the tests
+  // will use mock storage for repositories and HydratedBlocs/HydratedCubits
+  // this is useful for testing, because no files will actually be created and thus we don't have to perform any cleanup up
   final bool useMockStorage;
   final Widget Function(AppController?)? appBuilder;
 
@@ -60,7 +57,7 @@ class AppConfig extends Equatable {
   List<Object?> get props => [logger, useMockStorage, appBuilder];
 }
 
-//TODO let the user choose a storage directory in the app settings, use this as default
+// TODO let the user choose a storage directory in the app settings, use this as default
 const String storageSubDir = 'flutter-quotes';
 
 Future<HydratedStorage> buildHydratedStorage() async {

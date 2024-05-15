@@ -5,7 +5,7 @@ import 'package:flutter_quotes/quote/model/quote.dart';
 import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:flutter_quotes/quote/providers/quotable/model.dart';
 
-//API client for the Quotable API.
+// API client for the Quotable API.
 class QuotableApiClient implements QuoteProvider {
   static final _baseUri = Uri(
     scheme: 'https',
@@ -138,9 +138,7 @@ class QuotableQueryCursor extends Equatable {
 class QuotableApiError extends Equatable implements Exception {
   final String message;
 
-  //response code from http request
   final int? httpStatusCode;
-  //http response body
   final String? httpResponseBody;
 
   final Object? exception;

@@ -74,12 +74,12 @@ class _NavRailState extends State<NavRail> {
       onDestinationSelected: (index) {
         context.go(HomeRoute(tab: _indexToTab(index)));
       },
-      //Navigation rail places the widgets for the navigation destinations and the trailing widget inside a column
-      //that's why we can use expanded
+      // Navigation rail places the widgets for the navigation destinations and the trailing widget inside a column
+      // that's why we can use expanded
       trailing: Expanded(
-        //Use a nested navigation rail to form two groups of destinations
-        //i.e. one for the actual tabs: explore, search, favorites
-        //and one for settings and logout
+        // Use a nested navigation rail to form two groups of destinations
+        // i.e. one for the actual tabs: explore, search, favorites
+        // and one for settings and logout
         child: NavigationRail(
           extended: extended,
           minExtendedWidth: minExtendedWidth,

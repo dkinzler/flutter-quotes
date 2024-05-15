@@ -56,8 +56,8 @@ class SearchResultsWidget extends StatelessWidget {
       );
     }
 
-    //if there are search results, those results will always be shown
-    //any loading indicators or error widgets will be shown at the end of the results
+    // if there are search results, those results will always be shown
+    // any loading indicators or error widgets will be shown at the end of the results
     var quotes = state.quotes!;
     if (quotes.isEmpty) {
       return Center(
@@ -68,15 +68,15 @@ class SearchResultsWidget extends StatelessWidget {
       );
     }
 
-    //an extra widget will always be shown in the search results list
-    //either a progress indicator, error widget, button to load more results or a text indicating that there are no more results
+    // an extra widget will always be shown in the search results list
+    // either a progress indicator, error widget, button to load more results or a text indicating that there are no more results
     var itemCount = quotes.length + 1;
 
-    //we will choose how to present the list of quotes based on the available space/size of the screen
-    //on smaller screens we will show the results in a linear list using a ListView
-    //on larger screens we have multiple columns using a MasonryGridView
+    // we will choose how to present the list of quotes based on the available space/size of the screen
+    // on smaller screens we will show the results in a linear list using a ListView
+    // on larger screens we have multiple columns using a MasonryGridView
 
-    //we can use the same builder function for ListView and MasonryGridView
+    // we can use the same builder function for ListView and MasonryGridView
     itemBuilder(BuildContext context, int index) {
       if (index < quotes.length) {
         var quote = quotes[index];
@@ -122,13 +122,13 @@ class SearchResultsWidget extends StatelessWidget {
       );
     }
 
-    //compute number of columns based on the size of the screen
-    //we might want to use a LayoutBuilder to get the actual size that will be available to this widget, not the total size of the screen
-    //however the only other widget that takes up width is the nav bar, so this is good enough
+    // compute number of columns based on the size of the screen
+    // we might want to use a LayoutBuilder to get the actual size that will be available to this widget, not the total size of the screen
+    // however the only other widget that takes up width is the nav bar, so this is good enough
     var width = MediaQuery.of(context).size.width - 64;
     int numColumns = max((width / context.appTheme.scale / 400).floor(), 1);
 
-    //if there is more than 1 column use a MasonryGridView, otherwise a ListView
+    // if there is more than 1 column use a MasonryGridView, otherwise a ListView
     if (numColumns > 1) {
       return MasonryGridView.builder(
         controller: scrollController,

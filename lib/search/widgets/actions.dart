@@ -4,7 +4,7 @@ import 'package:flutter_quotes/search/cubit/search_cubit.dart';
 import 'package:provider/provider.dart';
 
 /*
-We can use intents and actions as a more general approach to coding actions a user can perform in the app.
+We can use intents and actions as a more general approach to implementing actions a user can perform in the app.
 Take search in this app as an example. There are different ways in different parts of the app to start a search for quotes.
 E.g. on the search page the user can type a query into a text field and press the search button to initiate a search. 
 Tapping on a tag of a quote on the explore or search screen will also take the user to the search screen and start a search with the selected tag as the query.

@@ -17,7 +17,7 @@ class FavoritesRobot extends Robot {
 
   Future<void> enterFilterTerm(String text) async {
     await enterText(AppKey.favoritesFilterTextField, text);
-    //pump some frames because filter bloc takes some time to run in the background
+    // pump some frames because filter bloc takes some time to run in the background
     for (int i = 0; i < 10; i++) {
       await tester.pumpAndSettle();
     }

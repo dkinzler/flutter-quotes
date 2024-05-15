@@ -35,7 +35,7 @@ class FilteredFavoritesBloc
 
   FilteredFavoritesBloc({
     required this.favoritesRepository,
-    //debouncing can be turned off e.g. for tests
+    // debouncing can be turned off e.g. for tests
     this.debounceTime = const Duration(milliseconds: 300),
   }) : super(const FilteredFavoritesState(
           status: Status.loading,
@@ -63,7 +63,7 @@ class FilteredFavoritesBloc
           : restartable(),
     );
 
-    //start listening to changes in FavoritesRepository
+    // start listening to changes in FavoritesRepository
     add(const FavoritesSubscriptionRequested());
   }
 
@@ -78,8 +78,8 @@ class FilteredFavoritesBloc
     await emit.onEach<Favorites>(
       favoritesRepository.getFavorites(),
       onData: (Favorites favorites) {
-        //make sure to change the state first before adding the event to request a recompute
-        //otherwise we might run into some weird asynchrouns issues, i.e. the recompute event being processed before the state is changed
+        // make sure to change the state first before adding the event to request a recompute
+        // otherwise we might run into some weird asynchronous issues, i.e. the recompute event being processed before the state is changed
         emit(state.copyWith(
             status: Status.fromRepositoryStatus(favorites.status),
             favorites: favorites.favorites));
@@ -87,7 +87,6 @@ class FilteredFavoritesBloc
           _requestRecompute();
         }
       },
-      //this shouldn't happen
       onError: (_, __) => emit(state.copyWith(status: Status.error)),
     );
   }
@@ -145,7 +144,7 @@ class FilteredFavoritesBloc
       var filteredFavorites = await p.first as List<Favorite>;
       emit(state.copyWith(filteredFavorites: filteredFavorites));
     } else {
-      //dart isolates are not available on web
+      // dart isolates are not available on web
       var filteredFavorites = _recomputeFilteredFavorites(
         state.favorites,
         state.filters,
@@ -155,8 +154,8 @@ class FilteredFavoritesBloc
     }
   }
 
-  //reload favorites
-  //convenience method so that calling code doesn't have to depend on FavoritesRepository
+  // reload favorites
+  // convenience method so that calling code doesn't have to depend on FavoritesRepository
   Future<void> reload() => favoritesRepository.load();
 
   @override
@@ -165,7 +164,6 @@ class FilteredFavoritesBloc
   }
 }
 
-//this function is intended to be passed to Isolate.spawn to be run in a separate isolate
 List<Favorite> _recomputeFilteredFavorites(
     List<Favorite> favorites, Filters filters, SortOrder sortOrder) {
   var filteredFavorites = filters.filter(favorites);

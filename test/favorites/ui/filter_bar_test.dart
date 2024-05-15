@@ -43,7 +43,7 @@ void main() {
       await favoritesRepository.init('testUserId');
       filteredFavoritesBloc = FilteredFavoritesBloc(
           favoritesRepository: favoritesRepository, debounceTime: null);
-      //we insert the providers above MaterialApp so that they can also be found from any dialogs
+      // we insert the providers above MaterialApp so that they can also be found from any dialogs
       widget = MultiBlocProvider(
         providers: [
           BlocProvider.value(value: filteredFavoritesBloc),
@@ -56,7 +56,7 @@ void main() {
       'FilterBar updates FilterBloc when search text changes',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
-        //wait for bloc to process initial events
+        // wait for bloc to process initial events
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
         expect(find.byType(FilterBar), findsOneWidget);
@@ -65,10 +65,10 @@ void main() {
             find.byKey(const ValueKey(AppKey.favoritesFilterTextField)),
             'test');
         await tester.pumpAndSettle();
-        //need to introduce an artifical delay for bloc to update it's state
+        // need to introduce an artifical delay for bloc to update it's state
         await waitForBloc(tester);
 
-        //check that filter term in the text field was send to favorites bloc
+        // check that filter term in the text field was send to favorites bloc
         expect(filteredFavoritesBloc.state.filters.searchTerm, 'test');
       },
     );
@@ -77,23 +77,23 @@ void main() {
       'FilterBar updates FilterBloc when sort order changes',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
-        //wait for bloc to process initial events
+        // wait for bloc to process initial events
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //sort order should initially be by newest
+        // sort order should initially be by newest
         expect(filteredFavoritesBloc.state.sortOrder, SortOrder.newest);
 
         await tester
             .tap(find.byKey(const ValueKey(AppKey.favoritesSortButton)));
-        //popupmenu should open
+        // popupmenu should open
         await tester.pumpAndSettle();
         await tester.tap(
             find.byKey(const ValueKey(AppKey.favoritesSortPopupOldestButton)));
         await tester.pumpAndSettle();
-        //need to introduce an artifical delay for bloc to update it's state
+        // need to introduce an artifical delay for bloc to update it's state
         await waitForBloc(tester);
 
-        //check that filter term in the text field was send to favorites bloc
+        // check that filter term in the text field was send to favorites bloc
         expect(filteredFavoritesBloc.state.sortOrder, SortOrder.oldest);
       },
     );
@@ -102,10 +102,10 @@ void main() {
       'FilterBar shows chips for filter tags',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
-        //wait for bloc to process initial events
+        // wait for bloc to process initial events
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //button to add a tag should be shown
+        // button to add a tag should be shown
         expect(find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsButton)),
             findsOneWidget);
 
@@ -114,7 +114,7 @@ void main() {
         ));
         await tester.pumpAndSettle();
 
-        //button to add a tag should be shown
+        // button to add a tag should be shown
         expect(find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsButton)),
             findsOneWidget);
         expect(find.text('testTag'), findsOneWidget);
@@ -126,29 +126,29 @@ void main() {
       'Adding and removing tags works',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
-        //wait for bloc to process initial events
+        // wait for bloc to process initial events
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //set favorites to have some tags to select
+        // set favorites to have some tags to select
         for (final favorite in exampleFavorites) {
           await favoritesRepository.add(favorite);
         }
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //tap button to add tag to open the dialog
+        // tap button to add tag to open the dialog
         await tester.tap(
             find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsButton)));
         await tester.pumpAndSettle();
         expect(find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsDialog)),
             findsOneWidget);
 
-        //tags should be shown in dialog
+        // tags should be shown in dialog
         expect(find.text('tag1'), findsOneWidget);
         expect(find.text('tag2'), findsOneWidget);
         expect(find.text('tag3'), findsOneWidget);
         expect(find.text('tag4'), findsOneWidget);
 
-        //select and unselect some tags
+        // select and unselect some tags
         Finder tagFinder(String tag) {
           return find.ancestor(
               of: find.descendant(
@@ -158,7 +158,7 @@ void main() {
               matching: find.byType(FilterChip));
         }
 
-        //after every select/unselect we need to wait for the bloc to update and the dialog to rebuild because of the bloc state change
+        // after every select/unselect we need to wait for the bloc to update and the dialog to rebuild because of the bloc state change
         await tester.tap(tagFinder('tag1'));
         await tester.pumpAndSettle();
         await waitForBloc(tester);
@@ -176,12 +176,12 @@ void main() {
         await waitForBloc(tester);
         await tester.pumpAndSettle();
 
-        //close the dialog
+        // close the dialog
         await tester.tap(find.byKey(
             const ValueKey(AppKey.favoritesFilterCloseAddTagsDialogButton)));
         await tester.pumpAndSettle();
 
-        //selected tags should be tag2 and tag3, and the should be shown in the filter bar
+        // selected tags should be tag2 and tag3, and the should be shown in the filter bar
         expect(filteredFavoritesBloc.state.filters.tags, ['tag2', 'tag3']);
         expect(find.text('tag1'), findsNothing);
         expect(find.text('tag2'), findsOneWidget);
@@ -190,7 +190,7 @@ void main() {
         expect(find.byKey(const ValueKey(AppKey.favoritesFilterAddTagsButton)),
             findsOneWidget);
 
-        //tap on delete icon of tag2 to delete it
+        // tap on delete icon of tag2 to delete it
         await tester.tap(find.descendant(
             of: find.ancestor(
                 of: find.text('tag2'), matching: find.byType(InputChip)),

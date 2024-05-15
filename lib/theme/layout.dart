@@ -1,10 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/*
-Layout defines different device/screen types based on the screen size.
-
-To extend this, we could e.g. take the screen orientation (portrait or landscape) into account.
-*/
+// Layout defines different device/screen types based on the screen size.
 enum Layout {
   mobile,
   tablet,

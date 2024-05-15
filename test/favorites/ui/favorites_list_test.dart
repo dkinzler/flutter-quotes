@@ -77,7 +77,7 @@ void main() {
         favoritesRepository: favoritesRepository,
         debounceTime: null,
       );
-      //we insert the providers above MaterialApp so that they can also be found from any dialogs
+      // we insert the providers above MaterialApp so that they can also be found from any dialogs
       widget = MultiBlocProvider(
         providers: [
           BlocProvider.value(value: favoritesCubit),
@@ -98,10 +98,10 @@ void main() {
       'correct content shown based on favorites status',
       (WidgetTester tester) async {
         await tester.pumpWidget(widget);
-        //wait for bloc to process initial events
+        // wait for bloc to process initial events
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
 
-        //while favorites are loading, a progress indicator should be shown
+        // while favorites are loading, a progress indicator should be shown
         filteredFavoritesBloc.emit(const FilteredFavoritesState(
           status: Status.loading,
           favorites: [],
@@ -111,7 +111,7 @@ void main() {
 
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-        //if loading fails show error retry widget
+        // if loading fails show error retry widget
         filteredFavoritesBloc.emit(const FilteredFavoritesState(
           status: Status.error,
           favorites: [],
@@ -122,7 +122,7 @@ void main() {
         expect(find.byKey(const ValueKey(AppKey.favoritesErrorRetryWidget)),
             findsOneWidget);
 
-        //if there are not favorites, a text should be shown
+        // if there are not favorites, a text should be shown
         filteredFavoritesBloc.emit(const FilteredFavoritesState(
           status: Status.loaded,
           favorites: [],
@@ -133,7 +133,7 @@ void main() {
         expect(find.byKey(const ValueKey(AppKey.favoritesNoFavoritesText)),
             findsOneWidget);
 
-        //if there are some favorites, the quote widgets should be shown
+        // if there are some favorites, the quote widgets should be shown
         filteredFavoritesBloc.emit(FilteredFavoritesState(
           status: Status.loaded,
           favorites: exampleFavorites,
@@ -146,8 +146,8 @@ void main() {
         expect(find.text('xyz'), findsOneWidget);
         expect(find.text('abc'), findsOneWidget);
 
-        //results are filtered based on filters
-        //when the filter search term changes the list of favorites is updated
+        // results are filtered based on filters
+        // when the filter search term changes the list of favorites is updated
         filteredFavoritesBloc.add(const SearchTermChanged(searchTerm: 'abc'));
         await waitForBloc(tester, duration: const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
@@ -173,7 +173,7 @@ void main() {
         expect(find.text('xyz'), findsOneWidget);
         expect(find.text('abc'), findsOneWidget);
 
-        //tap delete button on quote
+        // tap delete button on quote
         await tester.tap(
           find.descendant(
               of: find.ancestor(
@@ -188,7 +188,7 @@ void main() {
         expect(find.text('xyz'), findsNothing);
         expect(find.text('abc'), findsOneWidget);
 
-        //undo also works
+        // undo also works
         await tester.tap(
           find.descendant(
               of: find.byType(SnackBar), matching: find.text('Undo')),
@@ -206,7 +206,7 @@ void main() {
   });
 }
 
-//introduce an artifical delay to give the bloc time to process events and update its state
+// introduce an artifical delay to give the bloc time to process events and update its state
 Future<void> waitForBloc(WidgetTester tester,
     {Duration duration = Duration.zero}) {
   return tester.runAsync(() => Future.delayed(duration));

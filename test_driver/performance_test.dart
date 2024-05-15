@@ -5,7 +5,7 @@ import 'package:flutter_driver/flutter_driver.dart' as driver;
 import 'package:integration_test/integration_test_driver.dart';
 
 /*
-Adapted from flutter cookbook: https://docs.flutter.dev/cookbook/testing/integration/profiling
+Adapted from the flutter cookbook: https://docs.flutter.dev/cookbook/testing/integration/profiling
 */
 Future<void> main() {
   writeJsonToFile(filename: 'test.json', data: {'xyz': 'Abc', 'xz': 123});

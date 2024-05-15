@@ -8,7 +8,7 @@ class FilteredFavoritesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-//will cause FilteredFavoritesBloc to start listening to FavoritesRepository
+// will cause FilteredFavoritesBloc to start listening to FavoritesRepository
 class FavoritesSubscriptionRequested extends FilteredFavoritesEvent {
   const FavoritesSubscriptionRequested();
 }
@@ -49,7 +49,7 @@ class SortOrderChanged extends FilteredFavoritesEvent {
   List<Object?> get props => [sortOrder];
 }
 
-//will cause the filtered list of favorites to be recomputed based on the current favorites, filters and sort order
+// will cause the filtered list of favorites to be recomputed based on the current favorites, filters and sort order
 class RecomputeFavoritesRequested extends FilteredFavoritesEvent {
   const RecomputeFavoritesRequested();
 }

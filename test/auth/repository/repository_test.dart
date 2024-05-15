@@ -4,7 +4,7 @@ import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 
 void main() {
-  //fix time, because AuthState contains a DateTime lastLoginTime property
+  // fix time, because AuthState contains a DateTime lastLoginTime property
   var timeNow = DateTime(2022);
   currentTime = () => timeNow;
 

@@ -15,9 +15,9 @@ class FavoritesScreen extends StatelessWidget {
     Widget child;
     if (isMobile) {
       var padding = context.insets.paddingM;
-      //to have more space on mobile for actual quotes
-      //the filter bar will be scrolled out of view
-      //on non-mobile the filter bar will always stay at the top of the screen
+      // to have more space on mobile for actual quotes
+      // the filter bar will be scrolled out of view
+      // on non-mobile the filter bar will always stay at the top of the screen
       child = Padding(
         padding: padding,
         child: CustomScrollView(

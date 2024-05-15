@@ -6,7 +6,7 @@ class CustomCard extends StatelessWidget {
   final Widget content;
   final Widget? trailing;
 
-  //defaults to theme.insets.paddingM
+  // defaults to theme.insets.paddingM
   final EdgeInsets? padding;
 
   const CustomCard({

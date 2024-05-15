@@ -5,7 +5,7 @@ import 'package:flutter_quotes/quote/repository/repository.dart';
 import 'package:logging/logging.dart';
 
 /*
-SearchCubit can be used to search for quotes using a quote provider.
+SearchCubit can be used to search for quotes using a quote repository.
 The state of the cubit consists of the following:
 - the current search status
     * inProgress: if a search operation is currently running, can be an initial search or loading more results for a previous search
@@ -73,14 +73,14 @@ class SearchCubit extends Cubit<SearchState> {
     emit(const SearchState());
   }
 
-  //if no query is provided, search for state.query again (if non-null)
+  // if no query is provided, search for state.query again (if non-null)
   Future<bool> search({String? query}) async {
     query ??= state.query;
-    //if a search operation is already running, return
+    // if a search operation is already running, return
     if (query.isEmpty || state.status == SearchStatus.inProgress) {
       return false;
     }
-    //before performing the search, update the state to indicate that a search operation is currently in progress
+    // before performing the search, update the state to indicate that a search operation is currently in progress
     emit(SearchState(
       status: SearchStatus.inProgress,
       query: query,
@@ -124,7 +124,7 @@ class SearchCubit extends Cubit<SearchState> {
         status: SearchStatus.idle,
         query: state.query,
         quotes: newQuotes,
-        //Note: we can't use state.copyWith here, because if result.queryCursor is null the queryCursor field of state would not actually be set to null, since copyWith ignores null arguments
+        // Note: we can't use state.copyWith here, because if result.queryCursor is null the queryCursor field of state would not actually be set to null, since copyWith ignores null arguments
         queryCursor: result.queryCursor,
         totalNumberOfResults: result.totalNumberOfResults,
       ));

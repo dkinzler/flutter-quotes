@@ -21,8 +21,7 @@ the actions (entering text, scrolling, tapping on icons/buttons, navigating, ...
 an actual human user would perform in the app.
 The robot class hides all the implementation details of performing the actions
 using the flutter testing framework.
-Having these robots intended to emulate user behaviour, it becomes very easy
-to implement and understand integration tests.
+With these robots it becomes very easy to implement and understand integration tests.
 
 Consider e.g. the login flow of an application.
 A user starts the app and arrives on the login screen, where they can enter their 
@@ -43,8 +42,6 @@ await homeRobot.verifyIsHomeScreenShown();
 
 To make it easier to implement the robot classes, we can extend the base Robot class, which already
 provides methods to enter text, tap buttons, scroll, etc.
-Usually the method of robot subclasses just have to call one of these methods with the appropriate AppKey or widget type 
-to define which widget the robot should interact with.
 
 TODO
 We could also auto-generate the robots, e.g. by adding annotations like @RobotButton/@RobotTextField to the elements

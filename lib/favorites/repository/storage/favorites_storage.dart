@@ -1,8 +1,8 @@
 import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/storage/storage.dart';
 
-//any class implementing this interface can be used by FavoritesRepository
-//to persist the favorites of a user
+// Any class implementing this interface can be used by FavoritesRepository
+// to persist the favorites of a user.
 abstract class FavoritesStorage {
   Future<List<Favorite>> load();
   Future<bool> add(Favorite favorite);

@@ -8,11 +8,8 @@ import 'package:flutter_quotes/theme/theme.dart';
 import 'package:flutter_quotes/widgets/error.dart';
 import 'package:flutter_quotes/quote/widgets/quote.dart';
 
-/*
-Show a single row of quotes selected randomly from the user's favorites.
-*/
+// Shows a single row of quotes selected randomly from the user's favorites.
 class FavoritesWidget extends StatelessWidget {
-  //how many quotes to show in the row
   final int numQuotes;
 
   const FavoritesWidget({Key? key, required this.numQuotes}) : super(key: key);

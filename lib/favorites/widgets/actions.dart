@@ -65,7 +65,7 @@ class ToggleFavoriteAction extends ContextAction<ToggleFavoriteIntent> {
 }
 
 /*
-This will show a snackbar to undo the deletion.
+Snackbar to undo deletion.
 */
 class DeleteFavoriteIntent extends Intent {
   final Favorite favorite;

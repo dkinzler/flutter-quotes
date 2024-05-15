@@ -3,7 +3,6 @@ import 'package:flutter_quotes/favorites/model/favorite.dart';
 import 'package:flutter_quotes/favorites/repository/favorites_repository.dart'
     as fr show Status;
 
-//Separate status enum, since we don't need the "initial" status from FavoritesRepository.
 enum Status {
   loading,
   loaded,
@@ -31,11 +30,10 @@ class FilteredFavoritesState extends Equatable {
   bool get isLoaded => status == Status.loaded;
   bool get isError => status == Status.error;
 
-  //the current list of favorites obtained from FavoritesRepository
+  // the current list of favorites obtained from FavoritesRepository
   final List<Favorite> favorites;
-  //the list of favorites matching the filters below and sorted by sortOrder
-  //since bloc events are processed asynchronously, this will not always be immediately consistent with the current filters and sort order
-  //eventually the filters will be applied
+  // the list of favorites matching the filters and sorted by sortOrder
+  // since bloc events are processed asynchronously, this will not always be immediately consistent with the current filters and sort order
   final List<Favorite> filteredFavorites;
 
   final Filters filters;
@@ -94,8 +92,8 @@ class Filters extends Equatable {
   @override
   List<Object?> get props => [searchTerm, tags];
 
-  //given a list of favorites return the list of favorites that match
-  //the conditions defined by this object
+  // given a list of favorites return the list of favorites that match
+  // the conditions defined by this object
   List<Favorite> filter(List<Favorite> favorites) {
     return filterBySearchTerm(filterByTags(favorites));
   }

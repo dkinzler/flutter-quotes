@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 /*
-Provides common sizes that should be used across the app for consistency.
-They can be obtained using the extension on BuildContext by simply typing e.g. context.sizes.spaceM.
-The sizes will be automatically scaled using the AppThemeData.scale factor that can be changed in the settings of the app.
+Provides common sizes that can be used across the app for consistency.
+Can be obtained using the extension on BuildContext e.g. context.sizes.spaceM.
+Sizes will be automatically scaled using the AppThemeData.scale factor that can be changed in the settings of the app.
 */
 class Sizes extends Equatable {
   final double scale;

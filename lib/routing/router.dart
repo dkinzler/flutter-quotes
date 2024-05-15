@@ -33,7 +33,7 @@ However the routes are usually also changed without involvement of AppRouter, e.
 To catch these changes we would have to listen to the state of the GoRouter or GoRouterDelegate object.
 */
 class AppRouter {
-  //need auth cubit to check if a user is logged in or not, and if not prevent them from accessing certain routes
+  // need auth cubit to check if a user is logged in or not, and if not prevent them from accessing certain routes
   final AuthRepository? authRepository;
 
   late final GoRouter _router = GoRouter(
@@ -44,8 +44,8 @@ class AppRouter {
         path: '/login',
         builder: (context, state) => const LoginScreen(),
         redirect: (state) {
-          //will prevent users from accessing the login screen if they are logged in
-          //this is mostly for web, where the user could manually change the url to /login
+          // will prevent users from accessing the login screen if they are logged in
+          // this is mostly for web, where the user could manually change the url to /login
           if (authRepository != null) {
             if (!authRepository!.user.isEmpty) {
               var route = const HomeRoute(tab: HomeTab.explore);
@@ -68,8 +68,8 @@ class AppRouter {
           return HomeScreen(key: state.pageKey, tab: tab);
         },
         redirect: (state) {
-          //will prevent users from accessing the home screen if they are not logged in
-          //this is mostly for web, where the user could manually change the url to e.g. /home/explore
+          // will prevent users from accessing the home screen if they are not logged in
+          // this is mostly for web, where the user could manually change the url to e.g. /home/explore
           if (authRepository != null) {
             if (authRepository!.user.isEmpty) {
               var route = const LoginRoute();

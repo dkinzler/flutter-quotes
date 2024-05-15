@@ -11,7 +11,7 @@ abstract class TipEvent extends Equatable {
 class TipOpened extends TipEvent {
   final Tip tip;
 
-  //whether or not the tip was opened automatically or by the user
+  // whether or not the tip was opened automatically or by the user
   final bool openedAutomatically;
 
   const TipOpened({

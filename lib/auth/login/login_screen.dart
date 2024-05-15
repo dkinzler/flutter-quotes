@@ -64,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          //limit the width of the form, e.g. on desktop we wouldn't want the form to span the whole width of the screen
+          // limit the width of the form, e.g. on desktop we wouldn't want the form to span the whole width of the screen
           maxWidth: 500 * context.appTheme.scale,
         ),
         child: Card(
@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             child: FormBuilder(
               key: _formKey,
               child: BlocBuilder<LoginCubit, LoginState>(
-                //we don't need to rebuild when email or password fields of the state change
+                // we don't need to rebuild when email or password fields of the state change
                 buildWhen: (previous, current) =>
                     previous.loginInProgress != current.loginInProgress ||
                     previous.loginResult != current.loginResult,

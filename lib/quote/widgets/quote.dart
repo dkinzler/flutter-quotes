@@ -13,8 +13,8 @@ class QuoteWidget extends StatelessWidget {
   final Widget? button;
 
   final bool showTags;
-  //max number of tags to show, if there are more there will be a button to show all
-  //if -1 show all tags by default
+  // max number of tags to show, if there are more there will be a button to show all
+  // if -1 show all tags by default
   final int maxTagsToShow;
   final void Function(String tag)? onTagPressed;
 
@@ -129,8 +129,8 @@ class QuoteCard extends CustomCard {
   final Widget? button;
 
   final bool showTags;
-  //max number of tags to show, if there are more there will be a button to show all
-  //if -1 show all tags by default
+  // max number of tags to show, if there are more there will be a button to show all
+  // if -1 show all tags by default
   final int maxTagsToShow;
   final void Function(String tag)? onTagPressed;
 

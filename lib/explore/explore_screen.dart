@@ -28,7 +28,7 @@ class _ExploreScreenWidget extends StatelessWidget {
     var isMobile = context.layout == Layout.mobile;
     var padding = isMobile ? context.insets.paddingM : context.insets.paddingL;
 
-    //on mobile show just a single favorite and a single random quote
+    // on mobile show just a single favorite and a single random quote
     if (isMobile) {
       return SingleChildScrollView(
         child: Padding(

@@ -41,7 +41,7 @@ void main() {
     });
 
     test('filtering by searchTerm works', () {
-      //should match first and third (because author contains 'a') quote
+      // should match first and third (because author contains 'a') quote
       var filters = const Filters(searchTerm: 'a');
       var filtered = filters.filter(exampleFavorites);
       expect(filtered, hasLength(2));

@@ -44,7 +44,6 @@ class _AppState extends State<App> {
     }
 
     return MultiProvider(
-        //insert global dependencies
         providers: [
           BlocProvider.value(value: _appController),
           Provider.value(value: _appController.router),

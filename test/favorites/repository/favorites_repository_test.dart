@@ -83,25 +83,24 @@ void main() {
       expect(success, true);
       verify(() => s.add(favorite)).called(1);
 
-      //when storage can't add favorite, nothing happens
+      // when storage can't add favorite, nothing happens
       when(() => s.add(otherFavorite)).thenAnswer((_) async => false);
       success = await r.add(otherFavorite);
       expect(success, false);
       verify(() => s.add(otherFavorite)).called(1);
 
-      //now it works
+      // now it works
       when(() => s.add(otherFavorite)).thenAnswer((_) async => true);
       success = await r.add(otherFavorite);
       expect(success, true);
       verify(() => s.add(otherFavorite)).called(1);
 
-      //lets remove them
+      // lets remove them
       when(() => s.remove(favorite.id)).thenAnswer((_) async => true);
       success = await r.remove(favorite.id);
       expect(success, true);
       verify(() => s.remove(favorite.id)).called(1);
 
-      //should do nothing
       when(() => s.remove(otherFavorite.id)).thenAnswer((_) async => false);
       success = await r.remove(otherFavorite.id);
       expect(success, false);
@@ -128,12 +127,12 @@ void main() {
 
       var success = await r.add(exampleFavorites.first);
       expect(success, false);
-      //storage should not even have been called
+      // storage should not even have been called
       verifyNever(() => s.add(exampleFavorites.first));
 
       success = await r.remove(exampleFavorites.last.id);
       expect(success, false);
-      //storage should not even have been called
+      // storage should not even have been called
       verifyNever(() => s.remove(exampleFavorites.last.id));
     });
   });

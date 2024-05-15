@@ -29,7 +29,7 @@ class FavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //while the favorites of the user have not been loaded successfully, the button should be disabled
+    // while the favorites of the user have not been loaded successfully, the button should be disabled
     var fs = context.select<FavoritesCubit, _QuoteFavoriteState>((c) =>
         _QuoteFavoriteState(
             isFavorited: c.state.containsQuote(quote),

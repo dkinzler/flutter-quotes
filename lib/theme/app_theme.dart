@@ -23,28 +23,28 @@ This is the place to define icon themes, card themes, paddings, size constants, 
 that can be used across the app.
 Some of elements are grouped into separate classes, e.g. there is a class Insets that 
 contains predefined paddings and a class Sizes that contains predefined size constants.
-To make things consistent and easy to change across the entire app, one should always try
-to use themes and constants from AppThemeData instead of using hard-coded values for widgets.
+To make things consistent and easy to change across the entire app, always try
+to use themes and constants from AppThemeData instead of using hard-coded values.
 
 Some AppThemeData properties can be directly accessed using a BuildContext,
 e.g. "context.insets.paddingL".
 To add this behaviour for more properties, simply edit the AppThemeContext extension on BuildContext below.
 */
 class AppThemeData extends Equatable {
-  //device/screen size type
-  //can be used to build adaptive layouts, e.g. a list on mobile
-  //and a grid with multiple columns on larger screens like a tablet or desktop
+  // device/screen size type
+  // can be used to build adaptive layouts, e.g. a list on mobile
+  // and a grid with multiple columns on larger screens like a tablet or desktop
   final Layout layout;
 
-  //UI scaling factor that is applied to sizes, paddings, text themes, etc.
-  //Scale can be changed by the user in the app settings.
+  // UI scaling factor that is applied to sizes, paddings, text themes, etc.
+  // Scale can be changed by the user in the app settings.
   final double scale;
 
-  //contains different size constants that are scaled by "scale"
-  //can e.g. be used to insert whitespace in rows or columns using a SizedBox
+  // contains different size constants that are scaled by "scale"
+  // can e.g. be used to insert whitespace in rows or columns using a SizedBox
   final Sizes sizes;
 
-  //contains different paddings that are scaled by "scale"
+  // contains different paddings that are scaled by "scale"
   final Insets insets;
 
   AppThemeData({required this.layout, this.scale = 1.0})
@@ -63,7 +63,7 @@ class AppThemeData extends Equatable {
     return base.copyWith(
       textTheme: base.textTheme.apply(fontSizeFactor: scale),
       primaryTextTheme: base.primaryTextTheme.apply(fontSizeFactor: scale),
-      //here we can set any other theme properties like iconTheme, cardTheme, ...
+      // set any other theme properties like iconTheme or cardTheme here
     );
   }
 
@@ -80,7 +80,7 @@ class AppThemeData extends Equatable {
 }
 
 /*
-AppTheme builds an AppThemeData instance and makes it available to the widget tree.
+AppTheme makes an AppThemeData instance available to the widget tree.
 It depends on the screen size (using MediaQuery) and the app settings. Whenever one of these
 dependencies change, AppTheme automatically rebuilds a new AppThemeData instance.
 
@@ -99,8 +99,7 @@ class AppTheme extends StatelessWidget {
   const AppTheme({
     Key? key,
     required this.child,
-    //can be set to false for tests
-    //so that the test doesn't have to create a SettingsCubit
+    // set to false for tests so they don't have to create a SettingsCubit
     this.listenToSettings = true,
   }) : super(key: key);
 
@@ -111,9 +110,9 @@ class AppTheme extends StatelessWidget {
     var size = mediaQueryData.size;
     var layout = Layout.fromSize(size);
 
-    //if a textScaleFactor other than 1.0 is set we will use this factor
-    //instead of the one defined in the app settings
-    //textScaleFactor might not be 1.0 e.g. if the user changes OS wide scaling settings
+    // if a textScaleFactor other than 1.0 is set we will use this factor
+    // instead of the one defined in the app settings
+    // textScaleFactor might not be 1.0 if e.g. the user changes OS wide scaling settings
     var textScaleFactor = mediaQueryData.textScaleFactor;
     double settingsScale = 1.0;
     if (listenToSettings) {
@@ -155,9 +154,7 @@ class AppTheme extends StatelessWidget {
     );
   }
 
-  /*
-  Eliminates the dependency on SettingsCubit, use for widget tests.
-  */
+  // eliminates the dependency on SettingsCubit, use for widget tests
   static Widget appBuilderTest(BuildContext context, Widget? child) {
     if (child == null) {
       throw Exception(

@@ -40,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       vsync: this,
     );
-    //This is mostly for mobile, where we can change the tab by swiping left/right on the screen.
-    //When that happens we need to update the route, so that the BottomNavigationBar can mark the correct tab as selected.
+    // This is mostly for mobile, where we can change the tab by swiping left/right on the screen.
+    // When that happens we need to update the route, so that the BottomNavigationBar can mark the correct tab as selected.
     _tabController.addListener(_onTabIndexChanged);
   }
 

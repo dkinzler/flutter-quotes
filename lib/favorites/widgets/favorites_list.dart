@@ -64,9 +64,9 @@ class FavoritesList extends StatelessWidget {
 
     Widget quotesWidget;
 
-    //compute number of columns based on the size of the screen
-    //we might want to use a LayoutBuilder to get the actual size that will be available to this widget, not the total size of the screen
-    //however the only other widget that takes up width is the nav bar, so this is good enough
+    // compute number of columns based on the size of the screen
+    // we might want to use a LayoutBuilder to get the actual size that will be available to this widget, not the total size of the screen
+    // however the only other widget that takes up width is the nav bar, so this is good enough
     var width = MediaQuery.of(context).size.width - 64;
     int numColumns = max((width / context.appTheme.scale / 400).floor(), 1);
 

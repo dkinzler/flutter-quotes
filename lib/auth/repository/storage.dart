@@ -8,7 +8,7 @@ LoginStore can be used by AuthRepository to store and retrieve login sessions.
 It simply stores the currently logged-in user (i.e. the User object) using the Hive package.
 The user can later (e.g. after an app restart) be retrieved to automatically log the user back in.
 
-In an actual application we would probably also store some kind of token (e.g. JWT) instead of just the user object containing the user's email and name.
+In an actual application we would probably also store some kind of token e.g. JWT.
 */
 abstract class LoginStore {
   Future<bool> storeLogin(User user);

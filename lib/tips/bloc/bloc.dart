@@ -13,8 +13,6 @@ We use a bloc here that accepts 3 different events:
 
 Using the events we can track user behavior and calculate metrics/analytics, 
 e.g. are users actually using the tips and if yes how long are the looking at them.
-By interpreting this data we can then try and gauge whether or not the tips are actually interesting/helpful to the users
-and in consequence whether or not the tip feature is a valuable feature for the app.
 
 The same approach to collecting metrics could be used for any other feature/part of the app.
 */
@@ -22,9 +20,9 @@ The same approach to collecting metrics could be used for any other feature/part
 class TipsBloc extends HydratedBloc<TipEvent, TipsState> {
   final _log = Logger('TipBloc');
 
-  //HydratedBloc will only use the state passed to super if no state was previously stored
-  //the previous state will be loaded synchronously in the constructor
-  //so we don't need to worry that there is a small period on app startup where the stored state is not available
+  // HydratedBloc will only use the state passed to super if no state was previously stored
+  // the previous state will be loaded synchronously in the constructor
+  // so we don't need to worry that there is a small period on app startup where the stored state is not available
   TipsBloc() : super(const TipsState()) {
     on<TipOpened>(_onTipOpened);
     on<TipClosed>(_onTipClosed);
@@ -32,10 +30,8 @@ class TipsBloc extends HydratedBloc<TipEvent, TipsState> {
   }
 
   void _onTipOpened(TipOpened event, Emitter emit) {
-    //mark the tip as seen
     var seenTips = Set<Tip>.from(state.seenTips)..add(event.tip);
 
-    //record the time the tip was opened
     var timeOpened = Map<Tip, DateTime>.from(state.timeOpened);
     timeOpened[event.tip] = currentTime();
 
@@ -46,11 +42,11 @@ class TipsBloc extends HydratedBloc<TipEvent, TipsState> {
   }
 
   void _onTipClosed(TipClosed event, Emitter emit) {
-    //calculate the time the dialog was opened
-    //here we only log this information to console
-    //in an actual app we might e.g. sent this data to an analytics service like Google Analytics
-    //using this information we could e.g. infer whether or not users are actually reading the tips
-    //if the duration the dialog was open is very small, the user probably just closed the dialog and didn't even read it
+    // calculate the time the dialog was opened
+    // here we only log this information to console
+    // in an actual app we might e.g. sent this data to an analytics service like Google Analytics
+    // using this information we could e.g. infer whether or not users are actually reading the tips
+    // if the duration the dialog was open is very small, the user probably just closed the dialog and didn't even read it
     var timeClosed = currentTime();
     var timeOpened = state.timeOpened[event.tip];
     if (timeOpened != null) {

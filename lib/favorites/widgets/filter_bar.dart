@@ -205,8 +205,8 @@ class FilterAddTagsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //we don't rebuild here on changes to the list of favorites
-    //since the favorites shouldn't change anyway while we are in this dialog
+    // we don't rebuild here on changes to the list of favorites
+    // since the favorites shouldn't change anyway while we are in this dialog
     var favorites = context.read<FilteredFavoritesBloc>().state.favorites;
     Set<String> tags = Set<String>.from(
         favorites.expand<String>((favorite) => favorite.quote.tags));

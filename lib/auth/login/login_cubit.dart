@@ -69,7 +69,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void resetResult() {
-    //need to do this manually, since passing null as an optional parameter doesn't work (i.e. state.copyWith(loginResult: null))
+    // need to do this manually, since passing null as an optional parameter doesn't work (i.e. state.copyWith(loginResult: null))
     emit(LoginState(
       email: state.email,
       password: state.password,
@@ -79,7 +79,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> login() async {
-    //don't allow multiple login attempts to run at once
+    // don't allow multiple login attempts to run at once
     if (state.loginInProgress) {
       return;
     }
@@ -96,8 +96,8 @@ class LoginCubit extends Cubit<LoginState> {
       email: state.email,
       password: state.password,
     ));
-    //add an artifical delay to test the UI
-    //e.g. while the login attempt is in progress a progress indicator might be shown
+    // add an artifical delay to test the UI
+    // e.g. while the login attempt is in progress a progress indicator might be shown
     await Future.delayed(const Duration(seconds: 1));
     var result = await authRepository.login(email: email, password: password);
     emit(state.copyWith(loginInProgress: false, loginResult: result));

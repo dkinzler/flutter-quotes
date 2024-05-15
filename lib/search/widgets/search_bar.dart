@@ -29,9 +29,9 @@ class _SearchBarState extends State<SearchBar> {
   @override
   void initState() {
     super.initState();
-    //update text field with actual query from search cubit
-    //e.g. we can also initiate a search without the text field by tapping a tag of a quote
-    //however the text field should then show the tag as text
+    // update text field with actual query from search cubit
+    // e.g. we can also initiate a search without the text field by tapping a tag of a quote
+    // however the text field should then show the tag as text
     var searchCubit = context.read<SearchCubit>();
     _searchCubitSubscription = searchCubit.stream.listen((s) {
       var query = s.query;
@@ -39,9 +39,9 @@ class _SearchBarState extends State<SearchBar> {
         _searchFieldController.text = query;
       }
     });
-    //need to initially update text field once
-    //if the search cubit state was already updated with a new query before the search screen is opened
-    //the listener above won't notice
+    // need to initially update text field once
+    // if the search cubit state was already updated with a new query before the search screen is opened
+    // the listener above won't notice
     if (searchCubit.state.query != _searchFieldController.text) {
       _searchFieldController.text = searchCubit.state.query;
     }
@@ -57,7 +57,7 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        //on larger screens, e.g. desktop the search bar shouldn't fill the entire screen width
+        // on larger screens, e.g. desktop the search bar shouldn't fill the entire screen width
         maxWidth: context.sizes.scaled(600),
         maxHeight: 100,
       ),
@@ -68,7 +68,7 @@ class _SearchBarState extends State<SearchBar> {
             TODO
             We use a table to make the search button the same height as the text field,
             this is not easily possible with a Row widget. 
-            A cleaner solution might use a CustomMultiChildLayout.
+            Could alternatively use a CustomMultiChildLayout.
           */
           child: Table(
             columnWidths: const {
@@ -82,8 +82,8 @@ class _SearchBarState extends State<SearchBar> {
                   TextField(
                     key: const ValueKey(AppKey.searchBarTextField),
                     controller: _searchFieldController,
-                    //onSubmitted is called when the user presses the enter key on desktop
-                    //or the "done"/"search" button of the on-screen keyboard on mobile
+                    // onSubmitted is called when the user presses the enter key on desktop
+                    // or the "done"/"search" button of the on-screen keyboard on mobile
                     onSubmitted: (String value) => Actions.invoke<SearchIntent>(
                         context,
                         SearchIntent(

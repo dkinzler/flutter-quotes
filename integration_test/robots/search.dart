@@ -35,7 +35,7 @@ class SearchRobot extends Robot {
 
   Future<void> scrollDown() async {
     Finder scrollableFinder;
-    //we use different widgets for different layouts (mobile, tablet, desktop, ...)
+    // we use different widgets for different layouts (mobile, tablet, desktop, ...)
     if (isWidgetShown(SearchResultsWidget)) {
       scrollableFinder = find.descendant(
         of: find.byType(SearchResultsWidget),

@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 import 'favorites_storage.dart';
 
-//Implementation of FavoritesStorage using the hive package
+// Implementation of FavoritesStorage using the hive package
 class HiveFavoritesStorage implements FavoritesStorage {
   final _log = Logger('HiveFavoritesStorage');
 
@@ -18,8 +18,8 @@ class HiveFavoritesStorage implements FavoritesStorage {
 
   Future<bool> _init() async {
     try {
-      //TODO do we need to be careful here with the name of the box?
-      //e.g. if there are special characters in the userId might this cause errors?
+      // TODO do we need to be careful here with the name of the box?
+      // e.g. if there are special characters in the userId might this cause errors?
       box = await Hive.openBox<String>('favorites:$userId');
       return true;
     } catch (e) {

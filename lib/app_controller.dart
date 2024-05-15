@@ -13,19 +13,18 @@ import 'package:flutter_quotes/tips/bloc/bloc.dart';
 App Architecture
 ----------------
 
-The components of this app can be thought of as belonging to different layers:
+The components of this app can be thought of as belonging to 3 different layers: data, application/business logic, UI/presentation.
 (see https://bloclibrary.dev/#/architecture which serves as the basis for this app)
 
 * Data providers
-  - retrieves/manipulates "raw" data, usually provides simple methods to create/save/delete/load/query/search data
-  - "raw" data means that the data might not be in a format that is usable/convenient for the app, it needs to be further processed 
-    until it reaches the user's screen
+  - retrieve/manipulate "raw" data, usually provide simple methods to create/save/delete/load/query/search data
+  - "raw" data means that the data might not be in a format that is usable/convenient for the app
   - examples: 
     - a client for a quotes API provides data obtained over the network (see e.g. QuotableApiClient in this app)
     - a storage class that loads/persists data to disk (see e.g. FavoritesStorage)
 
 * Repositories
-  - a repository is an intermediary between the application/ui layer of the app and the data sources, abstracts away
+  - a repository is an intermediary between the application/business logic layer of the app and the data providers, abstracts away
     the details of using individual data providers
   - it can combine multiple data providers into a single data source, transform the data into a consistent format, ...
   - decouples the application/ui layer from the data providers, can implement a repository in such a way, that it is
@@ -33,16 +32,16 @@ The components of this app can be thought of as belonging to different layers:
     and without having to recreate the repository
   - examples in this app: AuthRepository, FavoritesRepository, QuotesRepository
 
-* Business logic
+* Application/Business logic
   - the components of the business logic layer are typically Blocs/Cubits
     they mediate between the data layer (repositories) and the UI/presentation layer
   - usually a Bloc/Cubit will depend on a repository (received in the constructor of the Bloc/Cubit) to get data
-  - it might transform the data from the repository into the final format that is needed in the UI, this can e.g. also include
-    filtering/sorting the data
+  - it might transform the data from the repository into the final format that is needed in the UI, this can e.g. include
+    filtering or sorting the data
   - receives input/user actions from the UI layer
       * some actions can be handled completely in the Bloc/Cubit, e.g. if the user changes the sort order of a list of data objects the Bloc/Cubit manages
       * other actions, e.g. to add or delete a data object, the Bloc/Cubit will pass on to the repository
-  - i.e. the UI/presentation layer (usually) doesn't interact with the data layer (i.e. repositories) directly, but through the business logic layer (i.e Blocs/Cubits)
+  - the UI/presentation layer usually doesn't interact with the data layer (repositories) directly, but through the business logic layer (Blocs/Cubits)
     e.g. in this app, when a user wants to favorite a quote, the UI layer will call the add() method on FavoritesCubit and FavoritesCubit will call FavoritesRepository 
     to actually save the favorite
 
@@ -129,12 +128,12 @@ It is also the place to implement app-global coordination tasks. E.g. AppControl
 authentication state. If a user logs in or a user logs out AppController will change the route of the app.
 */
 class AppState extends Equatable {
-  //set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
+  // set this to true for testing, with mock storage no files will be created/no state is persisted after the app is disposed
   final bool useMockStorage;
   FavoritesStorageType get favoritesStorageType =>
       useMockStorage ? FavoritesStorageType.mock : FavoritesStorageType.hive;
 
-  //the current user or User.empty if no user is logged in
+  // the current user or User.empty if no user is logged in
   final User user;
   bool get isUnauthenticated => user == User.empty;
   bool get isAuthenticated => !isUnauthenticated;

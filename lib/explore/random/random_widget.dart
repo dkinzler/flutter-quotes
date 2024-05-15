@@ -11,9 +11,7 @@ import 'package:flutter_quotes/quote/widgets/quote.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class RandomQuoteWidget extends StatefulWidget {
-  //number of quotes to show
   final int numQuotes;
-  //how many quotes to show side by side
   final int numColumns;
   final bool expand;
 

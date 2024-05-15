@@ -32,23 +32,23 @@ class SliverSearchResultsWidget extends StatelessWidget {
       return SliverToBoxAdapter(child: Center(child: child));
     }
 
-    //if there are search results, those results will always be shown
-    //any loading indicators or error widgets will be shown at the end of the results
+    // if there are search results, those results will always be shown
+    // any loading indicators or error widgets will be shown at the end of the results
     var quotes = state.quotes!;
     if (quotes.isEmpty) {
       return const SliverToBoxAdapter(
           child: Center(child: Text('No results found')));
     }
 
-    //an extra widget will always be shown in the search results list
-    //either a progress indicator, error widget, button to load more results or a text indicating that there are no more results
+    // an extra widget will always be shown in the search results list
+    // either a progress indicator, error widget, button to load more results or a text indicating that there are no more results
     var itemCount = quotes.length + 1;
 
-    //we will choose how to present the list of quotes based on the available space/size of the screen
-    //on smaller screens we will show the results in a linear list using a ListView
-    //on larger screens we have multiple columns using a MasonryGridView
+    // we will choose how to present the list of quotes based on the available space/size of the screen
+    // on smaller screens we will show the results in a linear list using a ListView
+    // on larger screens we have multiple columns using a MasonryGridView
 
-    //we can use the same builder function for ListView and MasonryGridView
+    // we can use the same builder function for ListView and MasonryGridView
     itemBuilder(BuildContext context, int index) {
       if (index < quotes.length) {
         var quote = quotes[index];

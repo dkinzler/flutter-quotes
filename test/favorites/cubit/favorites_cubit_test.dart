@@ -9,10 +9,10 @@ import 'package:flutter_quotes/util/time.dart';
 import 'package:test/test.dart';
 
 void main() {
-  //the Favorite class contains a DateTime property that holds the time the quote was favorited
-  //to make the tests predictable we need to fix the time
-  //otherwise it is hard to create expected instances of Favorite that can be compared
-  //with the result of some operation/method under test
+  // the Favorite class contains a DateTime property that holds the time the quote was favorited
+  // to make the tests predictable we need to fix the time
+  // otherwise it is hard to create expected instances of Favorite that can be compared
+  // with the result of some operation/method under test
   currentTime = () {
     return DateTime(2022);
   };
@@ -101,12 +101,12 @@ void main() {
         await c.remove(favorite: f1);
         await c.remove(quote: f2.quote);
         await c.toggle(f1.quote);
-        //need to wait for cubit to process the event from repository
+        // need to wait for cubit to process the event from repository
         await Future.delayed(const Duration(milliseconds: 10));
         await c.toggle(f1.quote);
         await Future.delayed(const Duration(milliseconds: 10));
         await c.toggle(f1.quote);
-        //this will reset FavoritesRepository
+        // this will reset FavoritesRepository
         await c.reload();
       },
       expect: () => [

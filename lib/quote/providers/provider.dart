@@ -3,7 +3,7 @@ import 'package:flutter_quotes/quote/providers/quotable/apiclient.dart';
 import 'package:flutter_quotes/quote/model/quote.dart';
 
 /*
-Interface for loading random quotes/searching for quotes.
+Interface for loading random quotes and searching for quotes.
 Any class implementing this interface can be used as the source of quotes for the app.
 
 There are currently 2 implementations of QuoteProvider:
@@ -16,9 +16,9 @@ add it to the QuoteProviderType enum and update QuoteProviderFactory below.
 abstract class QuoteProvider {
   Future<List<Quote>> random(int count);
 
-  //the query cursor object is used to implement pagination
-  //we can pass a query cursor, obtained from the search result of a previous call to search,
-  //to load the next page of results
+  // the query cursor object is used to implement pagination
+  // we can pass a query cursor, obtained from the search result of a previous call to search,
+  // to load the next page of results
   Future<SearchResult> search(String query, {Object? queryCursor});
 }
 
@@ -26,9 +26,8 @@ class SearchResult {
   final List<Quote> quotes;
   final int? totalNumberOfResults;
 
-  //a query cursor object
-  //if non-null and passed to the search() method of QuoteProvider, the next page of results
-  //should be returned
+  // if non-null and passed to the search() method of QuoteProvider, the next page of results
+  // should be returned
   final Object? queryCursor;
 
   const SearchResult({
@@ -38,9 +37,9 @@ class SearchResult {
   });
 }
 
-//enum of quote providers the app supports
-//if you implement and add another quote provider don't forget to add it to the
-//QuoteProviderFactory below and update the settings screen
+// enum of quote providers the app supports
+// if you implement and add another quote provider don't forget to add it to the
+// QuoteProviderFactory below and update the settings screen
 enum QuoteProviderType {
   mock,
   quotable;
@@ -49,8 +48,6 @@ enum QuoteProviderType {
     if (s == quotable.name) {
       return quotable;
     } else {
-      //return mock even if the given string doesn't match any of the providers
-      //alternatively we could also throw an exception if there is no match
       return mock;
     }
   }

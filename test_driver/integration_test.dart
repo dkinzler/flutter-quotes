@@ -6,7 +6,7 @@ Future<void> main() async {
     onScreenshot: (String name, List<int> screenshotBytes) async {
       var path = 'screenshots/$name.png';
       final File image = File(path);
-      //create parent folders if they don't already exist
+      // create parent folders if they don't already exist
       var parent = image.parent;
       if(!parent.existsSync()) {
         parent.createSync(recursive: true);

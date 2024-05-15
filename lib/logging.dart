@@ -74,7 +74,6 @@ abstract class Logger {
   }
 }
 
-//Simple implementation of the Logger interface that just prints any log and error messages to console.
 class ConsoleLogger extends Logger {
   ConsoleLogger({super.setFlutterOnError = true});
 

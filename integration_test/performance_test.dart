@@ -8,7 +8,7 @@ import 'robots/search.dart';
 
 Future<void> main() async {
   var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  //this is only necessary in profile mode to allow the test to enter text
+  // this is only necessary in profile mode to allow the test to enter text
   binding.testTextInput.register();
 
   testWidgets('happy path', (WidgetTester tester) async {

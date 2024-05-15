@@ -4,7 +4,7 @@ import 'package:flutter_quotes/theme/app_theme.dart';
 class ErrorText extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
-  //if null theme.errorColor is used
+  // if null theme.errorColor is used
   final Color? textColor;
 
   const ErrorText(
@@ -26,7 +26,7 @@ class ErrorText extends StatelessWidget {
 class ErrorRetryWidget extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
-  //if null theme.errorColor is used
+  // if null theme.errorColor is used
   final Color? textColor;
   final String buttonText;
   final void Function() onPressed;

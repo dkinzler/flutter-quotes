@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //use smaller padding on mobile
+    // use smaller padding on mobile
     var isMobile = context.layout == Layout.mobile;
     var padding = isMobile ? context.insets.paddingM : context.insets.paddingL;
 
@@ -36,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                   horizontal: 8.0,
                   vertical: 16.0,
                 ),
-                //use a ListView since contents might not fit on screen, especially on smaller devices and when some of the tiles are expanded
+                // use a ListView since contents might not fit on screen, especially on smaller devices and when some of the tiles are expanded
                 child: ListView(
                   children: const [
                     MyAccountTile(),

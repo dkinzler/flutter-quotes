@@ -8,25 +8,13 @@ import 'package:flutter_quotes/favorites/repository/storage/favorites_storage.da
 FavoritesRepository
 * maintains the list of favorite quotes of the currently logged in user
 * persists the favorites using an instance of FavoritesStorage
-* make the favorites available to other components of the app, e.g. application/ui-level blocs and cubits
+* makes the favorites available to other components of the app, e.g. UI blocs and cubits
 
-Other classes can call getFavorites() to obtain a stream of the current favorites, that can be listened to for changes.
+Other classes can call getFavorites() to obtain a stream of the current favorites that can be listened to for changes.
 
 The favorites of the app are represented using an instance of class Favorites, which consists of:
 * the list of quotes the user favorited
 * a status field indicating whether or not the favorites were successfully loaded from storage
-
-Why did we choose to include the status field?
-For a simple storage backend, that writes the favorites to the disk of the device, we can expect that loading the favorites will almost
-always succeed, unless the device or disk broken.
-Although in the future we might add a storage backend that stores the favorites in the cloud. Then it might happen frequently, e.g. if the device has no internet connection,
-that the favorites can not be loaded.
-The alternative to having an explicit status field, would be to make getFavorites() directly return a Stream<List<Favorite>> with the current list of favorites.
-If there is an error while loading the favorites from storage, we could add an error the stream.
-However, the responsibility to figure out what is currently happening (does the user not have any favorites? have they not been loaded yet? did the loading operation fail?), is then shifted
-to the upstream components like Blocs and Cubits, which are typically intersted in this information. E.g. on a UI screen that shows the list of favorites, possibly filtered and sorted,
-we would want to see a progress/loading indicator if the favorites are currently being loaded, or an error message and retry button if the favorites could not be retrieved.
-We believe it makes it easier to understand and use FavoritesRepository in upstream Blocs/Cubits, if the current status is explicitely represented.
 */
 
 enum Status {
@@ -51,7 +39,6 @@ class Favorites extends Equatable {
     required this.favorites,
   });
 
-  //this will be the state while no user is logged in.
   const Favorites.initial()
       : status = Status.initial,
         favorites = const [];
@@ -98,9 +85,9 @@ class FavoritesRepository {
 
   FavoritesRepository({
     FavoritesStorageType storageType = FavoritesStorageType.hive,
-    //can be used e.g. in testing to inject a mock storage instance
+    // can be used e.g. in testing to inject a mock storage instance
     FavoritesStorageBuilder storageBuilder = _defaultStorageBuilder,
-    //initialize the repository for the given user
+    // initialize the repository for the given user
     String? userId,
   })  : _storageType = storageType,
         _storageBuilder = storageBuilder {
@@ -155,12 +142,12 @@ class FavoritesRepository {
       return false;
     }
     try {
-      //only emit the new favorites if the change is successfully persisted using storage
+      // only emit the new favorites if the change is successfully persisted
       var success = await _storage!.add(favorite);
       if (success) {
         var newFavorites = [..._favorites.favorites];
         var index = newFavorites.indexWhere((f) => f.id == favorite.id);
-        //update favorite if it was already contained in the list
+        // update favorite if it was already contained in the list
         if (index >= 0) {
           newFavorites[index] = favorite;
         } else {
@@ -185,7 +172,7 @@ class FavoritesRepository {
       return true;
     }
     try {
-      //only emit the new favorites if the change is successfully persisted using storage
+      // only emit the new favorites if the change is successfully persisted
       var success = await _storage!.remove(id);
       if (success) {
         var newFavorites =

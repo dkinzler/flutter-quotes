@@ -21,8 +21,8 @@ void main() {
     late AuthRepository authCubit;
     late LoginCubit loginCubit;
 
-    //since the setup is the same for all tests we perform it there instead of
-    //repeating the same code in each build function of blocTest
+    // since the setup is the same for all tests we perform it there instead of
+    // repeating the same code in each build function of blocTest
     setUp(() {
       authCubit = AuthRepository();
       loginCubit = LoginCubit(authRepository: authCubit);

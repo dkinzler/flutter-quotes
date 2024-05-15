@@ -3,7 +3,7 @@ import 'package:flutter_quotes/quote/providers/provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 /*
-SettingsCubit keeps and stores app settings:
+SettingsCubit keeps app settings:
 - dark or light app theme
 - the api to use to get quotes
 - a ui scaling factor

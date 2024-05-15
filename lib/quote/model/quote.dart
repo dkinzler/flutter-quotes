@@ -1,28 +1,23 @@
 import 'package:equatable/equatable.dart';
 
 class Quote extends Equatable {
-  //the actual quote text
   final String text;
 
-  //the author of the quote
   final String author;
-  //author id
-  //can be null, depends on the QuoteProvider from which this quote originates
-  //some quote providers assign unique author ids
+  // can be null, depends on the QuoteProvider from which this quote originates
+  // some quote providers assign unique author ids
   final String? authorId;
 
-  //a possibly empty list of tags
   final List<String> tags;
 
-  //a unique string identifying the QuoteProvider from which this quote originates
-  //e.g. 'quotable.io' or 'mock'
+  // a unique string identifying the QuoteProvider from which this quote originates
+  // e.g. 'quotable.io' or 'mock'
   final String source;
-  //a unique id for the quote, not supported by all quote providers
+  // a unique id for the quote, not supported by all quote providers
   final String? sourceId;
 
-  //quote id
-  //if the quote provider assigned a unique id, use it
-  //otherwise simply use the quote text
+  // if the quote provider assigned a unique id, use it
+  // otherwise simply use the quote text
   String get id {
     if (sourceId != null) {
       return '$source:$sourceId';

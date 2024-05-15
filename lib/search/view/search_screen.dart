@@ -12,14 +12,16 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-//We use the AutomaticKeepAliveClientMixin to keep this widget in the widget tree
-//when we switch between tabs on the home screen.
-//This is to be at the same scroll position when we move from the search screen tab to another tab and back.
-//Keeping the widget around even when it's not visible will of course consume more memory, on web/desktop this should be fine.
-//Normally we could more easily remember the scroll position by using a PageStorageKey
-//for the ListView/GridView.
-//This works for the ListView widget but not for the MasonryGridView widget from the
-//flutter_staggered_grid_view package, this is probably a bug in that package.
+/*
+We use the AutomaticKeepAliveClientMixin to keep this widget in the widget tree
+when we switch between tabs on the home screen.
+This is to be at the same scroll position when we move from the search screen tab to another tab and back.
+Keeping the widget around even when it's not visible will of course consume more memory, on web/desktop this should be fine.
+Normally we could more easily remember the scroll position by using a PageStorageKey
+for the ListView/GridView.
+This works for the ListView widget but not for the MasonryGridView widget from the
+flutter_staggered_grid_view package, there might be a bug in that package.
+*/
 class _SearchScreenState extends State<SearchScreen>
     with AutomaticKeepAliveClientMixin<SearchScreen> {
   bool useInfiniteScroll = false;
@@ -48,8 +50,8 @@ class _SearchScreenState extends State<SearchScreen>
     }
 
     if (isMobile) {
-      //on mobile the search bar will be scrolled out of view, on tablet on desktop the search bar stays visible at the top of the screen
-      //as the user scrolls through results
+      // on mobile the search bar will be scrolled out of view, on tablet on desktop the search bar stays visible at the top of the screen
+      // as the user scrolls through results
       var padding = context.insets.paddingM;
       return Padding(
         padding: padding,

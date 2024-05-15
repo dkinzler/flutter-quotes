@@ -43,7 +43,7 @@ class RandomCubit extends Cubit<RandomState> {
   }
 
   Future<void> loadQuotes(int count) async {
-    //don't allow concurrent invocations of this method
+    // don't allow concurrent invocations of this method
     if (state.status == LoadingStatus.loading) {
       return;
     }
@@ -52,7 +52,7 @@ class RandomCubit extends Cubit<RandomState> {
       var quotes = await _quoteRepository.random(count);
       emit(state.copyWith(status: LoadingStatus.idle, quotes: quotes));
     } catch (e, st) {
-      _log.warning('could not load more quotes', e, st);
+      _log.warning('could not load random quotes', e, st);
       emit(state.copyWith(status: LoadingStatus.error));
     }
   }

@@ -14,8 +14,8 @@ class HomeRobot extends Robot {
     super.binding,
   });
 
-  //we have different layouts for mobile and tablet/desktop
-  //on mobile there is a bottom navigation bar, on tablet/desktop a navigation rail
+  // we have different layouts for mobile and tablet/desktop
+  // on mobile there is a bottom navigation bar, on tablet/desktop a navigation rail
   Future<void> _goto(AppKey a, AppKey b) async {
     if (isWidgetShown(a)) {
       await tap(a);
@@ -33,7 +33,7 @@ class HomeRobot extends Robot {
   Future<void> gotoFavoritesScreen() =>
       _goto(AppKey.drawerFavoritesButton, AppKey.navbarFavoritesButton);
 
-  //on mobile we first need to open a popup menu
+  // on mobile we first need to open a popup menu
   Future<void> gotoSettingsScreen() async {
     if (isWidgetShown(AppKey.appbarPopupMenu)) {
       await tap(AppKey.appbarPopupMenu);
